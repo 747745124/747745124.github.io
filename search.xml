@@ -103,6 +103,55 @@
       </tags>
   </entry>
   <entry>
+    <title>98.Validate Binary Search Tree</title>
+    <url>/2021/09/30/98.ValidateBST/</url>
+    <content><![CDATA[<h3 id="Description"><a href="#Description" class="headerlink" title="Description:"></a>Description:</h3><p>Given the <code>root</code> of a binary tree, <em>determine if it is a valid binary search tree (BST)</em>.</p>
+<p>A <strong>valid BST</strong> is defined as follows:</p>
+<ul>
+<li>The left subtree of a node contains only nodes with keys <strong>less than</strong> the node’s key.</li>
+<li>The right subtree of a node contains only nodes with keys <strong>greater than</strong> the node’s key.</li>
+<li>Both the left and right subtrees must also be binary search trees.</li>
+</ul>
+<h3 id="Examples"><a href="#Examples" class="headerlink" title="Examples:"></a>Examples:</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input: root = [2,1,3]</span><br><span class="line">Output: true</span><br><span class="line"></span><br><span class="line">Input: root = [5,1,4,null,null,3,6]</span><br><span class="line">Output: false</span><br><span class="line">Explanation: The root node&#x27;s value is 5 but its right child&#x27;s value is 4.</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Constraints"><a href="#Constraints" class="headerlink" title="Constraints:"></a>Constraints:</h3><ul>
+<li>The number of nodes in the tree is in the range <code>[1, 104]</code>.</li>
+<li><code>-2^31 &lt;= Node.val &lt;= 2^31 - 1</code></li>
+</ul>
+<h3 id="Note"><a href="#Note" class="headerlink" title="Note:"></a>Note:</h3><h4 id="Property-of-a-Binary-Search-Tree"><a href="#Property-of-a-Binary-Search-Tree" class="headerlink" title="Property of a Binary Search Tree:"></a>Property of a Binary Search Tree:</h4><p><img src="https://i.loli.net/2021/09/30/B4ygC6psULPtG5Z.png" alt="image-20210930171547076"></p>
+<blockquote>
+<p>Ref from Huahua@Youtube</p>
+</blockquote>
+<p>For each TreeNode</p>
+<ul>
+<li>cur-&gt;left-&gt;val &lt; cur-&gt;val</li>
+<li>cur-&gt;right-&gt;val &gt; cur-&gt;val</li>
+</ul>
+<h4 id="Consider-the-range"><a href="#Consider-the-range" class="headerlink" title="Consider the range:"></a>Consider the range:</h4><p>The input value ranges from -2^31 &lt;= Node.val &lt;= 2^31 - 1, so the positive/negative infinity should be set to LLONG_MIN, LLONG_MAX. (64-bit)</p>
+<h4 id="Pseudocode"><a href="#Pseudocode" class="headerlink" title="Pseudocode:"></a>Pseudocode:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">if nulltree:</span><br><span class="line">	return true;</span><br><span class="line"></span><br><span class="line">//if the node val is beyond the range, it&#x27;s invalid.</span><br><span class="line">if node-&gt;val&lt;=min_val||node-&gt;val&gt;=max_val:</span><br><span class="line">	return false;</span><br><span class="line"></span><br><span class="line">//check subtree of both sides</span><br><span class="line">return validate(cur-&gt;left,min,cur-&gt;val)&amp;&amp;validate(cur-&gt;right,cur-&gt;val,max)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="C"><a href="#C" class="headerlink" title="C++:"></a>C++:</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isValidBST</span><span class="params">(TreeNode *root)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">isValidBST</span>(root, LONG_MIN, LONG_MAX);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isValidBST</span><span class="params">(TreeNode *root, <span class="keyword">long</span> mn, <span class="keyword">long</span> mx)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!root)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (root-&gt;val &lt;= mn || root-&gt;val &gt;= mx)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">isValidBST</span>(root-&gt;left, mn, root-&gt;val) &amp;&amp; <span class="built_in">isValidBST</span>(root-&gt;right, root-&gt;val, mx);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="For-Your-Consider"><a href="#For-Your-Consider" class="headerlink" title="For Your Consider:"></a>For Your Consider:</h4><p>What if the range extends to -2^64 ~2^64-1?</p>
+<p><strong>Hint</strong>: Use nullptr to represent infinity.</p>
+]]></content>
+      <categories>
+        <category>Programming</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>LeetCode</tag>
+        <tag>DataStructure</tag>
+        <tag>Medium</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>1463. Cherry Pickup II</title>
     <url>/2022/01/07/1463.%20Cherry%20Pickup%20II/</url>
     <content><![CDATA[<h2 id="Description"><a href="#Description" class="headerlink" title="Description:"></a>Description:</h2><p>You are given a <code>rows x cols</code> matrix <code>grid</code> representing a field of cherries where <code>grid[i][j]</code> represents the number of cherries that you can collect from the <code>(i, j)</code> cell.</p>
@@ -171,6 +220,87 @@
         <tag>C/C++</tag>
         <tag>LeetCode</tag>
         <tag>Dynamic Programming</tag>
+        <tag>Hard</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>1345. Jump Game IV</title>
+    <url>/2022/01/14/1345.%20Jump%20Game%20IV/</url>
+    <content><![CDATA[<h3 id="Description"><a href="#Description" class="headerlink" title="Description:"></a>Description:</h3><p>Given an array of integers <code>arr</code>, you are initially positioned at the first index of the array.</p>
+<p>In one step you can jump from index <code>i</code> to index:</p>
+<ul>
+<li><code>i + 1</code> where: <code>i + 1 &lt; arr.length</code>.</li>
+<li><code>i - 1</code> where: <code>i - 1 &gt;= 0</code>.</li>
+<li><code>j</code> where: <code>arr[i] == arr[j]</code> and <code>i != j</code>.</li>
+</ul>
+<p>Return <em>the minimum number of steps</em> to reach the <strong>last index</strong> of the array.</p>
+<p>Notice that you can not jump outside of the array at any time.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input: arr = [100,-23,-23,404,100,23,23,23,3,404]</span><br><span class="line">Output: 3</span><br><span class="line">Explanation: You need three jumps from index 0 --&gt; 4 --&gt; 3 --&gt; 9. Note that index 9 is the last index of the array.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input: arr = [7]</span><br><span class="line">Output: 0</span><br><span class="line">Explanation: Start index is the last index. You do not need to jump.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 3:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input: arr = [7,6,9,6,9,6,9,7]</span><br><span class="line">Output: 1</span><br><span class="line">Explanation: You can jump directly from index 0 to index 7 which is last index of the array.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Constraints:</strong></p>
+<ul>
+<li><code>1 &lt;= arr.length &lt;= 5 * 10^4</code></li>
+<li><code>-10^8 &lt;= arr[i] &lt;= 10^8</code></li>
+</ul>
+<blockquote>
+<p>The length of the array is up to 10^4, the algorithm is expected to be bounded by ==O(nlogn)==</p>
+</blockquote>
+<h3 id="Brute-Force"><a href="#Brute-Force" class="headerlink" title="Brute Force:"></a>Brute Force:</h3><p>Each round, you can jump front or back one step, or jump to the place with the same value.</p>
+<ul>
+<li>Traverse all possibilities that start from index 0, with <code>#step = 0</code>, <code>minStep = INT_MAX</code><ul>
+<li>Each time, try out 3 possibilities, <code>#step++</code><ul>
+<li>When reaching the end, update the <code>minStep = min(minStep,#step)</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>It’s obvious that this method has a factorial time complexity. We can make a little modification, that is, each place can only be visited at most once, or it can’t be the <code>minimum number of steps</code>.</p>
+</blockquote>
+<h3 id="An-Graph-like-Intuition"><a href="#An-Graph-like-Intuition" class="headerlink" title="An Graph-like Intuition:"></a>An Graph-like Intuition:</h3><ul>
+<li><p>Each place is a node on the graph, nodes are sequentially linked according to their order in the array.</p>
+</li>
+<li><p>If there are nodes with the same value, link them with an edge.</p>
+</li>
+<li><p>Since we can move forward and backward at each place, the graph is a undirected graph.</p>
+</li>
+<li><p>Use BFS for solution (Use queue)</p>
+</li>
+</ul>
+<blockquote>
+<p>In actual implementation, a graph is not necessary, we can just keep. a hash map, where key is the value, value is the position of these values.</p>
+</blockquote>
+<h3 id="Complexity"><a href="#Complexity" class="headerlink" title="Complexity:"></a>Complexity:</h3><p>Vertices = N, Edges at max, all nodes have same value, $O(N^2)$, at min, 0.</p>
+<ul>
+<li><p>Time Complexity: O(V+E)</p>
+</li>
+<li><p>Space Complexity: O(V+E) (Use Graph), O(V) (Not using extra graph)</p>
+</li>
+</ul>
+<h3 id="Problem"><a href="#Problem" class="headerlink" title="Problem:"></a>Problem:</h3><p>In the implementation, our time complexity depends on the number of edges. In cases of the same value, there could be edges at $O(N^2)$. (All nodes have the same value), which is obviously gonna give us a TLE.</p>
+<h3 id="Solution"><a href="#Solution" class="headerlink" title="Solution:"></a>Solution:</h3><p>In the BFS Step, after we enqueue nodes with the same value, we can clear the entry in the hash map.</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span> (!q.<span class="built_in">empty</span>())</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">auto</span> [src, dest] = q.<span class="built_in">front</span>();</span><br><span class="line">    q.<span class="built_in">pop</span>();</span><br><span class="line">    shortestPath[dest] = <span class="built_in">min</span>(shortestPath[dest], shortestPath[src] + <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (dest == arr.<span class="built_in">size</span>() - <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> shortestPath[dest];</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//same value</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;newDest : sameValueSet[arr[dest]])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (shortestPath[newDest] == INT32_MAX)</span><br><span class="line">            q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, newDest));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//core step, this will get us away from redundant search</span></span><br><span class="line">    <span class="comment">//this step ensures nodes of the same value won&#x27;t get enqueued overly</span></span><br><span class="line">    <span class="comment">//actually, enqueue nodes of the same value once is enough</span></span><br><span class="line">    <span class="comment">//so we clear out the entry </span></span><br><span class="line">    sameValueSet[arr[dest]].<span class="built_in">clear</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//neighbors</span></span><br><span class="line">    <span class="keyword">if</span> (dest &gt; <span class="number">0</span> &amp;&amp; shortestPath[dest - <span class="number">1</span>] == INT32_MAX)</span><br><span class="line">        q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, dest - <span class="number">1</span>));</span><br><span class="line">    <span class="keyword">if</span> (dest &lt; (arr.<span class="built_in">size</span>() - <span class="number">1</span>) &amp;&amp; shortestPath[dest + <span class="number">1</span>] == INT32_MAX)</span><br><span class="line">        q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, dest + <span class="number">1</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Code"><a href="#Code" class="headerlink" title="Code:"></a>Code:</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;header.hpp&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">minJumps</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt; &amp;arr)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">//&lt;value,position&gt;</span></span><br><span class="line">        unordered_map&lt;<span class="keyword">int</span>, vector&lt;<span class="keyword">int</span>&gt;&gt; sameValueSet;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.<span class="built_in">size</span>(); i++)</span><br><span class="line">        &#123;</span><br><span class="line">            sameValueSet[arr[i]].<span class="built_in">push_back</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        queue&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; q;</span><br><span class="line">        <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">shortestPath</span><span class="params">(arr.size(), INT32_MAX)</span></span>;</span><br><span class="line">        shortestPath[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (arr.<span class="built_in">size</span>() == <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(<span class="number">0</span>, <span class="number">1</span>));</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;i : sameValueSet[arr[<span class="number">0</span>]])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (i != <span class="number">0</span>)</span><br><span class="line">                q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(<span class="number">0</span>, i));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (!q.<span class="built_in">empty</span>())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">auto</span> [src, dest] = q.<span class="built_in">front</span>();</span><br><span class="line">            q.<span class="built_in">pop</span>();</span><br><span class="line">            shortestPath[dest] = <span class="built_in">min</span>(shortestPath[dest], shortestPath[src] + <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">if</span> (dest == arr.<span class="built_in">size</span>() - <span class="number">1</span>)</span><br><span class="line">                <span class="keyword">return</span> shortestPath[dest];</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;newDest : sameValueSet[arr[dest]])</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (shortestPath[newDest] == INT32_MAX)</span><br><span class="line">                    q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, newDest));</span><br><span class="line">            &#125;</span><br><span class="line">            sameValueSet[arr[dest]].<span class="built_in">clear</span>();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (dest &gt; <span class="number">0</span> &amp;&amp; shortestPath[dest - <span class="number">1</span>] == INT32_MAX)</span><br><span class="line">                q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, dest - <span class="number">1</span>));</span><br><span class="line">            <span class="keyword">if</span> (dest &lt; (arr.<span class="built_in">size</span>() - <span class="number">1</span>) &amp;&amp; shortestPath[dest + <span class="number">1</span>] == INT32_MAX)</span><br><span class="line">                q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, dest + <span class="number">1</span>));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> shortestPath[arr.<span class="built_in">size</span>() - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Solution s;</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; arr = &#123;<span class="number">100</span>, <span class="number">-23</span>, <span class="number">-23</span>, <span class="number">404</span>, <span class="number">100</span>, <span class="number">23</span>, <span class="number">23</span>, <span class="number">23</span>, <span class="number">3</span>, <span class="number">404</span>&#125;;</span><br><span class="line">    cout &lt;&lt; s.<span class="built_in">minJumps</span>(arr) &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Programming</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>LeetCode</tag>
+        <tag>DataStructure</tag>
         <tag>Hard</tag>
       </tags>
   </entry>
@@ -270,169 +400,6 @@
       </tags>
   </entry>
   <entry>
-    <title>382. Linked List Random Node</title>
-    <url>/2021/11/15/382.%20Linked%20List%20Random%20Node/</url>
-    <content><![CDATA[<h2 id="Description"><a href="#Description" class="headerlink" title="Description:"></a>Description:</h2><p>Given a singly linked list, return a random node’s value from the linked list. Each node must have the <strong>same probability</strong> of being chosen.</p>
-<p>Implement the <code>Solution</code> class:</p>
-<ul>
-<li><code>Solution(ListNode head)</code> Initializes the object with the integer array nums.</li>
-<li><code>int getRandom()</code> Chooses a node randomly from the list and returns its value. All the nodes of the list should be equally likely to be choosen.</li>
-</ul>
-<h3 id="Example"><a href="#Example" class="headerlink" title="Example:"></a>Example:</h3><p><img src="https://assets.leetcode.com/uploads/2021/03/16/getrand-linked-list.jpg" alt="getrand-linked-list"></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input</span><br><span class="line">[&quot;Solution&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;]</span><br><span class="line">[[[1, 2, 3]], [], [], [], [], []]</span><br><span class="line">Output</span><br><span class="line">[null, 1, 3, 2, 2, 3]</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Constraints"><a href="#Constraints" class="headerlink" title="Constraints:"></a><strong>Constraints:</strong></h3><ul>
-<li>The number of nodes in the linked list will be in the range <code>[1, 104]</code>.</li>
-<li><code>-10^4 &lt;= Node.val &lt;= 10^4</code></li>
-<li>At most <code>10^4</code> calls will be made to <code>getRandom</code>.</li>
-</ul>
-<blockquote>
-<p>Since at most 10k calls will be made, the overall time complexity of each random call is expected to be bounded by O(nlogn).</p>
-</blockquote>
-<h3 id="Intuition"><a href="#Intuition" class="headerlink" title="Intuition:"></a>Intuition:</h3><p>A simple approach would be converting the linked list into an array, and then random generate a number and random access the array. This would cost extra <code>O(n)</code> space for keeping an array, and <code>O(1)</code> to random access the array.</p>
-<blockquote>
-<p>Actually, another implementation is that, we could traverse the list to get the length, and then random generate a number, and then take O(n) step to get the number.</p>
-<p>This implementation would take O(1) extra space, and O(n) for traversing and accessing.</p>
-</blockquote>
-<h3 id="What-if…-just-visit-each-node-only-once-and-use-O-1-space"><a href="#What-if…-just-visit-each-node-only-once-and-use-O-1-space" class="headerlink" title="What if… just visit each node only once and use O(1) space?"></a>What if… just visit each node only once and use O(1) space?</h3><blockquote>
-<p>The key is, Each node must have the <strong>same probability</strong> of being chosen.</p>
-<p>So to ensure the same probability, it is not necessary to use the built-in random function.</p>
-</blockquote>
-<h3 id="Introducing-Reservoir-Sampling"><a href="#Introducing-Reservoir-Sampling" class="headerlink" title="Introducing Reservoir Sampling:"></a>Introducing Reservoir Sampling:</h3><p>I found a video on YouTube, explaining this idea in an interesting and great way.</p>
-<ul>
-<li><h4 id="Scenario-A-man-picking-a-hat"><a href="#Scenario-A-man-picking-a-hat" class="headerlink" title="Scenario: A man picking a hat"></a>Scenario: A man picking a hat</h4><ul>
-<li><h4 id="each-round-replace-the-old-hat-or-wear-new-hat"><a href="#each-round-replace-the-old-hat-or-wear-new-hat" class="headerlink" title="each round replace the old hat or wear new hat"></a>each round replace the old hat or wear new hat</h4></li>
-<li><p>Each round probability of wearing new hat: 1/n</p>
-</li>
-<li><p>The first hat has a chance of 1/1, so he 100% wear the hat</p>
-</li>
-<li><p>The second hat has a chance of 1/2, so he 50% wear the 2nd hat, 50% keep the first hat</p>
-</li>
-<li><p>The third hat has a chance of 1/3, 1/3 wear the 3nd hat, 2/3 keep the original hat</p>
-</li>
-<li><p>So on and so forth…</p>
-</li>
-</ul>
-</li>
-</ul>
-<img src="https://s2.loli.net/2022/01/08/F9ehzSj1Ovrx6Tq.png" alt="image-20220108005314005" style="zoom: 50%;" />
-
-<img src="https://s2.loli.net/2022/01/08/OA8nIcDtopjaB7x.png" alt="image-20220108005616966" style="zoom:50%;" />
-
-<h3 id="The-Good-Side"><a href="#The-Good-Side" class="headerlink" title="The Good Side:"></a>The Good Side:</h3><p>Reservoir sampling doesn’t need to know the length of the list in advance, it’s an online random algorithm.</p>
-<h3 id="Proof-on-Equal-Probability"><a href="#Proof-on-Equal-Probability" class="headerlink" title="Proof on Equal Probability:"></a>Proof on Equal Probability:</h3><p>The $i_{th}$ hat has a probability of $\frac{1}{i}$ of being chosen in its round. The probability of  $i_{th}$ hat being chosen after $n$ times can be given as:</p>
-<img src="https://s2.loli.net/2022/01/08/XFk2Rr3On7gaKpM.png" alt="image-20220108005314005" style="zoom: 100%;" />
-
-<p>Which is the multiplication of $i_{th}$ hat being chosen, and all the hats after $i_{th}$ hat not being chosen.</p>
-<p>And this RHS equals to $\frac{1}n$, which means every hat has the same probability of being chosen.</p>
-<ul>
-<li>Link: <a href="https://www.youtube.com/watch?v=A1iwzSew5QY">https://www.youtube.com/watch?v=A1iwzSew5QY</a></li>
-</ul>
-<h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation:"></a>Implementation:</h3><p>Now let’s implement the Reservoir Sampling into our code, note that we still have to simulate the process of spinning the wheel, using the random function to implement. And it’s generally slower to perform floating point division, use integer instead.</p>
-<ul>
-<li>Instead of <code>1/i</code>, we have <code>1,2,3…i</code>, but only the <code>1</code> means being chosen</li>
-<li><code>i</code> start from <code>1</code>, because it’s not valid to divide by 0.</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;header.hpp&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// reservoir sampling</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">const</span> ListNode *head;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Solution</span>(ListNode *head)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;head = head;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getRandom</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// we are not allowed to modify the head pointer itself</span></span><br><span class="line">        <span class="comment">// each round we create a new node to do the trick</span></span><br><span class="line">        <span class="keyword">auto</span> node = head;</span><br><span class="line">        <span class="keyword">int</span> res = head-&gt;val;</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (node != <span class="literal">nullptr</span>)</span><br><span class="line">        &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// random generate 1~i, only 1 means being selected</span></span><br><span class="line">            <span class="comment">// i should start from 1, or there would be divide by 0 issue</span></span><br><span class="line">            <span class="keyword">bool</span> replace = (<span class="built_in">rand</span>() % (i - <span class="number">1</span> + <span class="number">1</span>)) + <span class="number">1</span> == <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (replace)</span><br><span class="line">                res = node-&gt;val;</span><br><span class="line">            node = node-&gt;next;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your Solution object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * Solution* obj = new Solution(head);</span></span><br><span class="line"><span class="comment"> * int param_1 = obj-&gt;getRandom();</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Programming</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>LeetCode</tag>
-        <tag>DataStructure</tag>
-        <tag>Medium</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>98.Validate Binary Search Tree</title>
-    <url>/2021/09/30/98.ValidateBST/</url>
-    <content><![CDATA[<h3 id="Description"><a href="#Description" class="headerlink" title="Description:"></a>Description:</h3><p>Given the <code>root</code> of a binary tree, <em>determine if it is a valid binary search tree (BST)</em>.</p>
-<p>A <strong>valid BST</strong> is defined as follows:</p>
-<ul>
-<li>The left subtree of a node contains only nodes with keys <strong>less than</strong> the node’s key.</li>
-<li>The right subtree of a node contains only nodes with keys <strong>greater than</strong> the node’s key.</li>
-<li>Both the left and right subtrees must also be binary search trees.</li>
-</ul>
-<h3 id="Examples"><a href="#Examples" class="headerlink" title="Examples:"></a>Examples:</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input: root = [2,1,3]</span><br><span class="line">Output: true</span><br><span class="line"></span><br><span class="line">Input: root = [5,1,4,null,null,3,6]</span><br><span class="line">Output: false</span><br><span class="line">Explanation: The root node&#x27;s value is 5 but its right child&#x27;s value is 4.</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Constraints"><a href="#Constraints" class="headerlink" title="Constraints:"></a>Constraints:</h3><ul>
-<li>The number of nodes in the tree is in the range <code>[1, 104]</code>.</li>
-<li><code>-2^31 &lt;= Node.val &lt;= 2^31 - 1</code></li>
-</ul>
-<h3 id="Note"><a href="#Note" class="headerlink" title="Note:"></a>Note:</h3><h4 id="Property-of-a-Binary-Search-Tree"><a href="#Property-of-a-Binary-Search-Tree" class="headerlink" title="Property of a Binary Search Tree:"></a>Property of a Binary Search Tree:</h4><p><img src="https://i.loli.net/2021/09/30/B4ygC6psULPtG5Z.png" alt="image-20210930171547076"></p>
-<blockquote>
-<p>Ref from Huahua@Youtube</p>
-</blockquote>
-<p>For each TreeNode</p>
-<ul>
-<li>cur-&gt;left-&gt;val &lt; cur-&gt;val</li>
-<li>cur-&gt;right-&gt;val &gt; cur-&gt;val</li>
-</ul>
-<h4 id="Consider-the-range"><a href="#Consider-the-range" class="headerlink" title="Consider the range:"></a>Consider the range:</h4><p>The input value ranges from -2^31 &lt;= Node.val &lt;= 2^31 - 1, so the positive/negative infinity should be set to LLONG_MIN, LLONG_MAX. (64-bit)</p>
-<h4 id="Pseudocode"><a href="#Pseudocode" class="headerlink" title="Pseudocode:"></a>Pseudocode:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">if nulltree:</span><br><span class="line">	return true;</span><br><span class="line"></span><br><span class="line">//if the node val is beyond the range, it&#x27;s invalid.</span><br><span class="line">if node-&gt;val&lt;=min_val||node-&gt;val&gt;=max_val:</span><br><span class="line">	return false;</span><br><span class="line"></span><br><span class="line">//check subtree of both sides</span><br><span class="line">return validate(cur-&gt;left,min,cur-&gt;val)&amp;&amp;validate(cur-&gt;right,cur-&gt;val,max)</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="C"><a href="#C" class="headerlink" title="C++:"></a>C++:</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isValidBST</span><span class="params">(TreeNode *root)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">isValidBST</span>(root, LONG_MIN, LONG_MAX);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isValidBST</span><span class="params">(TreeNode *root, <span class="keyword">long</span> mn, <span class="keyword">long</span> mx)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!root)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (root-&gt;val &lt;= mn || root-&gt;val &gt;= mx)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">isValidBST</span>(root-&gt;left, mn, root-&gt;val) &amp;&amp; <span class="built_in">isValidBST</span>(root-&gt;right, root-&gt;val, mx);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="For-Your-Consider"><a href="#For-Your-Consider" class="headerlink" title="For Your Consider:"></a>For Your Consider:</h4><p>What if the range extends to -2^64 ~2^64-1?</p>
-<p><strong>Hint</strong>: Use nullptr to represent infinity.</p>
-]]></content>
-      <categories>
-        <category>Programming</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>LeetCode</tag>
-        <tag>DataStructure</tag>
-        <tag>Medium</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Missing triangle in BVH</title>
-    <url>/2023/05/22/Little%20Caveat%20in%20BVH%20of%20Triangles/</url>
-    <content><![CDATA[<p>Recently I was applying Bounding Volume Hierachy to a Whitted-style Raytracing system. The idea of BVH and implementation are well described in <strong>Ray Tracing in the Next Week</strong> by Peter Shirly. It’s a really great book. And here’s the link <a href="https://raytracing.github.io/books/RayTracingTheNextWeek.html">https://raytracing.github.io/books/RayTracingTheNextWeek.html</a></p>
-<p>One key component in BVH is AABB (Axis-Aligned-Bounding-Box) intersects with ray. People usually adopt Slab method to address this problem. To be more specific, computing the ray-AABB intersection along 3 different axis, if these intervals produces an overlapping region, then the ray intersects with AABB and vice versa.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">compute (tx0, tx1)</span><br><span class="line">compute (ty0, ty1)</span><br><span class="line">compute (tz0, tz1)</span><br><span class="line">return overlap?( (tx0, tx1), (ty0, ty1), (tz0, tz1))</span><br></pre></td></tr></table></figure>
-
-
-
-<img src="https://s2.loli.net/2023/05/23/vhnUw7z6Z1xqeHg.png" alt="image-20230522223149832" style="zoom:33%;" />
-
-<p>After applying this method to the scene rendering, I lost some of the triangles in the scene. However, all spheres are kept intact. For example, here’s what I got after applying BVH and the latter is before BVH.</p>
-<img src="https://s2.loli.net/2023/05/23/dN6TeBRK4MjtzSm.png" alt="image-20230522224231933" style="zoom:33%;" />
-
-<img src="https://s2.loli.net/2023/05/23/xQ8LMCgjAqoVWPw.png" alt="image-20230522224256173" style="zoom:33%;" />
-
-<p> After couple hours of <code>step_into</code> debugging, I found the reason to be as follows:</p>
-<blockquote>
-<p>For spheres, the Bouding box will always have some length along 3 axis. However, this isn’t necessarily the case for AABB of triangles. ==Bounding Box of triangles can fall back to plane if the triangle is parallel to either xy, yz or xz plane== . </p>
-<p>Let’s say a triangle is parallel to the <code>xz</code> plane, so the 3 vertices has the same <code>y</code> value. And this makes <code>ty0</code> and <code>ty1</code> to be the same in above computation, and thus resulting no overlapping region for other 2 axis. i.e. The bounding box doesn’t intersect with the triangle (which is a false statement)</p>
-</blockquote>
-<p>To address this, simply add some thickness to each axis while building bounding box for triangles. In my case, I use <code>1e-3</code>, and boom, problem solved!</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//in triangle class  </span></span><br><span class="line"><span class="function">AABB <span class="title">getAABB</span><span class="params">(<span class="keyword">float</span> t0, <span class="keyword">float</span> t1)</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> min_x = std::<span class="built_in">min</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">x</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> min_y = std::<span class="built_in">min</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">y</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> min_z = std::<span class="built_in">min</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">z</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> max_x = std::<span class="built_in">max</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">x</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> max_y = std::<span class="built_in">max</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">y</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> max_z = std::<span class="built_in">max</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">z</span>()&#125;);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">AABB</span>(gl::<span class="built_in">vec3</span>(min_x<span class="number">-1e3</span>, min_y<span class="number">-1e3</span>, min_z<span class="number">-1e3</span>), gl::<span class="built_in">vec3</span>(max_x, max_y, max_z));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-]]></content>
-      <categories>
-        <category>Rendering</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>Rendering</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>One day in Monterey</title>
     <url>/2023/06/20/One%20Day%20in%20Monterey/</url>
     <content><![CDATA[<h3 id="One-day-in-Monterey"><a href="#One-day-in-Monterey" class="headerlink" title="One day in Monterey"></a>One day in Monterey</h3><p>​            因为赶着要去实习(在San Jose)，Path Tracer的作业又拖到最后一天才交，上学和实习便几乎是无缝衔接了。具体衔接得有多紧密呢？我18号中午提交完作业，20号就要开始实习。实习的公司距离学校很远，开车要4.5小时。即使我想一天冲到实习期间的住处，房东也只有19号才有空，这就意味着我只能19号到San Jose，第二天便直接迎接实习生活了。</p>
@@ -500,6 +467,41 @@
       <tags>
         <tag>Redering</tag>
         <tag>Blender</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Missing triangle in BVH</title>
+    <url>/2023/05/22/Little%20Caveat%20in%20BVH%20of%20Triangles/</url>
+    <content><![CDATA[<p>Recently I was applying Bounding Volume Hierachy to a Whitted-style Raytracing system. The idea of BVH and implementation are well described in <strong>Ray Tracing in the Next Week</strong> by Peter Shirly. It’s a really great book. And here’s the link <a href="https://raytracing.github.io/books/RayTracingTheNextWeek.html">https://raytracing.github.io/books/RayTracingTheNextWeek.html</a></p>
+<p>One key component in BVH is AABB (Axis-Aligned-Bounding-Box) intersects with ray. People usually adopt Slab method to address this problem. To be more specific, computing the ray-AABB intersection along 3 different axis, if these intervals produces an overlapping region, then the ray intersects with AABB and vice versa.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">compute (tx0, tx1)</span><br><span class="line">compute (ty0, ty1)</span><br><span class="line">compute (tz0, tz1)</span><br><span class="line">return overlap?( (tx0, tx1), (ty0, ty1), (tz0, tz1))</span><br></pre></td></tr></table></figure>
+
+
+
+<img src="https://s2.loli.net/2023/05/23/vhnUw7z6Z1xqeHg.png" alt="image-20230522223149832" style="zoom:33%;" />
+
+<p>After applying this method to the scene rendering, I lost some of the triangles in the scene. However, all spheres are kept intact. For example, here’s what I got after applying BVH and the latter is before BVH.</p>
+<img src="https://s2.loli.net/2023/05/23/dN6TeBRK4MjtzSm.png" alt="image-20230522224231933" style="zoom:33%;" />
+
+<img src="https://s2.loli.net/2023/05/23/xQ8LMCgjAqoVWPw.png" alt="image-20230522224256173" style="zoom:33%;" />
+
+<p> After couple hours of <code>step_into</code> debugging, I found the reason to be as follows:</p>
+<blockquote>
+<p>For spheres, the Bouding box will always have some length along 3 axis. However, this isn’t necessarily the case for AABB of triangles. ==Bounding Box of triangles can fall back to plane if the triangle is parallel to either xy, yz or xz plane== . </p>
+<p>Let’s say a triangle is parallel to the <code>xz</code> plane, so the 3 vertices has the same <code>y</code> value. And this makes <code>ty0</code> and <code>ty1</code> to be the same in above computation, and thus resulting no overlapping region for other 2 axis. i.e. The bounding box doesn’t intersect with the triangle (which is a false statement)</p>
+</blockquote>
+<p>To address this, simply add some thickness to each axis while building bounding box for triangles. In my case, I use <code>1e-3</code>, and boom, problem solved!</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//in triangle class  </span></span><br><span class="line"><span class="function">AABB <span class="title">getAABB</span><span class="params">(<span class="keyword">float</span> t0, <span class="keyword">float</span> t1)</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> min_x = std::<span class="built_in">min</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">x</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> min_y = std::<span class="built_in">min</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">y</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> min_z = std::<span class="built_in">min</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">z</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> max_x = std::<span class="built_in">max</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">x</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> max_y = std::<span class="built_in">max</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">y</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> max_z = std::<span class="built_in">max</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">z</span>()&#125;);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">AABB</span>(gl::<span class="built_in">vec3</span>(min_x<span class="number">-1e3</span>, min_y<span class="number">-1e3</span>, min_z<span class="number">-1e3</span>), gl::<span class="built_in">vec3</span>(max_x, max_y, max_z));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>Rendering</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>Rendering</tag>
       </tags>
   </entry>
   <entry>
@@ -594,103 +596,6 @@
       </tags>
   </entry>
   <entry>
-    <title>1345. Jump Game IV</title>
-    <url>/2022/01/14/1345.%20Jump%20Game%20IV/</url>
-    <content><![CDATA[<h3 id="Description"><a href="#Description" class="headerlink" title="Description:"></a>Description:</h3><p>Given an array of integers <code>arr</code>, you are initially positioned at the first index of the array.</p>
-<p>In one step you can jump from index <code>i</code> to index:</p>
-<ul>
-<li><code>i + 1</code> where: <code>i + 1 &lt; arr.length</code>.</li>
-<li><code>i - 1</code> where: <code>i - 1 &gt;= 0</code>.</li>
-<li><code>j</code> where: <code>arr[i] == arr[j]</code> and <code>i != j</code>.</li>
-</ul>
-<p>Return <em>the minimum number of steps</em> to reach the <strong>last index</strong> of the array.</p>
-<p>Notice that you can not jump outside of the array at any time.</p>
-<p><strong>Example 1:</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input: arr = [100,-23,-23,404,100,23,23,23,3,404]</span><br><span class="line">Output: 3</span><br><span class="line">Explanation: You need three jumps from index 0 --&gt; 4 --&gt; 3 --&gt; 9. Note that index 9 is the last index of the array.</span><br></pre></td></tr></table></figure>
-
-<p><strong>Example 2:</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input: arr = [7]</span><br><span class="line">Output: 0</span><br><span class="line">Explanation: Start index is the last index. You do not need to jump.</span><br></pre></td></tr></table></figure>
-
-<p><strong>Example 3:</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input: arr = [7,6,9,6,9,6,9,7]</span><br><span class="line">Output: 1</span><br><span class="line">Explanation: You can jump directly from index 0 to index 7 which is last index of the array.</span><br></pre></td></tr></table></figure>
-
-<p><strong>Constraints:</strong></p>
-<ul>
-<li><code>1 &lt;= arr.length &lt;= 5 * 10^4</code></li>
-<li><code>-10^8 &lt;= arr[i] &lt;= 10^8</code></li>
-</ul>
-<blockquote>
-<p>The length of the array is up to 10^4, the algorithm is expected to be bounded by ==O(nlogn)==</p>
-</blockquote>
-<h3 id="Brute-Force"><a href="#Brute-Force" class="headerlink" title="Brute Force:"></a>Brute Force:</h3><p>Each round, you can jump front or back one step, or jump to the place with the same value.</p>
-<ul>
-<li>Traverse all possibilities that start from index 0, with <code>#step = 0</code>, <code>minStep = INT_MAX</code><ul>
-<li>Each time, try out 3 possibilities, <code>#step++</code><ul>
-<li>When reaching the end, update the <code>minStep = min(minStep,#step)</code></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>It’s obvious that this method has a factorial time complexity. We can make a little modification, that is, each place can only be visited at most once, or it can’t be the <code>minimum number of steps</code>.</p>
-</blockquote>
-<h3 id="An-Graph-like-Intuition"><a href="#An-Graph-like-Intuition" class="headerlink" title="An Graph-like Intuition:"></a>An Graph-like Intuition:</h3><ul>
-<li><p>Each place is a node on the graph, nodes are sequentially linked according to their order in the array.</p>
-</li>
-<li><p>If there are nodes with the same value, link them with an edge.</p>
-</li>
-<li><p>Since we can move forward and backward at each place, the graph is a undirected graph.</p>
-</li>
-<li><p>Use BFS for solution (Use queue)</p>
-</li>
-</ul>
-<blockquote>
-<p>In actual implementation, a graph is not necessary, we can just keep. a hash map, where key is the value, value is the position of these values.</p>
-</blockquote>
-<h3 id="Complexity"><a href="#Complexity" class="headerlink" title="Complexity:"></a>Complexity:</h3><p>Vertices = N, Edges at max, all nodes have same value, $O(N^2)$, at min, 0.</p>
-<ul>
-<li><p>Time Complexity: O(V+E)</p>
-</li>
-<li><p>Space Complexity: O(V+E) (Use Graph), O(V) (Not using extra graph)</p>
-</li>
-</ul>
-<h3 id="Problem"><a href="#Problem" class="headerlink" title="Problem:"></a>Problem:</h3><p>In the implementation, our time complexity depends on the number of edges. In cases of the same value, there could be edges at $O(N^2)$. (All nodes have the same value), which is obviously gonna give us a TLE.</p>
-<h3 id="Solution"><a href="#Solution" class="headerlink" title="Solution:"></a>Solution:</h3><p>In the BFS Step, after we enqueue nodes with the same value, we can clear the entry in the hash map.</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span> (!q.<span class="built_in">empty</span>())</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">auto</span> [src, dest] = q.<span class="built_in">front</span>();</span><br><span class="line">    q.<span class="built_in">pop</span>();</span><br><span class="line">    shortestPath[dest] = <span class="built_in">min</span>(shortestPath[dest], shortestPath[src] + <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (dest == arr.<span class="built_in">size</span>() - <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> shortestPath[dest];</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//same value</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;newDest : sameValueSet[arr[dest]])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (shortestPath[newDest] == INT32_MAX)</span><br><span class="line">            q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, newDest));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//core step, this will get us away from redundant search</span></span><br><span class="line">    <span class="comment">//this step ensures nodes of the same value won&#x27;t get enqueued overly</span></span><br><span class="line">    <span class="comment">//actually, enqueue nodes of the same value once is enough</span></span><br><span class="line">    <span class="comment">//so we clear out the entry </span></span><br><span class="line">    sameValueSet[arr[dest]].<span class="built_in">clear</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//neighbors</span></span><br><span class="line">    <span class="keyword">if</span> (dest &gt; <span class="number">0</span> &amp;&amp; shortestPath[dest - <span class="number">1</span>] == INT32_MAX)</span><br><span class="line">        q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, dest - <span class="number">1</span>));</span><br><span class="line">    <span class="keyword">if</span> (dest &lt; (arr.<span class="built_in">size</span>() - <span class="number">1</span>) &amp;&amp; shortestPath[dest + <span class="number">1</span>] == INT32_MAX)</span><br><span class="line">        q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, dest + <span class="number">1</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Code"><a href="#Code" class="headerlink" title="Code:"></a>Code:</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;header.hpp&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">minJumps</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt; &amp;arr)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">//&lt;value,position&gt;</span></span><br><span class="line">        unordered_map&lt;<span class="keyword">int</span>, vector&lt;<span class="keyword">int</span>&gt;&gt; sameValueSet;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.<span class="built_in">size</span>(); i++)</span><br><span class="line">        &#123;</span><br><span class="line">            sameValueSet[arr[i]].<span class="built_in">push_back</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        queue&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; q;</span><br><span class="line">        <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">shortestPath</span><span class="params">(arr.size(), INT32_MAX)</span></span>;</span><br><span class="line">        shortestPath[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (arr.<span class="built_in">size</span>() == <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(<span class="number">0</span>, <span class="number">1</span>));</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;i : sameValueSet[arr[<span class="number">0</span>]])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (i != <span class="number">0</span>)</span><br><span class="line">                q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(<span class="number">0</span>, i));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (!q.<span class="built_in">empty</span>())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">auto</span> [src, dest] = q.<span class="built_in">front</span>();</span><br><span class="line">            q.<span class="built_in">pop</span>();</span><br><span class="line">            shortestPath[dest] = <span class="built_in">min</span>(shortestPath[dest], shortestPath[src] + <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">if</span> (dest == arr.<span class="built_in">size</span>() - <span class="number">1</span>)</span><br><span class="line">                <span class="keyword">return</span> shortestPath[dest];</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;newDest : sameValueSet[arr[dest]])</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (shortestPath[newDest] == INT32_MAX)</span><br><span class="line">                    q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, newDest));</span><br><span class="line">            &#125;</span><br><span class="line">            sameValueSet[arr[dest]].<span class="built_in">clear</span>();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (dest &gt; <span class="number">0</span> &amp;&amp; shortestPath[dest - <span class="number">1</span>] == INT32_MAX)</span><br><span class="line">                q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, dest - <span class="number">1</span>));</span><br><span class="line">            <span class="keyword">if</span> (dest &lt; (arr.<span class="built_in">size</span>() - <span class="number">1</span>) &amp;&amp; shortestPath[dest + <span class="number">1</span>] == INT32_MAX)</span><br><span class="line">                q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, dest + <span class="number">1</span>));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> shortestPath[arr.<span class="built_in">size</span>() - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Solution s;</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; arr = &#123;<span class="number">100</span>, <span class="number">-23</span>, <span class="number">-23</span>, <span class="number">404</span>, <span class="number">100</span>, <span class="number">23</span>, <span class="number">23</span>, <span class="number">23</span>, <span class="number">3</span>, <span class="number">404</span>&#125;;</span><br><span class="line">    cout &lt;&lt; s.<span class="built_in">minJumps</span>(arr) &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Programming</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>LeetCode</tag>
-        <tag>DataStructure</tag>
-        <tag>Hard</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Portfolio Site</title>
-    <url>/2022/01/19/Portfolio%20Site%20Online/</url>
-    <content><![CDATA[<p>Recently I began my Master application for 2022 Fall, and some of the universities, require the applicants to submit their portfolio in the form of personal website. I was intended to submit this site, however, this site only contains daily logs and technical topic posts. So I would rather create another website for my portfolio works.</p>
-<p>After one afternoon’s work, new Portfolio Website was online, powering by Wix. Actually I found the Wix tool quite easy to use, only drags and drops are needed, just like what they’ve shown in the Youtube ads. The problem is, it’s not suitable for me to contantly update the contents since it tooks a lot more to render a single site in Wix. You have to drag and drop each paragraph yourself. However, it’s pretty easy to publish a post in Hexo. I can just use Typora and markdown to upload a post in seconds. Also, Wix doesn’t have good support for code snippets as the Markdown does. So I‘m just gonna post most of my daily thoughts and progresses here. And major works on the portfolio site.</p>
-<p>I actually want to merge these two sites, this site and the portfolio site, into one. However, I find the two sites’ styles are quite different and I’m not interested in writing pieces of CSS code anyway. Maybe I will merge them someday.</p>
-<p>Finally, if you are interested in my portfolio, check  <a href = "https://zhaonzh.wixsite.com/mysite-1">Portfolio Site</a>.</p>
-]]></content>
-      <categories>
-        <category>Design</category>
-      </categories>
-      <tags>
-        <tag>Design</tag>
-        <tag>About Me</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>ノエルのテーマ 〜最後の旅〜</title>
     <url>/2021/09/27/%E3%83%8E%E3%82%A8%E3%83%AB%E3%81%AE%E3%83%86%E3%83%BC%E3%83%9E%E3%80%80%E3%80%9C%E6%9C%80%E5%BE%8C%E3%81%AE%E6%97%85%E3%80%9C/</url>
     <content><![CDATA[<h4 id="Original-Lyrics"><a href="#Original-Lyrics" class="headerlink" title="Original Lyrics:"></a>Original Lyrics:</h4><p>Long ago, when I was just a boy<br>So alone that last of my kind in the world<br>I believe futures could be reborn<br>I would go back in time<br>Change what’s to come</p>
@@ -777,6 +682,286 @@
       <tags>
         <tag>日常生活</tag>
         <tag>碎碎念</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>折叠表达式(Fold Expression)，低速下脚现代C++ Chapter 2 Exercise</title>
+    <url>/2022/01/01/%E6%8A%98%E5%8F%A0%E8%A1%A8%E8%BE%BE%E5%BC%8F(Fold%20Expression)%EF%BC%9A%E4%BD%8E%E9%80%9F%E4%B8%8B%E8%84%9A%E7%8E%B0%E4%BB%A3C++%20Chapter%202%20Exercise/</url>
+    <content><![CDATA[<h3 id="折叠表达式（Fold-Expression）：低速下脚现代C-Chapter-2-Exercise"><a href="#折叠表达式（Fold-Expression）：低速下脚现代C-Chapter-2-Exercise" class="headerlink" title="折叠表达式（Fold Expression）：低速下脚现代C++ Chapter 2 Exercise"></a>折叠表达式（Fold Expression）：低速下脚现代C++ Chapter 2 Exercise</h3><p>最近在看高速上手现代C++，这是一本很不错的书，作者用仅80余页的长度介绍了C++自C++11以来至C++20带来的许多特性。这些特性给C++带来了语言可用性上的强化，运行期的强化 etc. 以及使得这门语言本身更好地支持例如函数式编程的范式。</p>
+<p>每一章的结尾作者都会提供一些简单的小题目，其中第二章的小题目cover了折叠表达式(Fold Expression, since C++17)和结构化绑定（Structured Binding, since C++17）。在自己闲着摸索的时候发现了一个有意思的小事情，于是稍微写点东西记录一下。</p>
+<blockquote>
+<p>感觉光看这本书和课后的题的话，内容还是不太能掌握，可能跟着其他博客看一看会比较好。</p>
+</blockquote>
+<h3 id="为什么需要Fold-Expression"><a href="#为什么需要Fold-Expression" class="headerlink" title="为什么需要Fold Expression?"></a>为什么需要Fold Expression?</h3><p>模版是C++比较重要的一个板块之一，但是C++11之前，模版的参数数量是固定的。自从C++11之后，新引入的表示方法允许声明时引入任意数量的参数，即如下形式:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Ts&gt;</span><br></pre></td></tr></table></figure>
+
+<p>有了可变长模版，我们就可以写一个允许任意长度参数的函数模版了。一个显而易见的好处是，我们可用这样的语法实现以下函数功能，并且只要写一个函数模版。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 一个函数模版 mean_val，接受任意长度的参数，返回平均值</span></span><br><span class="line"><span class="built_in">mean_val</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>) <span class="comment">// return 2</span></span><br><span class="line"><span class="built_in">mean_val</span>(<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>) <span class="comment">// return 3.5</span></span><br></pre></td></tr></table></figure>
+
+<p>不过在C++17之前，这样的函数模版在解包(unpack)的时候会比较麻烦，因为我们在写函数模版的时候并不知道究竟会传几个参数进来，而参数包又不像是std::vector之类的容器有简单的方式进行遍历，因此我们对于函数参数的实际操作就变得比较麻烦。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//比如说我想实现max_val，但是我并没有直观的方式遍历args的内容</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Ts&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(Ts... args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="comment">//我该怎么获得args的内容呢？</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不过目前来说，我们可以通过sizeof… 来计算参数的个数:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Ts&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(Ts... args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	std::cout&lt;&lt;<span class="keyword">sizeof</span>...(args)&lt;&lt;std::endl</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">foo</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>) <span class="comment">// cout:3</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="一个比较常见的做法是利用递归来进行参数解包"><a href="#一个比较常见的做法是利用递归来进行参数解包" class="headerlink" title="一个比较常见的做法是利用递归来进行参数解包:"></a>一个比较常见的做法是利用递归来进行参数解包:</h4><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//书中的案例</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span> </span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T0&gt; <span class="keyword">void</span> <span class="title">printf1</span><span class="params">(T0 value)</span> </span>&#123;</span><br><span class="line">std::cout &lt;&lt; value &lt;&lt; std::endl;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Ts&gt; </span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printf1</span><span class="params">(T value, Ts... args)</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; value &lt;&lt; std::endl;<span class="comment">//每次取出一个T，然后递归再取出一个T</span></span><br><span class="line">    <span class="built_in">printf1</span>(args...);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="built_in">printf1</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="string">&quot;123&quot;</span>, <span class="number">1.1</span>); <span class="comment">//输出所有参数</span></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这么做的确比较繁琐，而C++17中引入了一种比较简洁的方式来实现这种功能需求，这就是标题里的折叠表达式。</p>
+<ul>
+<li>考虑下面的代码，下面的函数模版可以实现任意长度立即数的求和。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> ... T&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">sum</span><span class="params">(T ... t)</span> <span class="comment">//C++14，函数返回值自动推断</span></span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">	<span class="keyword">return</span> (t + ...); <span class="comment">//折叠表达式</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="built_in">sum</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>) &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不过书中没有仔细讲这个折叠表达式的内容，因此原理上就有些不清晰，这里做一些补充。</p>
+<h3 id="折叠表达式的语法："><a href="#折叠表达式的语法：" class="headerlink" title="折叠表达式的语法："></a>折叠表达式的语法：</h3><ul>
+<li><code>pack op ...</code> (一元右折叠 / unary right fold)</li>
+<li><code>... op pack</code> (一元左折叠 / unary right fold)</li>
+<li><code>pack op ... op init</code> (二元右折叠 / binary right fold)</li>
+<li><code>init op ... op pack</code> (二元左折叠 / binary left fold)</li>
+</ul>
+<p>其中，<code>pack</code>是参数包，即上述代码中的t，op即operator，支持32种二元运算符，例如<code>+,-,*,/</code> , <code>init</code>表示最后一层展开时二元运算符的另一个操作数。 其中在二元折叠中两个operator要保持一致。</p>
+<h3 id="以上四个表达式和以下内容等价："><a href="#以上四个表达式和以下内容等价：" class="headerlink" title="以上四个表达式和以下内容等价："></a>以上四个表达式和以下内容等价：</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(args op ...) &lt;-&gt; (arg1 op (arg2 op (arg3 op (... op (arg_n-1 op arg_n)))))</span><br><span class="line">(... op args) &lt;-&gt; (((arg1 op arg2) op ...) op arg_n)</span><br><span class="line">(args op ... op init) &lt;-&gt; (arg1 op (... op (arg_n−1 op (arg_n op init))))</span><br><span class="line">(init args op ... op ) &lt;-&gt; ((((init op arg1) op arg2) op ...) op arg_n)</span><br></pre></td></tr></table></figure>
+
+<p>这么写可能还是有点晕，举两个例子可能更好:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">args = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line">(args - ...) &lt;-&gt; (<span class="number">1</span> - (<span class="number">2</span> - <span class="number">3</span>))</span><br><span class="line">(<span class="number">3</span> - ... - args) &lt;-&gt; (((<span class="number">3</span><span class="number">-1</span>)<span class="number">-2</span>)<span class="number">-3</span>)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Ref: <a href="https://en.cppreference.com/w/cpp/language/fold">https://en.cppreference.com/w/cpp/language/fold</a></p>
+</blockquote>
+<p>下面是一个注意点，由于运算符优先级问题，第一种备注是掉的写法并不被接受，需要写成第二种写法</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> ...Args&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sum</span><span class="params">(Args&amp;&amp;... args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="comment">//  return (args + ... + 1 * 2);   // Error: operator with precedence below cast</span></span><br><span class="line">    <span class="keyword">return</span> (args + ... + (<span class="number">1</span> * <span class="number">2</span>)); <span class="comment">// OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="作业题："><a href="#作业题：" class="headerlink" title="作业题："></a>作业题：</h3><p>利用折叠表达式写一个计算求均值的函数模版:</p>
+<p>答案如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span>... T&gt;</span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">mean</span><span class="params">(T... t)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (t + ...) / <span class="keyword">sizeof</span>...(t);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="built_in">mean</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>) &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//output: 3</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="但是…"><a href="#但是…" class="headerlink" title="但是…"></a>但是…</h3><p>不知道为什么我突然想试着把 <code>+</code> 改成 <code>-</code></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">(t - ...)/<span class="keyword">sizeof</span>...(t) &lt;-&gt; (<span class="number">1</span>-(<span class="number">2</span>-(<span class="number">3</span>-(<span class="number">4</span><span class="number">-5</span>)))) = (<span class="keyword">int</span>)<span class="number">3</span>/<span class="number">5</span> = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>这个例子倒是没有问题，如果我改成左折叠:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">return</span> (... - t) / <span class="keyword">sizeof</span>...(t);</span><br><span class="line"><span class="comment">//output: 3689348814741910320</span></span><br></pre></td></tr></table></figure>
+
+<p>这个一长串数字并不是随机数，运行了好几次都是同一个结果。但是:</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">(... - t)/<span class="keyword">sizeof</span>...(t) &lt;-&gt; ((((<span class="number">1</span><span class="number">-2</span>)<span class="number">-3</span>)<span class="number">-4</span>)<span class="number">-5</span>)/<span class="number">5</span> = <span class="number">-13</span>/<span class="number">5</span></span><br></pre></td></tr></table></figure>
+
+<p>本应该输出-2才对，那么究竟是哪里出问题了呢？</p>
+<h3 id="探索"><a href="#探索" class="headerlink" title="探索"></a>探索</h3><p>首先我查看了折叠表达式和<code>sizeof…(t)</code>的返回值，用lldb调试后发现数值没有问题，那么应该是除法这一步出了问题。</p>
+<p><img src="https://s2.loli.net/2022/01/01/v2aCilBbDmuOLEj.png" alt="image-20220101230639043"></p>
+<p>当我将p的类型从auto改为int之后，返回值就变成-2了：</p>
+<p><img src="https://s2.loli.net/2022/01/01/16UWplfXmMLCNTv.png" alt="image-20220101230834880"></p>
+<p>那么看来应该是<code>sizeof…</code>返回值的问题。</p>
+<h3 id="解释："><a href="#解释：" class="headerlink" title="解释："></a>解释：</h3><p>询问学长之后发现，<code>sizeof...</code>返回的是一个<code>size_t</code>类型的值，在64-bit操作系统中类型是<code>uint64_t</code>，即64位无符号整型。然后折叠表达式自动推断返回为int（<code>int32_t</code>), 二者做除法的时候int被提升到<code>uint64_t</code>，然后又因为负数的符号位在最高位，被转换成unsigned的时候，数值就变得非常大了。</p>
+<p>可以具体算一下这个<code>3689348814741910320</code>的由来，结果是一致的。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-13 = (hex) FFFFFFFFFFFFFFF3 -&gt; 18,446,744,073,709,551,603</span><br><span class="line">int(18,446,744,073,709,551,603 / 5) = 3689348814741910320</span><br></pre></td></tr></table></figure>
+
+<p>所以需要注意的是，一行的表达式，其实包含了一次类型推断和一次隐式类型转换，所以使用的时候需要比较小心一些。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">(t + ...) / <span class="keyword">sizeof</span>...(t);</span><br><span class="line"><span class="comment">//equivalent as below</span></span><br><span class="line"><span class="keyword">auto</span> p = (t + ...);</span><br><span class="line"><span class="keyword">size_t</span> i = <span class="keyword">sizeof</span>...(t);</span><br><span class="line"><span class="keyword">return</span> p/i;</span><br></pre></td></tr></table></figure>
+
+<p>等我看完Chapter 4的时候可能会再来写一点内容，感觉还是得一边看一边跟着例子写一点才好。</p>
+]]></content>
+      <categories>
+        <category>Programming</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>382. Linked List Random Node</title>
+    <url>/2021/11/15/382.%20Linked%20List%20Random%20Node/</url>
+    <content><![CDATA[<h2 id="Description"><a href="#Description" class="headerlink" title="Description:"></a>Description:</h2><p>Given a singly linked list, return a random node’s value from the linked list. Each node must have the <strong>same probability</strong> of being chosen.</p>
+<p>Implement the <code>Solution</code> class:</p>
+<ul>
+<li><code>Solution(ListNode head)</code> Initializes the object with the integer array nums.</li>
+<li><code>int getRandom()</code> Chooses a node randomly from the list and returns its value. All the nodes of the list should be equally likely to be choosen.</li>
+</ul>
+<h3 id="Example"><a href="#Example" class="headerlink" title="Example:"></a>Example:</h3><p><img src="https://assets.leetcode.com/uploads/2021/03/16/getrand-linked-list.jpg" alt="getrand-linked-list"></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input</span><br><span class="line">[&quot;Solution&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;]</span><br><span class="line">[[[1, 2, 3]], [], [], [], [], []]</span><br><span class="line">Output</span><br><span class="line">[null, 1, 3, 2, 2, 3]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Constraints"><a href="#Constraints" class="headerlink" title="Constraints:"></a><strong>Constraints:</strong></h3><ul>
+<li>The number of nodes in the linked list will be in the range <code>[1, 104]</code>.</li>
+<li><code>-10^4 &lt;= Node.val &lt;= 10^4</code></li>
+<li>At most <code>10^4</code> calls will be made to <code>getRandom</code>.</li>
+</ul>
+<blockquote>
+<p>Since at most 10k calls will be made, the overall time complexity of each random call is expected to be bounded by O(nlogn).</p>
+</blockquote>
+<h3 id="Intuition"><a href="#Intuition" class="headerlink" title="Intuition:"></a>Intuition:</h3><p>A simple approach would be converting the linked list into an array, and then random generate a number and random access the array. This would cost extra <code>O(n)</code> space for keeping an array, and <code>O(1)</code> to random access the array.</p>
+<blockquote>
+<p>Actually, another implementation is that, we could traverse the list to get the length, and then random generate a number, and then take O(n) step to get the number.</p>
+<p>This implementation would take O(1) extra space, and O(n) for traversing and accessing.</p>
+</blockquote>
+<h3 id="What-if…-just-visit-each-node-only-once-and-use-O-1-space"><a href="#What-if…-just-visit-each-node-only-once-and-use-O-1-space" class="headerlink" title="What if… just visit each node only once and use O(1) space?"></a>What if… just visit each node only once and use O(1) space?</h3><blockquote>
+<p>The key is, Each node must have the <strong>same probability</strong> of being chosen.</p>
+<p>So to ensure the same probability, it is not necessary to use the built-in random function.</p>
+</blockquote>
+<h3 id="Introducing-Reservoir-Sampling"><a href="#Introducing-Reservoir-Sampling" class="headerlink" title="Introducing Reservoir Sampling:"></a>Introducing Reservoir Sampling:</h3><p>I found a video on YouTube, explaining this idea in an interesting and great way.</p>
+<ul>
+<li><h4 id="Scenario-A-man-picking-a-hat"><a href="#Scenario-A-man-picking-a-hat" class="headerlink" title="Scenario: A man picking a hat"></a>Scenario: A man picking a hat</h4><ul>
+<li><h4 id="each-round-replace-the-old-hat-or-wear-new-hat"><a href="#each-round-replace-the-old-hat-or-wear-new-hat" class="headerlink" title="each round replace the old hat or wear new hat"></a>each round replace the old hat or wear new hat</h4></li>
+<li><p>Each round probability of wearing new hat: 1/n</p>
+</li>
+<li><p>The first hat has a chance of 1/1, so he 100% wear the hat</p>
+</li>
+<li><p>The second hat has a chance of 1/2, so he 50% wear the 2nd hat, 50% keep the first hat</p>
+</li>
+<li><p>The third hat has a chance of 1/3, 1/3 wear the 3nd hat, 2/3 keep the original hat</p>
+</li>
+<li><p>So on and so forth…</p>
+</li>
+</ul>
+</li>
+</ul>
+<img src="https://s2.loli.net/2022/01/08/F9ehzSj1Ovrx6Tq.png" alt="image-20220108005314005" style="zoom: 50%;" />
+
+<img src="https://s2.loli.net/2022/01/08/OA8nIcDtopjaB7x.png" alt="image-20220108005616966" style="zoom:50%;" />
+
+<h3 id="The-Good-Side"><a href="#The-Good-Side" class="headerlink" title="The Good Side:"></a>The Good Side:</h3><p>Reservoir sampling doesn’t need to know the length of the list in advance, it’s an online random algorithm.</p>
+<h3 id="Proof-on-Equal-Probability"><a href="#Proof-on-Equal-Probability" class="headerlink" title="Proof on Equal Probability:"></a>Proof on Equal Probability:</h3><p>The $i_{th}$ hat has a probability of $\frac{1}{i}$ of being chosen in its round. The probability of  $i_{th}$ hat being chosen after $n$ times can be given as:</p>
+<img src="https://s2.loli.net/2022/01/08/XFk2Rr3On7gaKpM.png" alt="image-20220108005314005" style="zoom: 100%;" />
+
+<p>Which is the multiplication of $i_{th}$ hat being chosen, and all the hats after $i_{th}$ hat not being chosen.</p>
+<p>And this RHS equals to $\frac{1}n$, which means every hat has the same probability of being chosen.</p>
+<ul>
+<li>Link: <a href="https://www.youtube.com/watch?v=A1iwzSew5QY">https://www.youtube.com/watch?v=A1iwzSew5QY</a></li>
+</ul>
+<h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation:"></a>Implementation:</h3><p>Now let’s implement the Reservoir Sampling into our code, note that we still have to simulate the process of spinning the wheel, using the random function to implement. And it’s generally slower to perform floating point division, use integer instead.</p>
+<ul>
+<li>Instead of <code>1/i</code>, we have <code>1,2,3…i</code>, but only the <code>1</code> means being chosen</li>
+<li><code>i</code> start from <code>1</code>, because it’s not valid to divide by 0.</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;header.hpp&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// reservoir sampling</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">const</span> ListNode *head;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Solution</span>(ListNode *head)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;head = head;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getRandom</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// we are not allowed to modify the head pointer itself</span></span><br><span class="line">        <span class="comment">// each round we create a new node to do the trick</span></span><br><span class="line">        <span class="keyword">auto</span> node = head;</span><br><span class="line">        <span class="keyword">int</span> res = head-&gt;val;</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (node != <span class="literal">nullptr</span>)</span><br><span class="line">        &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// random generate 1~i, only 1 means being selected</span></span><br><span class="line">            <span class="comment">// i should start from 1, or there would be divide by 0 issue</span></span><br><span class="line">            <span class="keyword">bool</span> replace = (<span class="built_in">rand</span>() % (i - <span class="number">1</span> + <span class="number">1</span>)) + <span class="number">1</span> == <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (replace)</span><br><span class="line">                res = node-&gt;val;</span><br><span class="line">            node = node-&gt;next;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your Solution object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * Solution* obj = new Solution(head);</span></span><br><span class="line"><span class="comment"> * int param_1 = obj-&gt;getRandom();</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Programming</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>LeetCode</tag>
+        <tag>DataStructure</tag>
+        <tag>Medium</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Portfolio Site</title>
+    <url>/2022/01/19/Portfolio%20Site%20Online/</url>
+    <content><![CDATA[<p>Recently I began my Master application for 2022 Fall, and some of the universities, require the applicants to submit their portfolio in the form of personal website. I was intended to submit this site, however, this site only contains daily logs and technical topic posts. So I would rather create another website for my portfolio works.</p>
+<p>After one afternoon’s work, new Portfolio Website was online, powering by Wix. Actually I found the Wix tool quite easy to use, only drags and drops are needed, just like what they’ve shown in the Youtube ads. The problem is, it’s not suitable for me to contantly update the contents since it tooks a lot more to render a single site in Wix. You have to drag and drop each paragraph yourself. However, it’s pretty easy to publish a post in Hexo. I can just use Typora and markdown to upload a post in seconds. Also, Wix doesn’t have good support for code snippets as the Markdown does. So I‘m just gonna post most of my daily thoughts and progresses here. And major works on the portfolio site.</p>
+<p>I actually want to merge these two sites, this site and the portfolio site, into one. However, I find the two sites’ styles are quite different and I’m not interested in writing pieces of CSS code anyway. Maybe I will merge them someday.</p>
+<p>Finally, if you are interested in my portfolio, check  <a href = "https://zhaonzh.wixsite.com/mysite-1">Portfolio Site</a>.</p>
+]]></content>
+      <categories>
+        <category>Design</category>
+      </categories>
+      <tags>
+        <tag>Design</tag>
+        <tag>About Me</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>雨滴合成器/A Raindrop Synthesizer</title>
+    <url>/2023/03/23/%E9%9B%A8%E6%BB%B4%E5%90%88%E6%88%90%E5%99%A8/</url>
+    <content><![CDATA[<p>​        这学期的Audio Programming课写了一个雨滴合成器作为最终作业，期间因为种种原因代码改了好几个版本，现在的版本效果算是差强人意。虽然结果不是尽善尽美，整个迭代的过程还是值得记录的，如此也就有了这篇博客。</p>
+<h4 id="为什么想做雨滴合成器？"><a href="#为什么想做雨滴合成器？" class="headerlink" title="为什么想做雨滴合成器？"></a>为什么想做雨滴合成器？</h4><p>​        这学期的其中一个作业是复现一篇1984年的physcally-based synthesizer (Karplus-Strong model). 简单来说，就是基于物理规则对声音进行建模，例如市场上有物理建模钢琴<code>pianoteq</code>，据说声音可以媲美昂贵的采样音源，而且体积非常小巧。对钢琴来说，物理建模就需要包括琴槌的属性，琴槌击弦发声的过程，以及声音在钢琴腔体内的传播等等。每一个步骤都会涉及到非常复杂的推导过程，所以不适合数学不好的我（悲）。</p>
+<p>​        我觉得这种物理建模合成器非常神奇，不需要预录好的audio sample也可以产生出非常真实的声音，因此，我想试一试能不能做一个简单的物理合成器。然后我就选择了雨滴合成器。</p>
+<h4 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h4><p>​        既然想要基于物理，就得找到合适的公式。在参考了一圈之后，我找到了这篇04年的论文。</p>
+<blockquote>
+<p><a href="http://huelights.com/docs/P_169.pdf">http://huelights.com/docs/P_169.pdf</a></p>
+</blockquote>
+<img src="https://s2.loli.net/2023/03/24/rcQSwlteACn2TvN.png" alt="image-20230323223922933" style="zoom:33%;" />
+
+<p>​        其中，作者给出了以上的波形图。雨滴的波形通常可以分为两个不同的阶段：第一阶段，水滴打到硬表面。第二阶段，水滴打到湿表面，逐渐衰减。整个过程约持续10-20 ms。</p>
+<p>​        其中，第一阶段的波形由以下公式给出:</p>
+<img src="https://s2.loli.net/2023/03/24/v3HVjwd1l8JUkaM.png" alt="image-20230323224134739" style="zoom: 50%;" />
+
+<p>​        其中，<code>p</code>代表在<code>t</code>时间点,<code>H</code>的高度上雨滴产生的声压，而右侧参数多到让人直接昏厥。虽然形式看起来很复杂，但是大部分都是固定的参数。例如<code>c</code>代表声音的传播速度,<code>v_term</code>代表雨滴的终止速度等等。假设聆听者的高度<code>H</code>固定为1.85m (是谁的身高？)，那么整个函数其实只和时间<code>t</code>有关，我们只需要给定一个时间，函数就会返回声压级，这个声压级也就可以近似认为是这个时间点的响度。</p>
+<p>​        第二阶段如下给出：</p>
+<p>​    <img src="https://s2.loli.net/2023/03/24/fOt5SzgyXlrA287.png" alt="image-20230323224924652" style="zoom: 50%;" /></p>
+<blockquote>
+<p> 给定时间<code>t</code>和某个水波形状相关参数<code>l</code>，这一时间点的声压如上，对应波形图的上下来回并衰减的部分。</p>
+</blockquote>
+<h4 id="有了公式，然后呢？"><a href="#有了公式，然后呢？" class="headerlink" title="有了公式，然后呢？"></a>有了公式，然后呢？</h4><p>​        有了公式之后，只要把这些公式写下来，给定时间，返回值就可以了吧？不行。</p>
+<p>​        基于物理的建模虽然很精确，但是这得基于一个前提：参数是准确的。如果参数不准确，那么结果自然也不准确。而我恰好不知道怎样是好的参数。</p>
+<p>​        例如我第一次应用第一阶段的公式的时候，整个第一阶段只能产生3-4个sample（以44100Hz的sample rate为例，也就是只有0.06 ms），仅仅三四个sample哪里有声儿啊。同理，第二阶段参数设置也很复杂。考虑到一个水滴的完整声波应该有10-20 ms，我显然搞错了参数，但我也不知道从哪个开始改起。</p>
+<h4 id="简化"><a href="#简化" class="headerlink" title="简化"></a>简化</h4><p>​        现有公式参数太多了，让我不知从何下手。但至少我知道我波形图应该长什么样子，也知道整体的时长为10-20 ms。我们可以直接使用参数更少的波形去近似复杂的公式，同时让结果尽可能接近给定的波形图。</p>
+<p>​        在这样的想法下，第一阶段的函数被简化为了:</p>
+<img src="https://s2.loli.net/2023/03/24/kGK83WihZf2XmHS.png" alt="image-20230324012054270" style="zoom:50%;" />
+
+<blockquote>
+<p>其中<code>A0</code>用于控制响度，<code>k</code>用于控制波形的宽度，而<code>s</code>用于控制水滴发声的时间。</p>
+</blockquote>
+<p>​        同理，第二阶段的函数也被简化成了:</p>
+<img src="https://s2.loli.net/2023/03/24/tsajbyK821pnQJS.png" alt="image-20230324011547436" style="zoom: 50%;" />
+
+<blockquote>
+<p>其中<code>A1</code>用于控制响度，<code>m</code>用于控制响度衰减的速度，<code>f</code>用于控制衰减的频率，<code>q</code>用于控制水滴发声的时间。</p>
+</blockquote>
+<p>​        这是近似后产生的波形图，和给定的波形图是比较相似的。而且这一近似模型参数较少，易于控制。所以在实现的时候我就采用了这个近似模型。</p>
+<img src="https://s2.loli.net/2023/03/24/HEfziy7sa2hIRl3.png" alt="image-20230323232308569" style="zoom:33%;" />
+
+
+
+<h4 id="实现中遇到的问题"><a href="#实现中遇到的问题" class="headerlink" title="实现中遇到的问题"></a>实现中遇到的问题</h4><p>​        前景提要：音频计算通常是以block_rate为单位，一个block通常含有512个samples，在audio programming中每一个sample通俗理解就是一个时间点的数值。计算时基本上是一次性计算512个samples，然后再播放这512个samples，以此往复。</p>
+<ul>
+<li><strong>Amplitude Normalize</strong></li>
+</ul>
+<p>​        既然是雨滴生成器，那一滴雨肯定不够。怎么说也得每秒来一千个水滴吧？我给每个雨滴设置了不同的起始时间，使得这些雨滴均匀分布在1秒内。尝试一番后，我试着输出每个时间点t（也就是一个sample）的数值，发现有不少的sample数值大于30或小于-5。通常来说，每个sample的result都应该被限制在[-1,1]之间，否则就没有意义。因此，我需要对所有的samples进行normalize。直接clamp/cutoff肯定不行，这样会损失掉samples之间相对大小的信息。我采取的方法比较简单，先记录下所有的sample数值，并找到其中绝对值的最大值，然后每个数除以这个值。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">normalize</span><span class="params">(std::vector&lt;<span class="keyword">float</span>&gt; &amp;result)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> max_abs = *std::<span class="built_in">max_element</span>(result.<span class="built_in">begin</span>(), result.<span class="built_in">end</span>(), [](<span class="keyword">float</span> a, <span class="keyword">float</span> b)</span><br><span class="line">                                     &#123; <span class="keyword">return</span> std::<span class="built_in">abs</span>(a) &lt; std::<span class="built_in">abs</span>(b); &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;elem : result)</span><br><span class="line">    &#123;</span><br><span class="line">        elem /= max_abs;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>举个例子来说，<code>&#123;10.0,-20.0,-30.0&#125;</code>的结果在normalize之后应该是<code>&#123;1/3,-2/3,-1&#125;</code>。</p>
+<p>​        这样做有一个问题，音频的计算通常是以block_rate / sample_rate 作为单位，也就是说需要在512/44100 秒内完成计算。==由于我无法提前得知1秒内的最大绝对值==，因此只能提前计算完1秒内所有的samples (44100个samples，每个sample可能有几百个水滴，需要在512/44100秒内完成计算)，找到max_abs，然后再对所有的samples进行处理。显然CPU是没有这样的速度的，audio thread会被block，从而听不到任何声音。</p>
+<p>​        倘若采取<code>std::async</code>的方式进行异步计算，即每512/44100秒内，根据用户给定的参数，计算新的44100个samples的数值，当计算的thread完成后，现在的samples就会被替换成新的samples。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//每个block_rate完成如下计算</span></span><br><span class="line"><span class="keyword">auto</span> future = std::<span class="built_in">async</span>(std::launch::async, &amp;Raindrops::recompute, <span class="keyword">this</span>, randomness-&gt;<span class="built_in">get</span>(), density-&gt;<span class="built_in">get</span>(), decay_frequency-&gt;<span class="built_in">get</span>());</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; buffer.<span class="built_in">getNumSamples</span>(); ++i)</span><br><span class="line">&#123;</span><br><span class="line">    left[i] = <span class="built_in">soft_clip</span>(drops-&gt;<span class="built_in">next_sample</span>(start_sample, end_sample) * <span class="built_in">dbtoa</span>(gain-&gt;<span class="built_in">get</span>()));</span><br><span class="line">    left[i] = <span class="built_in">mix</span>(left[i], last_sample, <span class="number">0.5f</span>);</span><br><span class="line">    right[i] = left[i];</span><br><span class="line">    last_sample = left[i];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> future.<span class="built_in">get</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">//recompute会替换当前雨滴的sample,并使用std::mutex上锁</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">recompute</span><span class="params">(<span class="keyword">float</span> rnd, <span class="keyword">float</span> ds, <span class="keyword">float</span> d_freq)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    m.<span class="built_in">lock</span>();</span><br><span class="line">    drops = std::make_unique&lt;Drops&gt;(rnd, ds, <span class="number">0.0</span>, <span class="number">4.0</span>, d_freq, <span class="number">2.0</span>);</span><br><span class="line">    m.<span class="built_in">unlock</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​        由于不知道什么时候可以计算完（通常都比较慢），用户变更参数就会变得非常不灵敏，通常都得等上一段时间才会播放最新计算出来的samples。</p>
+<p>​        现在我们陷入了两难，不计算1秒内所有的samples，我就不能知道最大绝对值，也就不能normalize，提前计算好1秒内所有的samples又实在太慢。有没有什么两全其美的办法呢？用running max替代global max。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">#每个<span class="function">sample <span class="title">time</span><span class="params">(<span class="number">1</span>/<span class="number">44100</span>秒)</span> 进行如下计算</span></span><br><span class="line"><span class="function">result </span>= drops-&gt;<span class="built_in">sample_at</span>(t);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">fabs</span>(res) &gt; <span class="built_in">fabs</span>(running_max))</span><br><span class="line">&#123;</span><br><span class="line">	running_max = res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">result = res / <span class="built_in">fabs</span>(running_max);</span><br></pre></td></tr></table></figure>
+
+<p>​        之前我们需要预计算是因为我们希望使用global max进行normalize。假设我们采用running max，那么就不需要提前计算1秒的所有samples，我们只需要每个时间点计算出一个值，更新running max，再除以running max就可以了。</p>
+<ul>
+<li><strong>Inter-block Cutoff</strong></li>
+</ul>
+<p>​        由于不需要知道global max，我们计算的逻辑已经从每个block_rate (512/44100秒)计算1秒的所有samples (44100个)变成了计算每个block 的所有samples (512个)。这个量级基本可以实现实时计算了。但另一方面，由于每block_rate就会计算出512个新的samples，samples的更新速度非常快。那么就有可能存在以下的情况：</p>
+<p>​        在上一个block中，有一个水滴在还在第一阶段，并且没有结束第一阶段，所以按理来说，到下一个block的时候，上一个水滴应该继续第一阶段的波形。但是==由于计算一个新的block时会重新初始化所有的水滴(reset水滴的timer)==，那么不同的block之间就变得完全无关了。可能上一个block中某个水滴还在第一阶段，一到下一个block这个水滴却还没有进入第一阶段。这种跨越block时的不连贯我暂且称其为<code>inter-block cutoff</code> 。我总觉得这里应该配张图才能更好解释这个概念，不过后面再说吧。</p>
+<p>​        总之作为结果，这种不连贯会产生一种click的效果，听起来比较像鼠标按左键的声音。</p>
+<p>​        既然计算新的block时初始化所有的水滴会导致这样的不连贯性，那么只要不初始化不就行了吗？之所以我们需要初始化所有的水滴，是因为如果不初始化，按照当前设置的参数，所有的水滴只会均匀分布在0-1s的时间轴上，因而一旦时间超过1秒，所有的水滴都不会产生声音。而初始化所有的水滴就能reset时间轴，从而能够实现持续播放的效果。</p>
+<p>​        想要保持连贯，那么我们就需要保证在新的block开始时，每一个水滴的timer和上一个block结束时的timer只差了一个sample_step（1/44100秒），也就是上一段中提到的“不初始化”。那么我们该怎样实现持续播放呢？注意到所有的水滴都只有可能在[0,1]的区间上发出声音，如果我们需要让模拟器持续发出声音，那么每个水滴的时间轴就需要在这个区间上循环。如果重置时间轴发生在第一个阶段中或者第二个阶段中，那么就会产生cutoff，我们只需要确保重置时间轴时，水滴已经结束第一或者第二阶段（即不发出声音），此时，由于重置前后结果都为0，也就没有了cutoff带来的click效果。</p>
+<h4 id="可以控制的参数："><a href="#可以控制的参数：" class="headerlink" title="可以控制的参数："></a>可以控制的参数：</h4><p>​        在这个插件中，你可以调整这些参数来产生不同的效果</p>
+<ul>
+<li><p>Gain - Overall audio gain</p>
+</li>
+<li><p>Density - How many drops in one second</p>
+</li>
+<li><p>Freq Coeff - Controls overall frequency</p>
+</li>
+<li><p>Interval Coeff - Controls average duration of drops</p>
+</li>
+<li><p>Noise Level - White noise level</p>
+</li>
+<li><p>High pass filter and Low pass filter</p>
+<ul>
+<li>12dB / Oct</li>
+</ul>
+</li>
+</ul>
+<h4 id="应用："><a href="#应用：" class="headerlink" title="应用："></a>应用：</h4><p>​        其实在写代码之前，用Max做了一个雨声生成器的原型，思路来自于以下这篇文章。里面提到procedural的雨声可以由高频的烧水声+中频的烧水声+噪声+单独的水滴声组合而成。现在雨滴合成器可以通过调整参数实现一层烧水声+一层噪声的组合。理论上只要开2-3个雨滴合成器的instance，调整合适的参数后再按一定比例混合起来，就可以实现更为逼真的程序化的雨声了。</p>
+<blockquote>
+<p> <a href="https://blog.audiokinetic.com/zh/generating-rain-with-pure-synthesis/">https://blog.audiokinetic.com/zh/generating-rain-with-pure-synthesis/</a></p>
+</blockquote>
+<p>​        后面可能也许会考虑直接在插件里面写两个instance，然后用户可以直接控制每个instance的参数。另一方面还希望可以加一点UI，以及莫名出现的seg fault也需要debug。</p>
+<h4 id="最后："><a href="#最后：" class="headerlink" title="最后："></a>最后：</h4><p>​        这是小玩具的地址，需要用到JUCE submodule，有兴趣的可以试一试。</p>
+<p><a href="https://github.com/747745124/Raindrop-Generator">https://github.com/747745124/Raindrop-Generator</a></p>
+]]></content>
+      <categories>
+        <category>Audio Programming</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>Audio Programming</tag>
+        <tag>JUCE</tag>
       </tags>
   </entry>
   <entry>
@@ -1350,188 +1535,108 @@
       </tags>
   </entry>
   <entry>
-    <title>折叠表达式(Fold Expression)，低速下脚现代C++ Chapter 2 Exercise</title>
-    <url>/2022/01/01/%E6%8A%98%E5%8F%A0%E8%A1%A8%E8%BE%BE%E5%BC%8F(Fold%20Expression)%EF%BC%9A%E4%BD%8E%E9%80%9F%E4%B8%8B%E8%84%9A%E7%8E%B0%E4%BB%A3C++%20Chapter%202%20Exercise/</url>
-    <content><![CDATA[<h3 id="折叠表达式（Fold-Expression）：低速下脚现代C-Chapter-2-Exercise"><a href="#折叠表达式（Fold-Expression）：低速下脚现代C-Chapter-2-Exercise" class="headerlink" title="折叠表达式（Fold Expression）：低速下脚现代C++ Chapter 2 Exercise"></a>折叠表达式（Fold Expression）：低速下脚现代C++ Chapter 2 Exercise</h3><p>最近在看高速上手现代C++，这是一本很不错的书，作者用仅80余页的长度介绍了C++自C++11以来至C++20带来的许多特性。这些特性给C++带来了语言可用性上的强化，运行期的强化 etc. 以及使得这门语言本身更好地支持例如函数式编程的范式。</p>
-<p>每一章的结尾作者都会提供一些简单的小题目，其中第二章的小题目cover了折叠表达式(Fold Expression, since C++17)和结构化绑定（Structured Binding, since C++17）。在自己闲着摸索的时候发现了一个有意思的小事情，于是稍微写点东西记录一下。</p>
-<blockquote>
-<p>感觉光看这本书和课后的题的话，内容还是不太能掌握，可能跟着其他博客看一看会比较好。</p>
-</blockquote>
-<h3 id="为什么需要Fold-Expression"><a href="#为什么需要Fold-Expression" class="headerlink" title="为什么需要Fold Expression?"></a>为什么需要Fold Expression?</h3><p>模版是C++比较重要的一个板块之一，但是C++11之前，模版的参数数量是固定的。自从C++11之后，新引入的表示方法允许声明时引入任意数量的参数，即如下形式:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Ts&gt;</span><br></pre></td></tr></table></figure>
-
-<p>有了可变长模版，我们就可以写一个允许任意长度参数的函数模版了。一个显而易见的好处是，我们可用这样的语法实现以下函数功能，并且只要写一个函数模版。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 一个函数模版 mean_val，接受任意长度的参数，返回平均值</span></span><br><span class="line"><span class="built_in">mean_val</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>) <span class="comment">// return 2</span></span><br><span class="line"><span class="built_in">mean_val</span>(<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>) <span class="comment">// return 3.5</span></span><br></pre></td></tr></table></figure>
-
-<p>不过在C++17之前，这样的函数模版在解包(unpack)的时候会比较麻烦，因为我们在写函数模版的时候并不知道究竟会传几个参数进来，而参数包又不像是std::vector之类的容器有简单的方式进行遍历，因此我们对于函数参数的实际操作就变得比较麻烦。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//比如说我想实现max_val，但是我并没有直观的方式遍历args的内容</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Ts&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(Ts... args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="comment">//我该怎么获得args的内容呢？</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>不过目前来说，我们可以通过sizeof… 来计算参数的个数:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Ts&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">(Ts... args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	std::cout&lt;&lt;<span class="keyword">sizeof</span>...(args)&lt;&lt;std::endl</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">foo</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>) <span class="comment">// cout:3</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="一个比较常见的做法是利用递归来进行参数解包"><a href="#一个比较常见的做法是利用递归来进行参数解包" class="headerlink" title="一个比较常见的做法是利用递归来进行参数解包:"></a>一个比较常见的做法是利用递归来进行参数解包:</h4><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//书中的案例</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span> </span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T0&gt; <span class="keyword">void</span> <span class="title">printf1</span><span class="params">(T0 value)</span> </span>&#123;</span><br><span class="line">std::cout &lt;&lt; value &lt;&lt; std::endl;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Ts&gt; </span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printf1</span><span class="params">(T value, Ts... args)</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; value &lt;&lt; std::endl;<span class="comment">//每次取出一个T，然后递归再取出一个T</span></span><br><span class="line">    <span class="built_in">printf1</span>(args...);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="built_in">printf1</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="string">&quot;123&quot;</span>, <span class="number">1.1</span>); <span class="comment">//输出所有参数</span></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这么做的确比较繁琐，而C++17中引入了一种比较简洁的方式来实现这种功能需求，这就是标题里的折叠表达式。</p>
-<ul>
-<li>考虑下面的代码，下面的函数模版可以实现任意长度立即数的求和。</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> ... T&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">sum</span><span class="params">(T ... t)</span> <span class="comment">//C++14，函数返回值自动推断</span></span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">	<span class="keyword">return</span> (t + ...); <span class="comment">//折叠表达式</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="built_in">sum</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>) &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>不过书中没有仔细讲这个折叠表达式的内容，因此原理上就有些不清晰，这里做一些补充。</p>
-<h3 id="折叠表达式的语法："><a href="#折叠表达式的语法：" class="headerlink" title="折叠表达式的语法："></a>折叠表达式的语法：</h3><ul>
-<li><code>pack op ...</code> (一元右折叠 / unary right fold)</li>
-<li><code>... op pack</code> (一元左折叠 / unary right fold)</li>
-<li><code>pack op ... op init</code> (二元右折叠 / binary right fold)</li>
-<li><code>init op ... op pack</code> (二元左折叠 / binary left fold)</li>
-</ul>
-<p>其中，<code>pack</code>是参数包，即上述代码中的t，op即operator，支持32种二元运算符，例如<code>+,-,*,/</code> , <code>init</code>表示最后一层展开时二元运算符的另一个操作数。 其中在二元折叠中两个operator要保持一致。</p>
-<h3 id="以上四个表达式和以下内容等价："><a href="#以上四个表达式和以下内容等价：" class="headerlink" title="以上四个表达式和以下内容等价："></a>以上四个表达式和以下内容等价：</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(args op ...) &lt;-&gt; (arg1 op (arg2 op (arg3 op (... op (arg_n-1 op arg_n)))))</span><br><span class="line">(... op args) &lt;-&gt; (((arg1 op arg2) op ...) op arg_n)</span><br><span class="line">(args op ... op init) &lt;-&gt; (arg1 op (... op (arg_n−1 op (arg_n op init))))</span><br><span class="line">(init args op ... op ) &lt;-&gt; ((((init op arg1) op arg2) op ...) op arg_n)</span><br></pre></td></tr></table></figure>
-
-<p>这么写可能还是有点晕，举两个例子可能更好:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">args = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line">(args - ...) &lt;-&gt; (<span class="number">1</span> - (<span class="number">2</span> - <span class="number">3</span>))</span><br><span class="line">(<span class="number">3</span> - ... - args) &lt;-&gt; (((<span class="number">3</span><span class="number">-1</span>)<span class="number">-2</span>)<span class="number">-3</span>)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Ref: <a href="https://en.cppreference.com/w/cpp/language/fold">https://en.cppreference.com/w/cpp/language/fold</a></p>
-</blockquote>
-<p>下面是一个注意点，由于运算符优先级问题，第一种备注是掉的写法并不被接受，需要写成第二种写法</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> ...Args&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sum</span><span class="params">(Args&amp;&amp;... args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="comment">//  return (args + ... + 1 * 2);   // Error: operator with precedence below cast</span></span><br><span class="line">    <span class="keyword">return</span> (args + ... + (<span class="number">1</span> * <span class="number">2</span>)); <span class="comment">// OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="作业题："><a href="#作业题：" class="headerlink" title="作业题："></a>作业题：</h3><p>利用折叠表达式写一个计算求均值的函数模版:</p>
-<p>答案如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span>... T&gt;</span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">mean</span><span class="params">(T... t)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (t + ...) / <span class="keyword">sizeof</span>...(t);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="built_in">mean</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>) &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//output: 3</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="但是…"><a href="#但是…" class="headerlink" title="但是…"></a>但是…</h3><p>不知道为什么我突然想试着把 <code>+</code> 改成 <code>-</code></p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">(t - ...)/<span class="keyword">sizeof</span>...(t) &lt;-&gt; (<span class="number">1</span>-(<span class="number">2</span>-(<span class="number">3</span>-(<span class="number">4</span><span class="number">-5</span>)))) = (<span class="keyword">int</span>)<span class="number">3</span>/<span class="number">5</span> = <span class="number">0</span></span><br></pre></td></tr></table></figure>
-
-<p>这个例子倒是没有问题，如果我改成左折叠:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">return</span> (... - t) / <span class="keyword">sizeof</span>...(t);</span><br><span class="line"><span class="comment">//output: 3689348814741910320</span></span><br></pre></td></tr></table></figure>
-
-<p>这个一长串数字并不是随机数，运行了好几次都是同一个结果。但是:</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">(... - t)/<span class="keyword">sizeof</span>...(t) &lt;-&gt; ((((<span class="number">1</span><span class="number">-2</span>)<span class="number">-3</span>)<span class="number">-4</span>)<span class="number">-5</span>)/<span class="number">5</span> = <span class="number">-13</span>/<span class="number">5</span></span><br></pre></td></tr></table></figure>
-
-<p>本应该输出-2才对，那么究竟是哪里出问题了呢？</p>
-<h3 id="探索"><a href="#探索" class="headerlink" title="探索"></a>探索</h3><p>首先我查看了折叠表达式和<code>sizeof…(t)</code>的返回值，用lldb调试后发现数值没有问题，那么应该是除法这一步出了问题。</p>
-<p><img src="https://s2.loli.net/2022/01/01/v2aCilBbDmuOLEj.png" alt="image-20220101230639043"></p>
-<p>当我将p的类型从auto改为int之后，返回值就变成-2了：</p>
-<p><img src="https://s2.loli.net/2022/01/01/16UWplfXmMLCNTv.png" alt="image-20220101230834880"></p>
-<p>那么看来应该是<code>sizeof…</code>返回值的问题。</p>
-<h3 id="解释："><a href="#解释：" class="headerlink" title="解释："></a>解释：</h3><p>询问学长之后发现，<code>sizeof...</code>返回的是一个<code>size_t</code>类型的值，在64-bit操作系统中类型是<code>uint64_t</code>，即64位无符号整型。然后折叠表达式自动推断返回为int（<code>int32_t</code>), 二者做除法的时候int被提升到<code>uint64_t</code>，然后又因为负数的符号位在最高位，被转换成unsigned的时候，数值就变得非常大了。</p>
-<p>可以具体算一下这个<code>3689348814741910320</code>的由来，结果是一致的。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-13 = (hex) FFFFFFFFFFFFFFF3 -&gt; 18,446,744,073,709,551,603</span><br><span class="line">int(18,446,744,073,709,551,603 / 5) = 3689348814741910320</span><br></pre></td></tr></table></figure>
-
-<p>所以需要注意的是，一行的表达式，其实包含了一次类型推断和一次隐式类型转换，所以使用的时候需要比较小心一些。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">(t + ...) / <span class="keyword">sizeof</span>...(t);</span><br><span class="line"><span class="comment">//equivalent as below</span></span><br><span class="line"><span class="keyword">auto</span> p = (t + ...);</span><br><span class="line"><span class="keyword">size_t</span> i = <span class="keyword">sizeof</span>...(t);</span><br><span class="line"><span class="keyword">return</span> p/i;</span><br></pre></td></tr></table></figure>
-
-<p>等我看完Chapter 4的时候可能会再来写一点内容，感觉还是得一边看一边跟着例子写一点才好。</p>
-]]></content>
-      <categories>
-        <category>Programming</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-      </tags>
+    <title></title>
+    <url>/2023/09/08/Yosemite/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title>雨滴合成器/A Raindrop Synthesizer</title>
-    <url>/2023/03/23/%E9%9B%A8%E6%BB%B4%E5%90%88%E6%88%90%E5%99%A8/</url>
-    <content><![CDATA[<p>​        这学期的Audio Programming课写了一个雨滴合成器作为最终作业，期间因为种种原因代码改了好几个版本，现在的版本效果算是差强人意。虽然结果不是尽善尽美，整个迭代的过程还是值得记录的，如此也就有了这篇博客。</p>
-<h4 id="为什么想做雨滴合成器？"><a href="#为什么想做雨滴合成器？" class="headerlink" title="为什么想做雨滴合成器？"></a>为什么想做雨滴合成器？</h4><p>​        这学期的其中一个作业是复现一篇1984年的physcally-based synthesizer (Karplus-Strong model). 简单来说，就是基于物理规则对声音进行建模，例如市场上有物理建模钢琴<code>pianoteq</code>，据说声音可以媲美昂贵的采样音源，而且体积非常小巧。对钢琴来说，物理建模就需要包括琴槌的属性，琴槌击弦发声的过程，以及声音在钢琴腔体内的传播等等。每一个步骤都会涉及到非常复杂的推导过程，所以不适合数学不好的我（悲）。</p>
-<p>​        我觉得这种物理建模合成器非常神奇，不需要预录好的audio sample也可以产生出非常真实的声音，因此，我想试一试能不能做一个简单的物理合成器。然后我就选择了雨滴合成器。</p>
-<h4 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h4><p>​        既然想要基于物理，就得找到合适的公式。在参考了一圈之后，我找到了这篇04年的论文。</p>
-<blockquote>
-<p><a href="http://huelights.com/docs/P_169.pdf">http://huelights.com/docs/P_169.pdf</a></p>
-</blockquote>
-<img src="https://s2.loli.net/2023/03/24/rcQSwlteACn2TvN.png" alt="image-20230323223922933" style="zoom:33%;" />
-
-<p>​        其中，作者给出了以上的波形图。雨滴的波形通常可以分为两个不同的阶段：第一阶段，水滴打到硬表面。第二阶段，水滴打到湿表面，逐渐衰减。整个过程约持续10-20 ms。</p>
-<p>​        其中，第一阶段的波形由以下公式给出:</p>
-<img src="https://s2.loli.net/2023/03/24/v3HVjwd1l8JUkaM.png" alt="image-20230323224134739" style="zoom: 50%;" />
-
-<p>​        其中，<code>p</code>代表在<code>t</code>时间点,<code>H</code>的高度上雨滴产生的声压，而右侧参数多到让人直接昏厥。虽然形式看起来很复杂，但是大部分都是固定的参数。例如<code>c</code>代表声音的传播速度,<code>v_term</code>代表雨滴的终止速度等等。假设聆听者的高度<code>H</code>固定为1.85m (是谁的身高？)，那么整个函数其实只和时间<code>t</code>有关，我们只需要给定一个时间，函数就会返回声压级，这个声压级也就可以近似认为是这个时间点的响度。</p>
-<p>​        第二阶段如下给出：</p>
-<p>​    <img src="https://s2.loli.net/2023/03/24/fOt5SzgyXlrA287.png" alt="image-20230323224924652" style="zoom: 50%;" /></p>
-<blockquote>
-<p> 给定时间<code>t</code>和某个水波形状相关参数<code>l</code>，这一时间点的声压如上，对应波形图的上下来回并衰减的部分。</p>
-</blockquote>
-<h4 id="有了公式，然后呢？"><a href="#有了公式，然后呢？" class="headerlink" title="有了公式，然后呢？"></a>有了公式，然后呢？</h4><p>​        有了公式之后，只要把这些公式写下来，给定时间，返回值就可以了吧？不行。</p>
-<p>​        基于物理的建模虽然很精确，但是这得基于一个前提：参数是准确的。如果参数不准确，那么结果自然也不准确。而我恰好不知道怎样是好的参数。</p>
-<p>​        例如我第一次应用第一阶段的公式的时候，整个第一阶段只能产生3-4个sample（以44100Hz的sample rate为例，也就是只有0.06 ms），仅仅三四个sample哪里有声儿啊。同理，第二阶段参数设置也很复杂。考虑到一个水滴的完整声波应该有10-20 ms，我显然搞错了参数，但我也不知道从哪个开始改起。</p>
-<h4 id="简化"><a href="#简化" class="headerlink" title="简化"></a>简化</h4><p>​        现有公式参数太多了，让我不知从何下手。但至少我知道我波形图应该长什么样子，也知道整体的时长为10-20 ms。我们可以直接使用参数更少的波形去近似复杂的公式，同时让结果尽可能接近给定的波形图。</p>
-<p>​        在这样的想法下，第一阶段的函数被简化为了:</p>
-<img src="https://s2.loli.net/2023/03/24/kGK83WihZf2XmHS.png" alt="image-20230324012054270" style="zoom:50%;" />
-
-<blockquote>
-<p>其中<code>A0</code>用于控制响度，<code>k</code>用于控制波形的宽度，而<code>s</code>用于控制水滴发声的时间。</p>
-</blockquote>
-<p>​        同理，第二阶段的函数也被简化成了:</p>
-<img src="https://s2.loli.net/2023/03/24/tsajbyK821pnQJS.png" alt="image-20230324011547436" style="zoom: 50%;" />
-
-<blockquote>
-<p>其中<code>A1</code>用于控制响度，<code>m</code>用于控制响度衰减的速度，<code>f</code>用于控制衰减的频率，<code>q</code>用于控制水滴发声的时间。</p>
-</blockquote>
-<p>​        这是近似后产生的波形图，和给定的波形图是比较相似的。而且这一近似模型参数较少，易于控制。所以在实现的时候我就采用了这个近似模型。</p>
-<img src="https://s2.loli.net/2023/03/24/HEfziy7sa2hIRl3.png" alt="image-20230323232308569" style="zoom:33%;" />
-
-
-
-<h4 id="实现中遇到的问题"><a href="#实现中遇到的问题" class="headerlink" title="实现中遇到的问题"></a>实现中遇到的问题</h4><p>​        前景提要：音频计算通常是以block_rate为单位，一个block通常含有512个samples，在audio programming中每一个sample通俗理解就是一个时间点的数值。计算时基本上是一次性计算512个samples，然后再播放这512个samples，以此往复。</p>
+    <title>从歌词学语法01：譲り葉塚-霜月遥</title>
+    <url>/2025/04/20/%E8%AD%B2%E3%82%8A%E8%91%89%E5%A1%9A/</url>
+    <content><![CDATA[<h3 id="从歌词学语法01：譲り葉塚-霜月遥"><a href="#从歌词学语法01：譲り葉塚-霜月遥" class="headerlink" title="从歌词学语法01：譲り葉塚-霜月遥"></a>从歌词学语法01：譲り葉塚-霜月遥</h3><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>从歌词下手学习日语语法个人认为是个不错的选择。平时一直会唱，但并没有仔细整理其内容，因此多数时候也只是一知半解。另一方面，对歌词做分析也有助于更好地了解其背后的意涵。</p>
+<p>这次先选了《譲り葉塚》这首歌，整体而言文法/造词都偏古日语，因此更值得学习和研究。由于网络上翻译很多，所以这里就不作翻译，更多注重于语法和意象，来了解语法/文化本身。</p>
+<p>需要注意的是，这首歌<strong>不是一首男女情歌</strong>。虽然歌词当中出现了「恋慕えるあの人」、「双りの砂利道」容易被误读为“爱人”的表达，但是歌词的核心意象<strong>譲葉</strong>，常被用于比喻世代交替，亲子关系（尤其是母亲）。</p>
+<p><strong>譲葉</strong>这种植物主要的特点是： 新芽长出来以后，老叶才会掉落。给人一种「把位置让出来」的感觉。所以在文学作品中根据“老叶不急着掉落，而是等新芽长好后才慢慢让位”特点，用譲葉来比喻 <strong>父母对子女的关爱与传承</strong>。</p>
+<p>同样地，在这首歌中，譲葉也用于比喻母亲与母爱。这一点可以在词作者本人的博客中得以验证，<a href="https://note.com/hiyamason/n/n04ab9a7d75ad%E3%80%82%E4%B8%BA%E4%BA%86%E6%9B%B4%E5%A5%BD%E5%9C%B0%E5%AF%B9%E7%85%A7%E6%AD%8C%E8%AF%8D%EF%BC%8C%E5%85%88%E5%9C%A8%E4%B8%8B%E9%9D%A2%E7%BB%99%E5%87%BA%E6%95%85%E4%BA%8B%E8%83%8C%E6%99%AF%EF%BC%88%E6%9D%A5%E8%87%AA%E5%8D%9A%E6%96%87%EF%BC%89%E3%80%82">https://note.com/hiyamason/n/n04ab9a7d75ad。为了更好地对照歌词，先在下面给出故事背景（来自博文）。</a></p>
+<h4 id="故事背景"><a href="#故事背景" class="headerlink" title="故事背景"></a>故事背景</h4><p>一位少女在生前因某种原因早早离世，灵魂被困在自己的闺房中，日日等待母亲的到来。起初母亲还常常来探望她，带着团子与鲜花，但随着时间流逝，母亲渐渐不再出现。少女始终坚信母亲没有忘记她，直到有一天，天上的使者降临，邀请她升天。</p>
+<p>然而，升天意味着与母亲永别，少女因放不下执念而拒绝升天，并剪断了天上的丝线。意外地，她因此得到了蝴蝶的羽翼，开始寻找回家的路。</p>
+<p>她回到了故乡，见到母亲正慈爱地陪伴着另一个小女孩——一个她不认识的“新女儿”。这使她意识到，母亲已经彻底走出了悲伤，过上了新的生活，而自己早已被遗忘。</p>
+<p>在极度的悲伤与自责中，她回到空无一人的闺房，陷入彻底的孤独。但天之使者再次降临，给予她“救赎”的使命：成为连接天与地的蝴蝶，收集一千只像她一样无法升天、怀有执念的灵魂（蝶），便能实现愿望、找到归处。</p>
+<p>故事最后，她踏上旅程，边唱着童年与母亲共唱的歌，边在人世间寻找那一千只同样孤独的灵魂。</p>
+<h4 id="歌词（少女视角，第一人称）"><a href="#歌词（少女视角，第一人称）" class="headerlink" title="歌词（少女视角，第一人称）"></a>歌词（少女视角，第一人称）</h4><p>ひとり佇む　誰そ彼<br>小指絡ませぬ　ゆびきり<br>明日も来るから<br>ここに居りなさい</p>
 <ul>
-<li><strong>Amplitude Normalize</strong></li>
+<li>誰そ彼（黄昏）算是一个很出名的双关，在《你的名字》当中被着重介绍。语源是“彼は誰ぞ”，意思是“那人是谁”，因为黄昏时灯光昏暗，连人也无法辨识，因此得名。</li>
+<li>小指絡ませぬ，<strong>絡ませる</strong>：使役动词「絡む」的使役态。 「ぬ」算是一个很常见的文言体的否定词，即ない。</li>
+<li>后两句实为母亲对亡女所说的话，“我明天还会再来的，请好好待在这里”</li>
 </ul>
-<p>​        既然是雨滴生成器，那一滴雨肯定不够。怎么说也得每秒来一千个水滴吧？我给每个雨滴设置了不同的起始时间，使得这些雨滴均匀分布在1秒内。尝试一番后，我试着输出每个时间点t（也就是一个sample）的数值，发现有不少的sample数值大于30或小于-5。通常来说，每个sample的result都应该被限制在[-1,1]之间，否则就没有意义。因此，我需要对所有的samples进行normalize。直接clamp/cutoff肯定不行，这样会损失掉samples之间相对大小的信息。我采取的方法比较简单，先记录下所有的sample数值，并找到其中绝对值的最大值，然后每个数除以这个值。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">normalize</span><span class="params">(std::vector&lt;<span class="keyword">float</span>&gt; &amp;result)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> max_abs = *std::<span class="built_in">max_element</span>(result.<span class="built_in">begin</span>(), result.<span class="built_in">end</span>(), [](<span class="keyword">float</span> a, <span class="keyword">float</span> b)</span><br><span class="line">                                     &#123; <span class="keyword">return</span> std::<span class="built_in">abs</span>(a) &lt; std::<span class="built_in">abs</span>(b); &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;elem : result)</span><br><span class="line">    &#123;</span><br><span class="line">        elem /= max_abs;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>举个例子来说，<code>&#123;10.0,-20.0,-30.0&#125;</code>的结果在normalize之后应该是<code>&#123;1/3,-2/3,-1&#125;</code>。</p>
-<p>​        这样做有一个问题，音频的计算通常是以block_rate / sample_rate 作为单位，也就是说需要在512/44100 秒内完成计算。==由于我无法提前得知1秒内的最大绝对值==，因此只能提前计算完1秒内所有的samples (44100个samples，每个sample可能有几百个水滴，需要在512/44100秒内完成计算)，找到max_abs，然后再对所有的samples进行处理。显然CPU是没有这样的速度的，audio thread会被block，从而听不到任何声音。</p>
-<p>​        倘若采取<code>std::async</code>的方式进行异步计算，即每512/44100秒内，根据用户给定的参数，计算新的44100个samples的数值，当计算的thread完成后，现在的samples就会被替换成新的samples。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//每个block_rate完成如下计算</span></span><br><span class="line"><span class="keyword">auto</span> future = std::<span class="built_in">async</span>(std::launch::async, &amp;Raindrops::recompute, <span class="keyword">this</span>, randomness-&gt;<span class="built_in">get</span>(), density-&gt;<span class="built_in">get</span>(), decay_frequency-&gt;<span class="built_in">get</span>());</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; buffer.<span class="built_in">getNumSamples</span>(); ++i)</span><br><span class="line">&#123;</span><br><span class="line">    left[i] = <span class="built_in">soft_clip</span>(drops-&gt;<span class="built_in">next_sample</span>(start_sample, end_sample) * <span class="built_in">dbtoa</span>(gain-&gt;<span class="built_in">get</span>()));</span><br><span class="line">    left[i] = <span class="built_in">mix</span>(left[i], last_sample, <span class="number">0.5f</span>);</span><br><span class="line">    right[i] = left[i];</span><br><span class="line">    last_sample = left[i];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> future.<span class="built_in">get</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">//recompute会替换当前雨滴的sample,并使用std::mutex上锁</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">recompute</span><span class="params">(<span class="keyword">float</span> rnd, <span class="keyword">float</span> ds, <span class="keyword">float</span> d_freq)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    m.<span class="built_in">lock</span>();</span><br><span class="line">    drops = std::make_unique&lt;Drops&gt;(rnd, ds, <span class="number">0.0</span>, <span class="number">4.0</span>, d_freq, <span class="number">2.0</span>);</span><br><span class="line">    m.<span class="built_in">unlock</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​        由于不知道什么时候可以计算完（通常都比较慢），用户变更参数就会变得非常不灵敏，通常都得等上一段时间才会播放最新计算出来的samples。</p>
-<p>​        现在我们陷入了两难，不计算1秒内所有的samples，我就不能知道最大绝对值，也就不能normalize，提前计算好1秒内所有的samples又实在太慢。有没有什么两全其美的办法呢？用running max替代global max。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">#每个<span class="function">sample <span class="title">time</span><span class="params">(<span class="number">1</span>/<span class="number">44100</span>秒)</span> 进行如下计算</span></span><br><span class="line"><span class="function">result </span>= drops-&gt;<span class="built_in">sample_at</span>(t);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">fabs</span>(res) &gt; <span class="built_in">fabs</span>(running_max))</span><br><span class="line">&#123;</span><br><span class="line">	running_max = res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">result = res / <span class="built_in">fabs</span>(running_max);</span><br></pre></td></tr></table></figure>
-
-<p>​        之前我们需要预计算是因为我们希望使用global max进行normalize。假设我们采用running max，那么就不需要提前计算1秒的所有samples，我们只需要每个时间点计算出一个值，更新running max，再除以running max就可以了。</p>
+<p>心ぼそき閨の中でも</p>
+<p>灯りとなる　その言葉<br>髪撫づる　痩せた手と手を<br>繋ぎ歩む　双りの砂利道<br>今も　あの日は褪せずに</p>
 <ul>
-<li><strong>Inter-block Cutoff</strong></li>
+<li>心ぼそき，形容词 心細い 的文言连体形。</li>
+<li>閨，闺房、卧室，常用于女性、亲密关系的空间。</li>
+<li>砂利道：碎石铺成的小路，常见于乡村或墓地通路。</li>
+<li>歩む，文体的「歩く」，多用于抽象/比喻义，例如经历了坎坷的人生，“苦難の人生を歩んできた”。</li>
+<li>髪撫づる　痩せた手と手を，这一句中，同样是母亲的手，以及“亡女与母亲”一同走过的石子路。</li>
 </ul>
-<p>​        由于不需要知道global max，我们计算的逻辑已经从每个block_rate (512/44100秒)计算1秒的所有samples (44100个)变成了计算每个block 的所有samples (512个)。这个量级基本可以实现实时计算了。但另一方面，由于每block_rate就会计算出512个新的samples，samples的更新速度非常快。那么就有可能存在以下的情况：</p>
-<p>​        在上一个block中，有一个水滴在还在第一阶段，并且没有结束第一阶段，所以按理来说，到下一个block的时候，上一个水滴应该继续第一阶段的波形。但是==由于计算一个新的block时会重新初始化所有的水滴(reset水滴的timer)==，那么不同的block之间就变得完全无关了。可能上一个block中某个水滴还在第一阶段，一到下一个block这个水滴却还没有进入第一阶段。这种跨越block时的不连贯我暂且称其为<code>inter-block cutoff</code> 。我总觉得这里应该配张图才能更好解释这个概念，不过后面再说吧。</p>
-<p>​        总之作为结果，这种不连贯会产生一种click的效果，听起来比较像鼠标按左键的声音。</p>
-<p>​        既然计算新的block时初始化所有的水滴会导致这样的不连贯性，那么只要不初始化不就行了吗？之所以我们需要初始化所有的水滴，是因为如果不初始化，按照当前设置的参数，所有的水滴只会均匀分布在0-1s的时间轴上，因而一旦时间超过1秒，所有的水滴都不会产生声音。而初始化所有的水滴就能reset时间轴，从而能够实现持续播放的效果。</p>
-<p>​        想要保持连贯，那么我们就需要保证在新的block开始时，每一个水滴的timer和上一个block结束时的timer只差了一个sample_step（1/44100秒），也就是上一段中提到的“不初始化”。那么我们该怎样实现持续播放呢？注意到所有的水滴都只有可能在[0,1]的区间上发出声音，如果我们需要让模拟器持续发出声音，那么每个水滴的时间轴就需要在这个区间上循环。如果重置时间轴发生在第一个阶段中或者第二个阶段中，那么就会产生cutoff，我们只需要确保重置时间轴时，水滴已经结束第一或者第二阶段（即不发出声音），此时，由于重置前后结果都为0，也就没有了cutoff带来的click效果。</p>
-<h4 id="可以控制的参数："><a href="#可以控制的参数：" class="headerlink" title="可以控制的参数："></a>可以控制的参数：</h4><p>​        在这个插件中，你可以调整这些参数来产生不同的效果</p>
+<p>格子隔てて散る花<br>骨に纏わりし蝶々も<br>はやくお帰りと<br>舞ひて　ささめきて</p>
 <ul>
-<li><p>Gain - Overall audio gain</p>
-</li>
-<li><p>Density - How many drops in one second</p>
-</li>
-<li><p>Freq Coeff - Controls overall frequency</p>
-</li>
-<li><p>Interval Coeff - Controls average duration of drops</p>
-</li>
-<li><p>Noise Level - White noise level</p>
-</li>
-<li><p>High pass filter and Low pass filter</p>
+<li>格子（窗格/栅栏）、散る花（正在凋零的花），分别象征阴阳之隔与生命的枯萎。</li>
+<li>骨に，结合亡女的身份，此处可能指遗体。</li>
+<li>纏わりし，し是古日语的过去时态助动词。</li>
+<li>蝶々も，蝴蝶在日式文化中常象征<strong>灵魂、轮回或死者转世</strong>。</li>
+<li>“快点回去吧”，这里可能是指“天之使者（蝴蝶）”，劝主人公放下母亲，一同回到死者的世界。</li>
+<li>舞ひて，动词「舞ふ（まふ）」的连体形+て，此处指蝴蝶在风中飞舞。</li>
+</ul>
+<p>刻の過ぎる故里に住む<br>恋慕える　あの人は<br>嗚呼　偏に別人のよう<br>知らぬ人に<br>知りえぬ笑みなど見せて<br>世界を違える</p>
 <ul>
-<li>12dB / Oct</li>
+<li>刻（とき），更文雅的 “時”</li>
+<li>第一句话在说，“我住在这时间流逝的故乡中”， 体现了“我被留下”的感觉，即灵魂依然留在原地。</li>
+<li><strong>恋慕える　あの人は</strong>， 结合前文，此处指对母亲的深爱。</li>
+<li>知らぬ人に， 这里指母亲的“新女儿”</li>
+<li>知りえぬ笑みなど見せて，<ul>
+<li>「知る」= 知道 +「えぬ」= 「得る」的否定文语体 → “无法得知”</li>
+<li><strong>など</strong>：表示列举或语气强调（在这里有<strong>贬义</strong>成分：居然）</li>
+<li>两句连在一起意为“还向我从未见过的陌生人，展露那种我不曾见过的微笑”，体现了极强的剥夺感。</li>
+</ul>
+</li>
+<li>違える，「違う」的文体表达。</li>
+</ul>
+<p>便り絶える閨の中でも<br>また良い子に眠ります<br>だから　呼んで　名前だけでも<br>忘れぬこと　それだけの願い<br>今は　儚く醜く</p>
+<ul>
+<li>閨，结合前文，此处为亡女生前的卧室，她的灵魂仍被困于此。</li>
+<li>良い子に眠ります，这里的に表示“姿态/方法”，即像好孩子一样入睡。<ul>
+<li>象征“顺从，安静接受命运”</li>
+</ul>
+</li>
+<li>后两句表达不被母亲遗忘的愿望。</li>
+</ul>
+<p>土に汚れ　塚は荒れ果て<br>枯れた草に寄る命<br>天へ昇る糸を切りしは<br>居場所もなき泡沫のならい<br>枝を落ちゆく譲り葉<br>いざや　何処へ逝こうか……</p>
+<ul>
+<li>「荒れ果てる」为复合动词：荒れる + 果てる → “彻底荒废”<ul>
+<li>“我的坟冢早已被泥土污染、彻底荒废”</li>
+</ul>
+</li>
+<li>天へ昇る糸，通往天国的丝线，类似“奈何桥”的存在。</li>
+<li>“切りし”同样为古体过去式表达。</li>
+<li>居場所もなき<ul>
+<li>「居場所」（容身之处）+「なき」= 文语否定形 → 没有归处的</li>
+</ul>
+</li>
+<li>泡沫のならい<ul>
+<li>泡沫是常见古典意象，表达人生如梦，命运无常</li>
+<li>習い，原意是“<strong>习惯、惯例、惯习</strong>”，这里理解为“世间的常态”“命运的安排”。<ul>
+<li>在古语中有时也带有“事物自然的道理”之意。</li>
 </ul>
 </li>
 </ul>
-<h4 id="应用："><a href="#应用：" class="headerlink" title="应用："></a>应用：</h4><p>​        其实在写代码之前，用Max做了一个雨声生成器的原型，思路来自于以下这篇文章。里面提到procedural的雨声可以由高频的烧水声+中频的烧水声+噪声+单独的水滴声组合而成。现在雨滴合成器可以通过调整参数实现一层烧水声+一层噪声的组合。理论上只要开2-3个雨滴合成器的instance，调整合适的参数后再按一定比例混合起来，就可以实现更为逼真的程序化的雨声了。</p>
-<blockquote>
-<p> <a href="https://blog.audiokinetic.com/zh/generating-rain-with-pure-synthesis/">https://blog.audiokinetic.com/zh/generating-rain-with-pure-synthesis/</a></p>
-</blockquote>
-<p>​        后面可能也许会考虑直接在插件里面写两个instance，然后用户可以直接控制每个instance的参数。另一方面还希望可以加一点UI，以及莫名出现的seg fault也需要debug。</p>
-<h4 id="最后："><a href="#最后：" class="headerlink" title="最后："></a>最后：</h4><p>​        这是小玩具的地址，需要用到JUCE submodule，有兴趣的可以试一试。</p>
-<p><a href="https://github.com/747745124/Raindrop-Generator">https://github.com/747745124/Raindrop-Generator</a></p>
+</li>
+<li>「いざや」：感叹词 ，代表“那么…“</li>
+<li>「逝こうか」：<ul>
+<li>「逝く」为「行く」的婉约说法，多用于死亡</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>一位已被世界遗忘的逝者，用尽全歌表达了她唯一的愿望：<br> <strong>希望被你记得。</strong><br> 哪怕只是一次轻声呼唤她的名字。<br> 但如今连墓都荒废、归处尽失，她温柔而孤独地问：“那我，究竟该往何方去了呢？”</p>
+<p>最后感谢：</p>
+<ul>
+<li>ChatGPT，MOJI 辞书</li>
+</ul>
 ]]></content>
       <categories>
-        <category>Audio Programming</category>
+        <category>Lyric Analysis</category>
       </categories>
       <tags>
-        <tag>C/C++</tag>
-        <tag>Audio Programming</tag>
-        <tag>JUCE</tag>
+        <tag>Japanese</tag>
+        <tag>Lyric</tag>
       </tags>
   </entry>
 </search>
