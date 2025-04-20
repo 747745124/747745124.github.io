@@ -1,6 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>1345. Jump Game IV</title>
+    <url>/2022/01/14/1345.%20Jump%20Game%20IV/</url>
+    <content><![CDATA[<h3 id="Description"><a href="#Description" class="headerlink" title="Description:"></a>Description:</h3><p>Given an array of integers <code>arr</code>, you are initially positioned at the first index of the array.</p>
+<p>In one step you can jump from index <code>i</code> to index:</p>
+<ul>
+<li><code>i + 1</code> where: <code>i + 1 &lt; arr.length</code>.</li>
+<li><code>i - 1</code> where: <code>i - 1 &gt;= 0</code>.</li>
+<li><code>j</code> where: <code>arr[i] == arr[j]</code> and <code>i != j</code>.</li>
+</ul>
+<p>Return <em>the minimum number of steps</em> to reach the <strong>last index</strong> of the array.</p>
+<p>Notice that you can not jump outside of the array at any time.</p>
+<p><strong>Example 1:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input: arr = [100,-23,-23,404,100,23,23,23,3,404]</span><br><span class="line">Output: 3</span><br><span class="line">Explanation: You need three jumps from index 0 --&gt; 4 --&gt; 3 --&gt; 9. Note that index 9 is the last index of the array.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input: arr = [7]</span><br><span class="line">Output: 0</span><br><span class="line">Explanation: Start index is the last index. You do not need to jump.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 3:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input: arr = [7,6,9,6,9,6,9,7]</span><br><span class="line">Output: 1</span><br><span class="line">Explanation: You can jump directly from index 0 to index 7 which is last index of the array.</span><br></pre></td></tr></table></figure>
+
+<p><strong>Constraints:</strong></p>
+<ul>
+<li><code>1 &lt;= arr.length &lt;= 5 * 10^4</code></li>
+<li><code>-10^8 &lt;= arr[i] &lt;= 10^8</code></li>
+</ul>
+<blockquote>
+<p>The length of the array is up to 10^4, the algorithm is expected to be bounded by ==O(nlogn)==</p>
+</blockquote>
+<h3 id="Brute-Force"><a href="#Brute-Force" class="headerlink" title="Brute Force:"></a>Brute Force:</h3><p>Each round, you can jump front or back one step, or jump to the place with the same value.</p>
+<ul>
+<li>Traverse all possibilities that start from index 0, with <code>#step = 0</code>, <code>minStep = INT_MAX</code><ul>
+<li>Each time, try out 3 possibilities, <code>#step++</code><ul>
+<li>When reaching the end, update the <code>minStep = min(minStep,#step)</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>It’s obvious that this method has a factorial time complexity. We can make a little modification, that is, each place can only be visited at most once, or it can’t be the <code>minimum number of steps</code>.</p>
+</blockquote>
+<h3 id="An-Graph-like-Intuition"><a href="#An-Graph-like-Intuition" class="headerlink" title="An Graph-like Intuition:"></a>An Graph-like Intuition:</h3><ul>
+<li><p>Each place is a node on the graph, nodes are sequentially linked according to their order in the array.</p>
+</li>
+<li><p>If there are nodes with the same value, link them with an edge.</p>
+</li>
+<li><p>Since we can move forward and backward at each place, the graph is a undirected graph.</p>
+</li>
+<li><p>Use BFS for solution (Use queue)</p>
+</li>
+</ul>
+<blockquote>
+<p>In actual implementation, a graph is not necessary, we can just keep. a hash map, where key is the value, value is the position of these values.</p>
+</blockquote>
+<h3 id="Complexity"><a href="#Complexity" class="headerlink" title="Complexity:"></a>Complexity:</h3><p>Vertices = N, Edges at max, all nodes have same value, $O(N^2)$, at min, 0.</p>
+<ul>
+<li><p>Time Complexity: O(V+E)</p>
+</li>
+<li><p>Space Complexity: O(V+E) (Use Graph), O(V) (Not using extra graph)</p>
+</li>
+</ul>
+<h3 id="Problem"><a href="#Problem" class="headerlink" title="Problem:"></a>Problem:</h3><p>In the implementation, our time complexity depends on the number of edges. In cases of the same value, there could be edges at $O(N^2)$. (All nodes have the same value), which is obviously gonna give us a TLE.</p>
+<h3 id="Solution"><a href="#Solution" class="headerlink" title="Solution:"></a>Solution:</h3><p>In the BFS Step, after we enqueue nodes with the same value, we can clear the entry in the hash map.</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span> (!q.<span class="built_in">empty</span>())</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">auto</span> [src, dest] = q.<span class="built_in">front</span>();</span><br><span class="line">    q.<span class="built_in">pop</span>();</span><br><span class="line">    shortestPath[dest] = <span class="built_in">min</span>(shortestPath[dest], shortestPath[src] + <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (dest == arr.<span class="built_in">size</span>() - <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> shortestPath[dest];</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//same value</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;newDest : sameValueSet[arr[dest]])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (shortestPath[newDest] == INT32_MAX)</span><br><span class="line">            q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, newDest));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//core step, this will get us away from redundant search</span></span><br><span class="line">    <span class="comment">//this step ensures nodes of the same value won&#x27;t get enqueued overly</span></span><br><span class="line">    <span class="comment">//actually, enqueue nodes of the same value once is enough</span></span><br><span class="line">    <span class="comment">//so we clear out the entry </span></span><br><span class="line">    sameValueSet[arr[dest]].<span class="built_in">clear</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//neighbors</span></span><br><span class="line">    <span class="keyword">if</span> (dest &gt; <span class="number">0</span> &amp;&amp; shortestPath[dest - <span class="number">1</span>] == INT32_MAX)</span><br><span class="line">        q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, dest - <span class="number">1</span>));</span><br><span class="line">    <span class="keyword">if</span> (dest &lt; (arr.<span class="built_in">size</span>() - <span class="number">1</span>) &amp;&amp; shortestPath[dest + <span class="number">1</span>] == INT32_MAX)</span><br><span class="line">        q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, dest + <span class="number">1</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Code"><a href="#Code" class="headerlink" title="Code:"></a>Code:</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;header.hpp&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">minJumps</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt; &amp;arr)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">//&lt;value,position&gt;</span></span><br><span class="line">        unordered_map&lt;<span class="keyword">int</span>, vector&lt;<span class="keyword">int</span>&gt;&gt; sameValueSet;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.<span class="built_in">size</span>(); i++)</span><br><span class="line">        &#123;</span><br><span class="line">            sameValueSet[arr[i]].<span class="built_in">push_back</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        queue&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; q;</span><br><span class="line">        <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">shortestPath</span><span class="params">(arr.size(), INT32_MAX)</span></span>;</span><br><span class="line">        shortestPath[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (arr.<span class="built_in">size</span>() == <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(<span class="number">0</span>, <span class="number">1</span>));</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;i : sameValueSet[arr[<span class="number">0</span>]])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (i != <span class="number">0</span>)</span><br><span class="line">                q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(<span class="number">0</span>, i));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (!q.<span class="built_in">empty</span>())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">auto</span> [src, dest] = q.<span class="built_in">front</span>();</span><br><span class="line">            q.<span class="built_in">pop</span>();</span><br><span class="line">            shortestPath[dest] = <span class="built_in">min</span>(shortestPath[dest], shortestPath[src] + <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">if</span> (dest == arr.<span class="built_in">size</span>() - <span class="number">1</span>)</span><br><span class="line">                <span class="keyword">return</span> shortestPath[dest];</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;newDest : sameValueSet[arr[dest]])</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (shortestPath[newDest] == INT32_MAX)</span><br><span class="line">                    q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, newDest));</span><br><span class="line">            &#125;</span><br><span class="line">            sameValueSet[arr[dest]].<span class="built_in">clear</span>();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (dest &gt; <span class="number">0</span> &amp;&amp; shortestPath[dest - <span class="number">1</span>] == INT32_MAX)</span><br><span class="line">                q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, dest - <span class="number">1</span>));</span><br><span class="line">            <span class="keyword">if</span> (dest &lt; (arr.<span class="built_in">size</span>() - <span class="number">1</span>) &amp;&amp; shortestPath[dest + <span class="number">1</span>] == INT32_MAX)</span><br><span class="line">                q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, dest + <span class="number">1</span>));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> shortestPath[arr.<span class="built_in">size</span>() - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Solution s;</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; arr = &#123;<span class="number">100</span>, <span class="number">-23</span>, <span class="number">-23</span>, <span class="number">404</span>, <span class="number">100</span>, <span class="number">23</span>, <span class="number">23</span>, <span class="number">23</span>, <span class="number">3</span>, <span class="number">404</span>&#125;;</span><br><span class="line">    cout &lt;&lt; s.<span class="built_in">minJumps</span>(arr) &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Programming</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>LeetCode</tag>
+        <tag>DataStructure</tag>
+        <tag>Hard</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>121.Buy And Sell Stock</title>
     <url>/2021/09/22/121.BuyAndSellStock/</url>
     <content><![CDATA[<h3 id="Description"><a href="#Description" class="headerlink" title="Description:"></a>Description:</h3><p>You are given an array <code>prices</code> where <code>prices[i]</code> is the price of a given stock on the <code>ith</code> day.</p>
@@ -43,6 +124,157 @@
         <tag>LeetCode</tag>
         <tag>DataStructure</tag>
         <tag>Easy</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>1463. Cherry Pickup II</title>
+    <url>/2022/01/07/1463.%20Cherry%20Pickup%20II/</url>
+    <content><![CDATA[<h2 id="Description"><a href="#Description" class="headerlink" title="Description:"></a>Description:</h2><p>You are given a <code>rows x cols</code> matrix <code>grid</code> representing a field of cherries where <code>grid[i][j]</code> represents the number of cherries that you can collect from the <code>(i, j)</code> cell.</p>
+<p>You have two robots that can collect cherries for you:</p>
+<ul>
+<li><strong>Robot #1</strong> is located at the <strong>top-left corner</strong> <code>(0, 0)</code>, and</li>
+<li><strong>Robot #2</strong> is located at the <strong>top-right corner</strong> <code>(0, cols - 1)</code>.</li>
+</ul>
+<p>Return <em>the maximum number of cherries collection using both robots by following the rules below</em>:</p>
+<ul>
+<li>From a cell <code>(i, j)</code>, robots can move to cell <code>(i + 1, j - 1)</code>, <code>(i + 1, j)</code>, or <code>(i + 1, j + 1)</code>.</li>
+<li>When any robot passes through a cell, It picks up all cherries, and the cell becomes an empty cell.</li>
+<li>When both robots stay in the same cell, only one takes the cherries.</li>
+<li>Both robots cannot move outside of the grid at any moment.</li>
+<li>Both robots should reach the bottom row in <code>grid</code>.</li>
+</ul>
+<h3 id="Example-1"><a href="#Example-1" class="headerlink" title="Example 1:"></a>Example 1:</h3><p><img src="https://assets.leetcode.com/uploads/2020/04/29/sample_1_1802.png" alt="sample_1_1802"></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input: grid = [[3,1,1],[2,5,1],[1,5,5],[2,1,1]]</span><br><span class="line">Output: 24</span><br><span class="line">Explanation: Path of robot #1 and #2 are described in color green and blue respectively.</span><br><span class="line">Cherries taken by Robot #1, (3 + 2 + 5 + 2) = 12.</span><br><span class="line">Cherries taken by Robot #2, (1 + 5 + 5 + 1) = 12.</span><br><span class="line">Total of cherries: 12 + 12 = 24.</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Example-2"><a href="#Example-2" class="headerlink" title="Example 2:"></a>Example 2:</h3><p><img src="https://assets.leetcode.com/uploads/2020/04/23/sample_2_1802.png" alt="sample_2_1802"></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input: grid = [[1,0,0,0,0,0,1],[2,0,0,0,0,3,0],[2,0,9,0,0,0,0],[0,3,0,5,4,0,0],[1,0,2,3,0,0,6]]</span><br><span class="line">Output: 28</span><br><span class="line">Explanation: Path of robot #1 and #2 are described in color green and blue respectively.</span><br><span class="line">Cherries taken by Robot #1, (1 + 9 + 5 + 2) = 17.</span><br><span class="line">Cherries taken by Robot #2, (1 + 3 + 4 + 3) = 11.</span><br><span class="line">Total of cherries: 17 + 11 = 28.</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Constraints"><a href="#Constraints" class="headerlink" title="Constraints:"></a><strong>Constraints:</strong></h3><ul>
+<li><code>rows == grid.length</code></li>
+<li><code>cols == grid[i].length</code></li>
+<li><code>2 &lt;= rows, cols &lt;= 70</code></li>
+<li><code>0 &lt;= grid[i][j] &lt;= 100</code></li>
+</ul>
+<blockquote>
+<p>We have a maximum input size of 70*70 = 4900, a loose limit would be $O((mn)^2)$.</p>
+</blockquote>
+<h3 id="Intuition"><a href="#Intuition" class="headerlink" title="Intuition:"></a>Intuition:</h3><ul>
+<li>Each round, each robot would go exactly one step down. And they will always move forward until reaching the end.<ul>
+<li>In this way, we can describe the status of two robots by a 3-element tuple <code>(y,x1,x2)</code>. Since <code>#y: row #x: col</code>, there are $O(r*c^2)$ combinations</li>
+</ul>
+</li>
+<li><code>dp[y][x1][x2]</code> means the maximum cherries collected at this combination</li>
+<li>Base Case: <code>y&gt;=r, x&lt;0 or x&gt;c</code> (out of bounary), return 0</li>
+<li><strong>Transition Equation:</strong> <code>dp[y+1][x1][x2] =&#123;max[y][x1&#39;][x2&#39;] + grid[y][x1]+grid[y][x2] if x1!=x2 else 0&#125;</code></li>
+<li>Time Complexity: $O(r<em>c^2</em>9)$</li>
+<li>Space Complexity: $O(r*c^2)$</li>
+<li><strong>To get the answer:</strong> find the maximum value in <code>dp[r-1][x1][x2]</code> (traverse)</li>
+</ul>
+<h3 id="A-Reverse-Solution"><a href="#A-Reverse-Solution" class="headerlink" title="A Reverse Solution:"></a>A Reverse Solution:</h3><p>Robots start at any grid in the last level, and then they go up until one goes to the left corner, the other go to the right corner.</p>
+<ul>
+<li><p><strong>Transition Equation:</strong> <code>dp[y][x1][x2] =&#123;max[y+1][x1&#39;][x2&#39;] + grid[y][x1]+grid[y][x2] if x1!=x2 else 0</code>}</p>
+</li>
+<li><p><strong>To get the answer</strong>: <code>dp[0][0][c-1]</code></p>
+</li>
+</ul>
+<h3 id="Code"><a href="#Code" class="headerlink" title="Code:"></a>Code:</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">using</span> triArr = vector&lt;vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt;&gt;;</span><br><span class="line">    <span class="keyword">int</span> r = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> c = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">cherryPickup</span><span class="params">(vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; &amp;grid)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;r = grid.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">this</span>-&gt;c = grid[<span class="number">0</span>].<span class="built_in">size</span>();</span><br><span class="line">        <span class="function">triArr <span class="title">dp</span><span class="params">(r, vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt;(c, vector&lt;<span class="keyword">int</span>&gt;(c, <span class="number">-1</span>)))</span></span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">helper</span>(<span class="number">0</span>, <span class="number">0</span>, c - <span class="number">1</span>, grid, dp);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// used for recursion</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">helper</span><span class="params">(<span class="keyword">int</span> y, <span class="keyword">int</span> x1, <span class="keyword">int</span> x2, vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; &amp;grid, triArr &amp;dp)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (x1 &lt; <span class="number">0</span> || x1 &gt;= c || x2 &lt; <span class="number">0</span> || x2 &gt;= c || y &gt;= r || y &lt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> ans = dp[y][x1][x2];</span><br><span class="line">		</span><br><span class="line">        <span class="comment">//if visited return</span></span><br><span class="line">        <span class="keyword">if</span> (ans != <span class="number">-1</span>)</span><br><span class="line">            <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">bool</span> isSame = x1 == x2;</span><br><span class="line">        <span class="keyword">int</span> cur = grid[y][x1] + (isSame ? <span class="number">0</span> : grid[y][x2]);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> d1 = <span class="number">-1</span>; d1 &lt;= <span class="number">1</span>; d1++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> d2 = <span class="number">-1</span>; d2 &lt;= <span class="number">1</span>; d2++)</span><br><span class="line">            &#123; <span class="comment">// each round find the max one from 9 combinations</span></span><br><span class="line">                ans = <span class="built_in">max</span>(ans, cur + <span class="built_in">helper</span>(y + <span class="number">1</span>, x1 + d1, x2 + d2, grid, dp));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">		</span><br><span class="line">        <span class="comment">//update the answer</span></span><br><span class="line">        dp[y][x1][x2] = ans;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>Programming</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>LeetCode</tag>
+        <tag>Hard</tag>
+        <tag>Dynamic Programming</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>382. Linked List Random Node</title>
+    <url>/2021/11/15/382.%20Linked%20List%20Random%20Node/</url>
+    <content><![CDATA[<h2 id="Description"><a href="#Description" class="headerlink" title="Description:"></a>Description:</h2><p>Given a singly linked list, return a random node’s value from the linked list. Each node must have the <strong>same probability</strong> of being chosen.</p>
+<p>Implement the <code>Solution</code> class:</p>
+<ul>
+<li><code>Solution(ListNode head)</code> Initializes the object with the integer array nums.</li>
+<li><code>int getRandom()</code> Chooses a node randomly from the list and returns its value. All the nodes of the list should be equally likely to be choosen.</li>
+</ul>
+<h3 id="Example"><a href="#Example" class="headerlink" title="Example:"></a>Example:</h3><p><img src="https://assets.leetcode.com/uploads/2021/03/16/getrand-linked-list.jpg" alt="getrand-linked-list"></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input</span><br><span class="line">[&quot;Solution&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;]</span><br><span class="line">[[[1, 2, 3]], [], [], [], [], []]</span><br><span class="line">Output</span><br><span class="line">[null, 1, 3, 2, 2, 3]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Constraints"><a href="#Constraints" class="headerlink" title="Constraints:"></a><strong>Constraints:</strong></h3><ul>
+<li>The number of nodes in the linked list will be in the range <code>[1, 104]</code>.</li>
+<li><code>-10^4 &lt;= Node.val &lt;= 10^4</code></li>
+<li>At most <code>10^4</code> calls will be made to <code>getRandom</code>.</li>
+</ul>
+<blockquote>
+<p>Since at most 10k calls will be made, the overall time complexity of each random call is expected to be bounded by O(nlogn).</p>
+</blockquote>
+<h3 id="Intuition"><a href="#Intuition" class="headerlink" title="Intuition:"></a>Intuition:</h3><p>A simple approach would be converting the linked list into an array, and then random generate a number and random access the array. This would cost extra <code>O(n)</code> space for keeping an array, and <code>O(1)</code> to random access the array.</p>
+<blockquote>
+<p>Actually, another implementation is that, we could traverse the list to get the length, and then random generate a number, and then take O(n) step to get the number.</p>
+<p>This implementation would take O(1) extra space, and O(n) for traversing and accessing.</p>
+</blockquote>
+<h3 id="What-if…-just-visit-each-node-only-once-and-use-O-1-space"><a href="#What-if…-just-visit-each-node-only-once-and-use-O-1-space" class="headerlink" title="What if… just visit each node only once and use O(1) space?"></a>What if… just visit each node only once and use O(1) space?</h3><blockquote>
+<p>The key is, Each node must have the <strong>same probability</strong> of being chosen.</p>
+<p>So to ensure the same probability, it is not necessary to use the built-in random function.</p>
+</blockquote>
+<h3 id="Introducing-Reservoir-Sampling"><a href="#Introducing-Reservoir-Sampling" class="headerlink" title="Introducing Reservoir Sampling:"></a>Introducing Reservoir Sampling:</h3><p>I found a video on YouTube, explaining this idea in an interesting and great way.</p>
+<ul>
+<li><h4 id="Scenario-A-man-picking-a-hat"><a href="#Scenario-A-man-picking-a-hat" class="headerlink" title="Scenario: A man picking a hat"></a>Scenario: A man picking a hat</h4><ul>
+<li><h4 id="each-round-replace-the-old-hat-or-wear-new-hat"><a href="#each-round-replace-the-old-hat-or-wear-new-hat" class="headerlink" title="each round replace the old hat or wear new hat"></a>each round replace the old hat or wear new hat</h4></li>
+<li><p>Each round probability of wearing new hat: 1/n</p>
+</li>
+<li><p>The first hat has a chance of 1/1, so he 100% wear the hat</p>
+</li>
+<li><p>The second hat has a chance of 1/2, so he 50% wear the 2nd hat, 50% keep the first hat</p>
+</li>
+<li><p>The third hat has a chance of 1/3, 1/3 wear the 3nd hat, 2/3 keep the original hat</p>
+</li>
+<li><p>So on and so forth…</p>
+</li>
+</ul>
+</li>
+</ul>
+<img src="https://s2.loli.net/2022/01/08/F9ehzSj1Ovrx6Tq.png" alt="image-20220108005314005" style="zoom: 50%;" />
+
+<img src="https://s2.loli.net/2022/01/08/OA8nIcDtopjaB7x.png" alt="image-20220108005616966" style="zoom:50%;" />
+
+<h3 id="The-Good-Side"><a href="#The-Good-Side" class="headerlink" title="The Good Side:"></a>The Good Side:</h3><p>Reservoir sampling doesn’t need to know the length of the list in advance, it’s an online random algorithm.</p>
+<h3 id="Proof-on-Equal-Probability"><a href="#Proof-on-Equal-Probability" class="headerlink" title="Proof on Equal Probability:"></a>Proof on Equal Probability:</h3><p>The $i_{th}$ hat has a probability of $\frac{1}{i}$ of being chosen in its round. The probability of  $i_{th}$ hat being chosen after $n$ times can be given as:</p>
+<img src="https://s2.loli.net/2022/01/08/XFk2Rr3On7gaKpM.png" alt="image-20220108005314005" style="zoom: 100%;" />
+
+<p>Which is the multiplication of $i_{th}$ hat being chosen, and all the hats after $i_{th}$ hat not being chosen.</p>
+<p>And this RHS equals to $\frac{1}n$, which means every hat has the same probability of being chosen.</p>
+<ul>
+<li>Link: <a href="https://www.youtube.com/watch?v=A1iwzSew5QY">https://www.youtube.com/watch?v=A1iwzSew5QY</a></li>
+</ul>
+<h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation:"></a>Implementation:</h3><p>Now let’s implement the Reservoir Sampling into our code, note that we still have to simulate the process of spinning the wheel, using the random function to implement. And it’s generally slower to perform floating point division, use integer instead.</p>
+<ul>
+<li>Instead of <code>1/i</code>, we have <code>1,2,3…i</code>, but only the <code>1</code> means being chosen</li>
+<li><code>i</code> start from <code>1</code>, because it’s not valid to divide by 0.</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;header.hpp&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// reservoir sampling</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">const</span> ListNode *head;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Solution</span>(ListNode *head)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;head = head;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getRandom</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// we are not allowed to modify the head pointer itself</span></span><br><span class="line">        <span class="comment">// each round we create a new node to do the trick</span></span><br><span class="line">        <span class="keyword">auto</span> node = head;</span><br><span class="line">        <span class="keyword">int</span> res = head-&gt;val;</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (node != <span class="literal">nullptr</span>)</span><br><span class="line">        &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// random generate 1~i, only 1 means being selected</span></span><br><span class="line">            <span class="comment">// i should start from 1, or there would be divide by 0 issue</span></span><br><span class="line">            <span class="keyword">bool</span> replace = (<span class="built_in">rand</span>() % (i - <span class="number">1</span> + <span class="number">1</span>)) + <span class="number">1</span> == <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (replace)</span><br><span class="line">                res = node-&gt;val;</span><br><span class="line">            node = node-&gt;next;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your Solution object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * Solution* obj = new Solution(head);</span></span><br><span class="line"><span class="comment"> * int param_1 = obj-&gt;getRandom();</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Programming</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>LeetCode</tag>
+        <tag>DataStructure</tag>
+        <tag>Medium</tag>
       </tags>
   </entry>
   <entry>
@@ -152,75 +384,108 @@
       </tags>
   </entry>
   <entry>
-    <title>1463. Cherry Pickup II</title>
-    <url>/2022/01/07/1463.%20Cherry%20Pickup%20II/</url>
-    <content><![CDATA[<h2 id="Description"><a href="#Description" class="headerlink" title="Description:"></a>Description:</h2><p>You are given a <code>rows x cols</code> matrix <code>grid</code> representing a field of cherries where <code>grid[i][j]</code> represents the number of cherries that you can collect from the <code>(i, j)</code> cell.</p>
-<p>You have two robots that can collect cherries for you:</p>
-<ul>
-<li><strong>Robot #1</strong> is located at the <strong>top-left corner</strong> <code>(0, 0)</code>, and</li>
-<li><strong>Robot #2</strong> is located at the <strong>top-right corner</strong> <code>(0, cols - 1)</code>.</li>
+    <title>Blender 3.1 Alpha Render Test on M1 Max</title>
+    <url>/2021/12/10/Blender%203.1%20Render%20Test/</url>
+    <content><![CDATA[<h2 id="All-Scenes-are-rendered-using-cycles-using-GPU-Compute-1080P"><a href="#All-Scenes-are-rendered-using-cycles-using-GPU-Compute-1080P" class="headerlink" title="All Scenes are rendered using cycles using GPU Compute 1080P"></a>All Scenes are rendered using cycles using GPU Compute 1080P</h2><h3 id="1-Classroom-300-Samplings"><a href="#1-Classroom-300-Samplings" class="headerlink" title="1.Classroom 300 Samplings"></a>1.Classroom 300 Samplings</h3><ul>
+<li><p>Result: 1min 47.32s = 107.32s </p>
+</li>
+<li><p>Boost compared to CPU: 8*60/107.32 = 4.47x</p>
+</li>
+<li><p>Roughly equivalent to CUDA 3060Ti @Blender 2.9x </p>
+</li>
+<li><p>Roughtly equivalent to Optix 2080 @Blender 2.8x and Optix 3060 @Blender 2.9x</p>
+</li>
+<li><p>According to Rob Williams@<a href="https://techgage.com/article/blender-3-0-gpu-performance/">https://techgage.com/article/blender-3-0-gpu-performance/</a>, the performance of M1 Max is half of the 3060 with Optix 3060 @Blender 3.00. If we assume there is a performance boost of 2 times in Cycles from 2.9x to 3.00, a rough equivalent will be 2060 Max-Q (206s Optix 2.93).</p>
+<p><img src="https://s2.loli.net/2022/01/01/WiZIz8rKlXEcOYM.png" alt="image-20220101235753865"></p>
+</li>
 </ul>
-<p>Return <em>the maximum number of cherries collection using both robots by following the rules below</em>:</p>
-<ul>
-<li>From a cell <code>(i, j)</code>, robots can move to cell <code>(i + 1, j - 1)</code>, <code>(i + 1, j)</code>, or <code>(i + 1, j + 1)</code>.</li>
-<li>When any robot passes through a cell, It picks up all cherries, and the cell becomes an empty cell.</li>
-<li>When both robots stay in the same cell, only one takes the cherries.</li>
-<li>Both robots cannot move outside of the grid at any moment.</li>
-<li>Both robots should reach the bottom row in <code>grid</code>.</li>
+<h3 id="2-BMW27-GPU-Compute-1225-Samplings"><a href="#2-BMW27-GPU-Compute-1225-Samplings" class="headerlink" title="2.BMW27 (GPU Compute) 1225 Samplings"></a>2.BMW27 (GPU Compute) 1225 Samplings</h3><ul>
+<li>Result: 43.59s</li>
+<li>Boost Compared to CPU: 210/43.59 = 4.82x</li>
+<li>Roughly equivalent to CUDA 3060~3060Ti @Blender 2.9x </li>
+<li>Roughtly equivalent to Optix 2060 @Blender 2.8x and Optix 3050Ti @Blender 2.9x</li>
+<li><img src="https://s2.loli.net/2022/01/01/wZ35lDaBkiJ7mWQ.png" alt="image-20211219164344829" style="zoom:50%;" /></li>
 </ul>
-<h3 id="Example-1"><a href="#Example-1" class="headerlink" title="Example 1:"></a>Example 1:</h3><p><img src="https://assets.leetcode.com/uploads/2020/04/29/sample_1_1802.png" alt="sample_1_1802"></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input: grid = [[3,1,1],[2,5,1],[1,5,5],[2,1,1]]</span><br><span class="line">Output: 24</span><br><span class="line">Explanation: Path of robot #1 and #2 are described in color green and blue respectively.</span><br><span class="line">Cherries taken by Robot #1, (3 + 2 + 5 + 2) = 12.</span><br><span class="line">Cherries taken by Robot #2, (1 + 5 + 5 + 1) = 12.</span><br><span class="line">Total of cherries: 12 + 12 = 24.</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Example-2"><a href="#Example-2" class="headerlink" title="Example 2:"></a>Example 2:</h3><p><img src="https://assets.leetcode.com/uploads/2020/04/23/sample_2_1802.png" alt="sample_2_1802"></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input: grid = [[1,0,0,0,0,0,1],[2,0,0,0,0,3,0],[2,0,9,0,0,0,0],[0,3,0,5,4,0,0],[1,0,2,3,0,0,6]]</span><br><span class="line">Output: 28</span><br><span class="line">Explanation: Path of robot #1 and #2 are described in color green and blue respectively.</span><br><span class="line">Cherries taken by Robot #1, (1 + 9 + 5 + 2) = 17.</span><br><span class="line">Cherries taken by Robot #2, (1 + 3 + 4 + 3) = 11.</span><br><span class="line">Total of cherries: 17 + 11 = 28.</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Constraints"><a href="#Constraints" class="headerlink" title="Constraints:"></a><strong>Constraints:</strong></h3><ul>
-<li><code>rows == grid.length</code></li>
-<li><code>cols == grid[i].length</code></li>
-<li><code>2 &lt;= rows, cols &lt;= 70</code></li>
-<li><code>0 &lt;= grid[i][j] &lt;= 100</code></li>
+<h3 id="3-Barcelona-Pavilion-1000-Samplings"><a href="#3-Barcelona-Pavilion-1000-Samplings" class="headerlink" title="3.Barcelona Pavilion 1000 Samplings"></a>3.Barcelona Pavilion 1000 Samplings</h3><ul>
+<li>Result: 176.51s</li>
+<li>Boost Compared to CPU: 640/176.51 = 3.62x</li>
+<li>Roughly equivalent to CUDA 3070~3070Ti @Blender 2.9x </li>
+<li>Roughtly equivalent to Optix 2070 @Blender 2.8x and Optix 3050Ti @Blender 2.9x</li>
+<li><img src="https://s2.loli.net/2022/01/01/oBTbOQra1Dp8nZd.png" alt="image-20211219171113341" style="zoom:33%;" /></li>
 </ul>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3>]]></content>
+      <categories>
+        <category>Rendering</category>
+      </categories>
+      <tags>
+        <tag>Redering</tag>
+        <tag>Blender</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>One day in Monterey</title>
+    <url>/2023/06/20/One%20Day%20in%20Monterey/</url>
+    <content><![CDATA[<h3 id="One-day-in-Monterey"><a href="#One-day-in-Monterey" class="headerlink" title="One day in Monterey"></a>One day in Monterey</h3><p>​            因为赶着要去实习(在San Jose)，Path Tracer的作业又拖到最后一天才交，上学和实习便几乎是无缝衔接了。具体衔接得有多紧密呢？我18号中午提交完作业，20号就要开始实习。实习的公司距离学校很远，开车要4.5小时。即使我想一天冲到实习期间的住处，房东也只有19号才有空，这就意味着我只能19号到San Jose，第二天便直接迎接实习生活了。</p>
+<p>​            既然不能一天狂奔到公司，我就估摸着中间找个地方休息一天。南加州和北加州中间选哪呢？San-Luis-Obispo，感觉没什么好玩的，pass。Santa Maria，感觉和Santa Barbara（我学校在的地方）差不多，pass。其他地方感觉也没有什么特别的，也许是加州的小城市都大同小异吧？最后我选择Monterey的原因是1. 听说水族馆很漂亮，是美国第二大的水族馆（第一大在Atlanta）2. macOS 12.0的版本好就是Monterey 3. 有一次在学校旁的iHop吃饭，有一位阿姨说自己住在Monterey，她今天把孩子接回去。稍微聊了几句之后，她便结账离开了。后来我才知道，她也帮我买了单。</p>
+<p>​            选定好地点之后，选择酒店也是纠结了许久。难得出来玩一趟，总得住点好的吧，这可不得Hilton, Hyatt定起来？可是看到Hyatt Regency 358刀一晚的价格的时候，还是一下就退缩了。最终我选择了一个110刀的汽车旅馆，差不多是这个区域里最平价的住处之一了，虽然不如高端酒店豪华，但是评分竟也有8.8，Hyatt Regency评分也不过9.0。就当我怀疑是不是旅馆老板疯狂刷单做评分的时候，我的手已经按下了付款键。</p>
+<p>​            万事俱备，18号交完作业，再次检查行李，加完油，洗车，出发！</p>
+<p>​            沿着101公路一路向北开了1个多小时之后，我的肚子就饿得不行了，毕竟那时已经下午4点半，而我一天都没有吃东西。最后就近下高速，路边找了个麦当劳，点了个巨无霸，麦乐鸡一顿狂吃。啊～活过来了。</p>
+<p>​            再往北开2小时，路上许多飞虫会撞向挡风玻璃，这也就意味着，我的车白洗了。除开这个点，路上的风景倒是很多样，有峡谷，有农田，有沙丘。整体路况而言还可以，大多数时候能开到70-80 mph (国内112-128码)。下午7:30，开到了！在一家中餐馆简单解决晚饭后，我便开回酒店，准备第二天前往水族馆。</p>
+<p>​    <img src="https://s2.loli.net/2023/06/20/oITjcvFuNDAkHyG.png" style="zoom:50%;" /></p>
 <blockquote>
-<p>We have a maximum input size of 70*70 = 4900, a loose limit would be $O((mn)^2)$.</p>
+<p>中餐馆 (Full Moon Chinese Restaurant) 的蟹黄豆腐，他们家分量太足了，饭是用平底的碗装的，差不多是平时2人的量。</p>
 </blockquote>
-<h3 id="Intuition"><a href="#Intuition" class="headerlink" title="Intuition:"></a>Intuition:</h3><ul>
-<li>Each round, each robot would go exactly one step down. And they will always move forward until reaching the end.<ul>
-<li>In this way, we can describe the status of two robots by a 3-element tuple <code>(y,x1,x2)</code>. Since <code>#y: row #x: col</code>, there are $O(r*c^2)$ combinations</li>
-</ul>
-</li>
-<li><code>dp[y][x1][x2]</code> means the maximum cherries collected at this combination</li>
-<li>Base Case: <code>y&gt;=r, x&lt;0 or x&gt;c</code> (out of bounary), return 0</li>
-<li><strong>Transition Equation:</strong> <code>dp[y+1][x1][x2] =&#123;max[y][x1&#39;][x2&#39;] + grid[y][x1]+grid[y][x2] if x1!=x2 else 0&#125;</code></li>
-<li>Time Complexity: $O(r<em>c^2</em>9)$</li>
-<li>Space Complexity: $O(r*c^2)$</li>
-<li><strong>To get the answer:</strong> find the maximum value in <code>dp[r-1][x1][x2]</code> (traverse)</li>
-</ul>
-<h3 id="A-Reverse-Solution"><a href="#A-Reverse-Solution" class="headerlink" title="A Reverse Solution:"></a>A Reverse Solution:</h3><p>Robots start at any grid in the last level, and then they go up until one goes to the left corner, the other go to the right corner.</p>
-<ul>
-<li><p><strong>Transition Equation:</strong> <code>dp[y][x1][x2] =&#123;max[y+1][x1&#39;][x2&#39;] + grid[y][x1]+grid[y][x2] if x1!=x2 else 0</code>}</p>
-</li>
-<li><p><strong>To get the answer</strong>: <code>dp[0][0][c-1]</code></p>
-</li>
-</ul>
-<h3 id="Code"><a href="#Code" class="headerlink" title="Code:"></a>Code:</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">using</span> triArr = vector&lt;vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt;&gt;;</span><br><span class="line">    <span class="keyword">int</span> r = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> c = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">cherryPickup</span><span class="params">(vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; &amp;grid)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;r = grid.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">this</span>-&gt;c = grid[<span class="number">0</span>].<span class="built_in">size</span>();</span><br><span class="line">        <span class="function">triArr <span class="title">dp</span><span class="params">(r, vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt;(c, vector&lt;<span class="keyword">int</span>&gt;(c, <span class="number">-1</span>)))</span></span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">helper</span>(<span class="number">0</span>, <span class="number">0</span>, c - <span class="number">1</span>, grid, dp);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// used for recursion</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">helper</span><span class="params">(<span class="keyword">int</span> y, <span class="keyword">int</span> x1, <span class="keyword">int</span> x2, vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; &amp;grid, triArr &amp;dp)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (x1 &lt; <span class="number">0</span> || x1 &gt;= c || x2 &lt; <span class="number">0</span> || x2 &gt;= c || y &gt;= r || y &lt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> ans = dp[y][x1][x2];</span><br><span class="line">		</span><br><span class="line">        <span class="comment">//if visited return</span></span><br><span class="line">        <span class="keyword">if</span> (ans != <span class="number">-1</span>)</span><br><span class="line">            <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">bool</span> isSame = x1 == x2;</span><br><span class="line">        <span class="keyword">int</span> cur = grid[y][x1] + (isSame ? <span class="number">0</span> : grid[y][x2]);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> d1 = <span class="number">-1</span>; d1 &lt;= <span class="number">1</span>; d1++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> d2 = <span class="number">-1</span>; d2 &lt;= <span class="number">1</span>; d2++)</span><br><span class="line">            &#123; <span class="comment">// each round find the max one from 9 combinations</span></span><br><span class="line">                ans = <span class="built_in">max</span>(ans, cur + <span class="built_in">helper</span>(y + <span class="number">1</span>, x1 + d1, x2 + d2, grid, dp));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">		</span><br><span class="line">        <span class="comment">//update the answer</span></span><br><span class="line">        dp[y][x1][x2] = ans;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>​            回去的路上，车辆一直在提示玻璃水不足，我便去加油站的超市里买了一瓶玻璃水。回到酒店的时候，便尝试打开引擎盖，自己添加玻璃水。结果我竟然连怎么打开引擎盖都不会！为了避免行驶过程中汽车引擎盖弹起，汽车引擎盖通常是双层解锁设计，不仅需要车内拉动开关，还需要拉动引擎盖内的锁扣，才能完全解锁。我按照教程摸了半天上方的锁扣，却完全是抓瞎。无奈之下，只能求助于一旁的酒店工作人员，没想到他三下五除二就帮我打开了汽车锁扣——原来我的车的锁扣设置在引擎盖下方。接下来，他熟练地帮我加完玻璃水，此时，我内心的崇拜之情已经无以言表。就在我以为一切完美结束的时候，我才发现引擎盖关不上了，准确来说，是引擎盖的锁扣坏了。酒店人员看到这种情况后，他也尝试着帮我复位锁扣，可惜不管如何拨动都于事无补。他向我指了一个附近的修车店，并告知我“这种情况下千万不能上高速，因为有可能引擎盖会弹起来，挡住视线”。我很无奈，却也只能回到房间，准备第二天一早去维修店碰碰运气。睡觉之前，我不甘心，再去试试把引擎盖压回原位，依然是没有成功。</p>
+<p>​            第二天一早，我便开车去了一个最近的修车店。店内清一色的BBA，保时捷，有些一看就是老古董了。正当我准备下车和店主说明情况的时候，店主和我说，我们不修这种车，你得去隔壁看看。这还是我第一次感觉到阶级的差异，毕竟这汽修店也只是在小破巷里，谁又能想到他有这么大的口气呢？倒车离开的时候，店主因为担心我倒车撞倒后放的古董保时捷，还让我下车，他亲自倒车。我在一片尴尬的氛围中来到了隔壁汽修店，只可惜他也是无能为力，他推荐我去品牌4S店进行维修。</p>
+<p>​            我打开地图，最近的马自达4S店在13英里外，而现在的车况是不能上高速的。无奈之下，我只能去Subaru的4S店寻求帮助，没想到前台的亚裔小哥帮我联系了马自达的4S店，并且询问他们能不能把零件寄过来维修，那一刻我内心涌起一股“Asian help asian”的感动。因为次日我就要去实习，而维修也无法当日完成。在这种情况下，他们不知道用了什么法子，帮我把引擎盖关上了（具体怎么关我也不清楚），并建议我周末到附近的4S店更换这个零件。在得知这一切都不需要收费的情况下，我恨不得当即跪下来给他磕三个头。因为要是关不上，我就去不成水族馆，并且接下来几天就都需要租车，我的车也只能放在他这里维修，甚至之后还要从San Jose开到这边来取（来回就要接近3小时）。</p>
+<p>​            车子能上路了，我就前往了Monterey的水族馆（淘宝买的票竟然只要官网价格的1/7），虽然Santa Barbra也有水族馆，并且同样也以海鲜闻名，但就水族馆而言，终究还是比不上Monterey的规模。文字叙述水族馆的美还是太苍白了，这里便用图片说明吧（其实也是因为流水账太长了）。</p>
+<p><img src="https://s2.loli.net/2023/06/20/C3skF8hro5JVbAN.png" alt="image-20230620003020062"></p>
+<blockquote>
+<p>水族馆的沙丁鱼群，在Open Sea 区域</p>
+</blockquote>
+<p>​            离开水族馆后，我预约了公司附近的车辆维修，然后便直接往住处开去。虽然在蒙特雷只是短短呆了一天，甚至不到24小时，但是实惠的饭菜份量，全能的酒店服务员，热情的4S店员都让我对这个城市有着很好的印象（那个只为富人修车的店家除外）。下次有机会一定会再来！</p>
+]]></content>
+      <categories>
+        <category>Life, Journal, Travel</category>
+      </categories>
+      <tags>
+        <tag>日常生活</tag>
+        <tag>旅行</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Missing triangle in BVH</title>
+    <url>/2023/05/22/Little%20Caveat%20in%20BVH%20of%20Triangles/</url>
+    <content><![CDATA[<p>Recently I was applying Bounding Volume Hierachy to a Whitted-style Raytracing system. The idea of BVH and implementation are well described in <strong>Ray Tracing in the Next Week</strong> by Peter Shirly. It’s a really great book. And here’s the link <a href="https://raytracing.github.io/books/RayTracingTheNextWeek.html">https://raytracing.github.io/books/RayTracingTheNextWeek.html</a></p>
+<p>One key component in BVH is AABB (Axis-Aligned-Bounding-Box) intersects with ray. People usually adopt Slab method to address this problem. To be more specific, computing the ray-AABB intersection along 3 different axis, if these intervals produces an overlapping region, then the ray intersects with AABB and vice versa.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">compute (tx0, tx1)</span><br><span class="line">compute (ty0, ty1)</span><br><span class="line">compute (tz0, tz1)</span><br><span class="line">return overlap?( (tx0, tx1), (ty0, ty1), (tz0, tz1))</span><br></pre></td></tr></table></figure>
 
 
+
+<img src="https://s2.loli.net/2023/05/23/vhnUw7z6Z1xqeHg.png" alt="image-20230522223149832" style="zoom:33%;" />
+
+<p>After applying this method to the scene rendering, I lost some of the triangles in the scene. However, all spheres are kept intact. For example, here’s what I got after applying BVH and the latter is before BVH.</p>
+<img src="https://s2.loli.net/2023/05/23/dN6TeBRK4MjtzSm.png" alt="image-20230522224231933" style="zoom:33%;" />
+
+<img src="https://s2.loli.net/2023/05/23/xQ8LMCgjAqoVWPw.png" alt="image-20230522224256173" style="zoom:33%;" />
+
+<p> After couple hours of <code>step_into</code> debugging, I found the reason to be as follows:</p>
+<blockquote>
+<p>For spheres, the Bouding box will always have some length along 3 axis. However, this isn’t necessarily the case for AABB of triangles. ==Bounding Box of triangles can fall back to plane if the triangle is parallel to either xy, yz or xz plane== . </p>
+<p>Let’s say a triangle is parallel to the <code>xz</code> plane, so the 3 vertices has the same <code>y</code> value. And this makes <code>ty0</code> and <code>ty1</code> to be the same in above computation, and thus resulting no overlapping region for other 2 axis. i.e. The bounding box doesn’t intersect with the triangle (which is a false statement)</p>
+</blockquote>
+<p>To address this, simply add some thickness to each axis while building bounding box for triangles. In my case, I use <code>1e-3</code>, and boom, problem solved!</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//in triangle class  </span></span><br><span class="line"><span class="function">AABB <span class="title">getAABB</span><span class="params">(<span class="keyword">float</span> t0, <span class="keyword">float</span> t1)</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> min_x = std::<span class="built_in">min</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">x</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> min_y = std::<span class="built_in">min</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">y</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> min_z = std::<span class="built_in">min</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">z</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> max_x = std::<span class="built_in">max</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">x</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> max_y = std::<span class="built_in">max</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">y</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> max_z = std::<span class="built_in">max</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">z</span>()&#125;);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">AABB</span>(gl::<span class="built_in">vec3</span>(min_x<span class="number">-1e3</span>, min_y<span class="number">-1e3</span>, min_z<span class="number">-1e3</span>), gl::<span class="built_in">vec3</span>(max_x, max_y, max_z));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
 
 
 ]]></content>
       <categories>
-        <category>Programming</category>
+        <category>Rendering</category>
       </categories>
       <tags>
         <tag>C/C++</tag>
-        <tag>LeetCode</tag>
-        <tag>Dynamic Programming</tag>
-        <tag>Hard</tag>
+        <tag>Rendering</tag>
       </tags>
   </entry>
   <entry>
@@ -319,238 +584,9 @@
       </tags>
   </entry>
   <entry>
-    <title>Blender 3.1 Alpha Render Test on M1 Max</title>
-    <url>/2021/12/10/Blender%203.1%20Render%20Test/</url>
-    <content><![CDATA[<h2 id="All-Scenes-are-rendered-using-cycles-using-GPU-Compute-1080P"><a href="#All-Scenes-are-rendered-using-cycles-using-GPU-Compute-1080P" class="headerlink" title="All Scenes are rendered using cycles using GPU Compute 1080P"></a>All Scenes are rendered using cycles using GPU Compute 1080P</h2><h3 id="1-Classroom-300-Samplings"><a href="#1-Classroom-300-Samplings" class="headerlink" title="1.Classroom 300 Samplings"></a>1.Classroom 300 Samplings</h3><ul>
-<li><p>Result: 1min 47.32s = 107.32s </p>
-</li>
-<li><p>Boost compared to CPU: 8*60/107.32 = 4.47x</p>
-</li>
-<li><p>Roughly equivalent to CUDA 3060Ti @Blender 2.9x </p>
-</li>
-<li><p>Roughtly equivalent to Optix 2080 @Blender 2.8x and Optix 3060 @Blender 2.9x</p>
-</li>
-<li><p>According to Rob Williams@<a href="https://techgage.com/article/blender-3-0-gpu-performance/">https://techgage.com/article/blender-3-0-gpu-performance/</a>, the performance of M1 Max is half of the 3060 with Optix 3060 @Blender 3.00. If we assume there is a performance boost of 2 times in Cycles from 2.9x to 3.00, a rough equivalent will be 2060 Max-Q (206s Optix 2.93).</p>
-<p><img src="https://s2.loli.net/2022/01/01/WiZIz8rKlXEcOYM.png" alt="image-20220101235753865"></p>
-</li>
-</ul>
-<h3 id="2-BMW27-GPU-Compute-1225-Samplings"><a href="#2-BMW27-GPU-Compute-1225-Samplings" class="headerlink" title="2.BMW27 (GPU Compute) 1225 Samplings"></a>2.BMW27 (GPU Compute) 1225 Samplings</h3><ul>
-<li>Result: 43.59s</li>
-<li>Boost Compared to CPU: 210/43.59 = 4.82x</li>
-<li>Roughly equivalent to CUDA 3060~3060Ti @Blender 2.9x </li>
-<li>Roughtly equivalent to Optix 2060 @Blender 2.8x and Optix 3050Ti @Blender 2.9x</li>
-<li><img src="https://s2.loli.net/2022/01/01/wZ35lDaBkiJ7mWQ.png" alt="image-20211219164344829" style="zoom:50%;" /></li>
-</ul>
-<h3 id="3-Barcelona-Pavilion-1000-Samplings"><a href="#3-Barcelona-Pavilion-1000-Samplings" class="headerlink" title="3.Barcelona Pavilion 1000 Samplings"></a>3.Barcelona Pavilion 1000 Samplings</h3><ul>
-<li>Result: 176.51s</li>
-<li>Boost Compared to CPU: 640/176.51 = 3.62x</li>
-<li>Roughly equivalent to CUDA 3070~3070Ti @Blender 2.9x </li>
-<li>Roughtly equivalent to Optix 2070 @Blender 2.8x and Optix 3050Ti @Blender 2.9x</li>
-<li><img src="https://s2.loli.net/2022/01/01/oBTbOQra1Dp8nZd.png" alt="image-20211219171113341" style="zoom:33%;" /></li>
-</ul>
-<h3 id=""><a href="#" class="headerlink" title=""></a></h3>]]></content>
-      <categories>
-        <category>Rendering</category>
-      </categories>
-      <tags>
-        <tag>Redering</tag>
-        <tag>Blender</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>1345. Jump Game IV</title>
-    <url>/2022/01/14/1345.%20Jump%20Game%20IV/</url>
-    <content><![CDATA[<h3 id="Description"><a href="#Description" class="headerlink" title="Description:"></a>Description:</h3><p>Given an array of integers <code>arr</code>, you are initially positioned at the first index of the array.</p>
-<p>In one step you can jump from index <code>i</code> to index:</p>
-<ul>
-<li><code>i + 1</code> where: <code>i + 1 &lt; arr.length</code>.</li>
-<li><code>i - 1</code> where: <code>i - 1 &gt;= 0</code>.</li>
-<li><code>j</code> where: <code>arr[i] == arr[j]</code> and <code>i != j</code>.</li>
-</ul>
-<p>Return <em>the minimum number of steps</em> to reach the <strong>last index</strong> of the array.</p>
-<p>Notice that you can not jump outside of the array at any time.</p>
-<p><strong>Example 1:</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input: arr = [100,-23,-23,404,100,23,23,23,3,404]</span><br><span class="line">Output: 3</span><br><span class="line">Explanation: You need three jumps from index 0 --&gt; 4 --&gt; 3 --&gt; 9. Note that index 9 is the last index of the array.</span><br></pre></td></tr></table></figure>
-
-<p><strong>Example 2:</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input: arr = [7]</span><br><span class="line">Output: 0</span><br><span class="line">Explanation: Start index is the last index. You do not need to jump.</span><br></pre></td></tr></table></figure>
-
-<p><strong>Example 3:</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input: arr = [7,6,9,6,9,6,9,7]</span><br><span class="line">Output: 1</span><br><span class="line">Explanation: You can jump directly from index 0 to index 7 which is last index of the array.</span><br></pre></td></tr></table></figure>
-
-<p><strong>Constraints:</strong></p>
-<ul>
-<li><code>1 &lt;= arr.length &lt;= 5 * 10^4</code></li>
-<li><code>-10^8 &lt;= arr[i] &lt;= 10^8</code></li>
-</ul>
-<blockquote>
-<p>The length of the array is up to 10^4, the algorithm is expected to be bounded by ==O(nlogn)==</p>
-</blockquote>
-<h3 id="Brute-Force"><a href="#Brute-Force" class="headerlink" title="Brute Force:"></a>Brute Force:</h3><p>Each round, you can jump front or back one step, or jump to the place with the same value.</p>
-<ul>
-<li>Traverse all possibilities that start from index 0, with <code>#step = 0</code>, <code>minStep = INT_MAX</code><ul>
-<li>Each time, try out 3 possibilities, <code>#step++</code><ul>
-<li>When reaching the end, update the <code>minStep = min(minStep,#step)</code></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>It’s obvious that this method has a factorial time complexity. We can make a little modification, that is, each place can only be visited at most once, or it can’t be the <code>minimum number of steps</code>.</p>
-</blockquote>
-<h3 id="An-Graph-like-Intuition"><a href="#An-Graph-like-Intuition" class="headerlink" title="An Graph-like Intuition:"></a>An Graph-like Intuition:</h3><ul>
-<li><p>Each place is a node on the graph, nodes are sequentially linked according to their order in the array.</p>
-</li>
-<li><p>If there are nodes with the same value, link them with an edge.</p>
-</li>
-<li><p>Since we can move forward and backward at each place, the graph is a undirected graph.</p>
-</li>
-<li><p>Use BFS for solution (Use queue)</p>
-</li>
-</ul>
-<blockquote>
-<p>In actual implementation, a graph is not necessary, we can just keep. a hash map, where key is the value, value is the position of these values.</p>
-</blockquote>
-<h3 id="Complexity"><a href="#Complexity" class="headerlink" title="Complexity:"></a>Complexity:</h3><p>Vertices = N, Edges at max, all nodes have same value, $O(N^2)$, at min, 0.</p>
-<ul>
-<li><p>Time Complexity: O(V+E)</p>
-</li>
-<li><p>Space Complexity: O(V+E) (Use Graph), O(V) (Not using extra graph)</p>
-</li>
-</ul>
-<h3 id="Problem"><a href="#Problem" class="headerlink" title="Problem:"></a>Problem:</h3><p>In the implementation, our time complexity depends on the number of edges. In cases of the same value, there could be edges at $O(N^2)$. (All nodes have the same value), which is obviously gonna give us a TLE.</p>
-<h3 id="Solution"><a href="#Solution" class="headerlink" title="Solution:"></a>Solution:</h3><p>In the BFS Step, after we enqueue nodes with the same value, we can clear the entry in the hash map.</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span> (!q.<span class="built_in">empty</span>())</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">auto</span> [src, dest] = q.<span class="built_in">front</span>();</span><br><span class="line">    q.<span class="built_in">pop</span>();</span><br><span class="line">    shortestPath[dest] = <span class="built_in">min</span>(shortestPath[dest], shortestPath[src] + <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (dest == arr.<span class="built_in">size</span>() - <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> shortestPath[dest];</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//same value</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;newDest : sameValueSet[arr[dest]])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (shortestPath[newDest] == INT32_MAX)</span><br><span class="line">            q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, newDest));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//core step, this will get us away from redundant search</span></span><br><span class="line">    <span class="comment">//this step ensures nodes of the same value won&#x27;t get enqueued overly</span></span><br><span class="line">    <span class="comment">//actually, enqueue nodes of the same value once is enough</span></span><br><span class="line">    <span class="comment">//so we clear out the entry </span></span><br><span class="line">    sameValueSet[arr[dest]].<span class="built_in">clear</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//neighbors</span></span><br><span class="line">    <span class="keyword">if</span> (dest &gt; <span class="number">0</span> &amp;&amp; shortestPath[dest - <span class="number">1</span>] == INT32_MAX)</span><br><span class="line">        q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, dest - <span class="number">1</span>));</span><br><span class="line">    <span class="keyword">if</span> (dest &lt; (arr.<span class="built_in">size</span>() - <span class="number">1</span>) &amp;&amp; shortestPath[dest + <span class="number">1</span>] == INT32_MAX)</span><br><span class="line">        q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, dest + <span class="number">1</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Code"><a href="#Code" class="headerlink" title="Code:"></a>Code:</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;header.hpp&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">minJumps</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt; &amp;arr)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">//&lt;value,position&gt;</span></span><br><span class="line">        unordered_map&lt;<span class="keyword">int</span>, vector&lt;<span class="keyword">int</span>&gt;&gt; sameValueSet;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.<span class="built_in">size</span>(); i++)</span><br><span class="line">        &#123;</span><br><span class="line">            sameValueSet[arr[i]].<span class="built_in">push_back</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        queue&lt;pair&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt;&gt; q;</span><br><span class="line">        <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">shortestPath</span><span class="params">(arr.size(), INT32_MAX)</span></span>;</span><br><span class="line">        shortestPath[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (arr.<span class="built_in">size</span>() == <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(<span class="number">0</span>, <span class="number">1</span>));</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;i : sameValueSet[arr[<span class="number">0</span>]])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (i != <span class="number">0</span>)</span><br><span class="line">                q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(<span class="number">0</span>, i));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (!q.<span class="built_in">empty</span>())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">auto</span> [src, dest] = q.<span class="built_in">front</span>();</span><br><span class="line">            q.<span class="built_in">pop</span>();</span><br><span class="line">            shortestPath[dest] = <span class="built_in">min</span>(shortestPath[dest], shortestPath[src] + <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">if</span> (dest == arr.<span class="built_in">size</span>() - <span class="number">1</span>)</span><br><span class="line">                <span class="keyword">return</span> shortestPath[dest];</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;newDest : sameValueSet[arr[dest]])</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (shortestPath[newDest] == INT32_MAX)</span><br><span class="line">                    q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, newDest));</span><br><span class="line">            &#125;</span><br><span class="line">            sameValueSet[arr[dest]].<span class="built_in">clear</span>();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (dest &gt; <span class="number">0</span> &amp;&amp; shortestPath[dest - <span class="number">1</span>] == INT32_MAX)</span><br><span class="line">                q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, dest - <span class="number">1</span>));</span><br><span class="line">            <span class="keyword">if</span> (dest &lt; (arr.<span class="built_in">size</span>() - <span class="number">1</span>) &amp;&amp; shortestPath[dest + <span class="number">1</span>] == INT32_MAX)</span><br><span class="line">                q.<span class="built_in">push</span>(<span class="built_in">make_pair</span>(dest, dest + <span class="number">1</span>));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> shortestPath[arr.<span class="built_in">size</span>() - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Solution s;</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; arr = &#123;<span class="number">100</span>, <span class="number">-23</span>, <span class="number">-23</span>, <span class="number">404</span>, <span class="number">100</span>, <span class="number">23</span>, <span class="number">23</span>, <span class="number">23</span>, <span class="number">3</span>, <span class="number">404</span>&#125;;</span><br><span class="line">    cout &lt;&lt; s.<span class="built_in">minJumps</span>(arr) &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Programming</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>LeetCode</tag>
-        <tag>DataStructure</tag>
-        <tag>Hard</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Missing triangle in BVH</title>
-    <url>/2023/05/22/Little%20Caveat%20in%20BVH%20of%20Triangles/</url>
-    <content><![CDATA[<p>Recently I was applying Bounding Volume Hierachy to a Whitted-style Raytracing system. The idea of BVH and implementation are well described in <strong>Ray Tracing in the Next Week</strong> by Peter Shirly. It’s a really great book. And here’s the link <a href="https://raytracing.github.io/books/RayTracingTheNextWeek.html">https://raytracing.github.io/books/RayTracingTheNextWeek.html</a></p>
-<p>One key component in BVH is AABB (Axis-Aligned-Bounding-Box) intersects with ray. People usually adopt Slab method to address this problem. To be more specific, computing the ray-AABB intersection along 3 different axis, if these intervals produces an overlapping region, then the ray intersects with AABB and vice versa.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">compute (tx0, tx1)</span><br><span class="line">compute (ty0, ty1)</span><br><span class="line">compute (tz0, tz1)</span><br><span class="line">return overlap?( (tx0, tx1), (ty0, ty1), (tz0, tz1))</span><br></pre></td></tr></table></figure>
-
-
-
-<img src="https://s2.loli.net/2023/05/23/vhnUw7z6Z1xqeHg.png" alt="image-20230522223149832" style="zoom:33%;" />
-
-<p>After applying this method to the scene rendering, I lost some of the triangles in the scene. However, all spheres are kept intact. For example, here’s what I got after applying BVH and the latter is before BVH.</p>
-<img src="https://s2.loli.net/2023/05/23/dN6TeBRK4MjtzSm.png" alt="image-20230522224231933" style="zoom:33%;" />
-
-<img src="https://s2.loli.net/2023/05/23/xQ8LMCgjAqoVWPw.png" alt="image-20230522224256173" style="zoom:33%;" />
-
-<p> After couple hours of <code>step_into</code> debugging, I found the reason to be as follows:</p>
-<blockquote>
-<p>For spheres, the Bouding box will always have some length along 3 axis. However, this isn’t necessarily the case for AABB of triangles. ==Bounding Box of triangles can fall back to plane if the triangle is parallel to either xy, yz or xz plane== . </p>
-<p>Let’s say a triangle is parallel to the <code>xz</code> plane, so the 3 vertices has the same <code>y</code> value. And this makes <code>ty0</code> and <code>ty1</code> to be the same in above computation, and thus resulting no overlapping region for other 2 axis. i.e. The bounding box doesn’t intersect with the triangle (which is a false statement)</p>
-</blockquote>
-<p>To address this, simply add some thickness to each axis while building bounding box for triangles. In my case, I use <code>1e-3</code>, and boom, problem solved!</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//in triangle class  </span></span><br><span class="line"><span class="function">AABB <span class="title">getAABB</span><span class="params">(<span class="keyword">float</span> t0, <span class="keyword">float</span> t1)</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> min_x = std::<span class="built_in">min</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">x</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> min_y = std::<span class="built_in">min</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">y</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> min_z = std::<span class="built_in">min</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">z</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> max_x = std::<span class="built_in">max</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">x</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> max_y = std::<span class="built_in">max</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">y</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> max_z = std::<span class="built_in">max</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">z</span>()&#125;);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">AABB</span>(gl::<span class="built_in">vec3</span>(min_x<span class="number">-1e3</span>, min_y<span class="number">-1e3</span>, min_z<span class="number">-1e3</span>), gl::<span class="built_in">vec3</span>(max_x, max_y, max_z));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-]]></content>
-      <categories>
-        <category>Rendering</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>Rendering</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>382. Linked List Random Node</title>
-    <url>/2021/11/15/382.%20Linked%20List%20Random%20Node/</url>
-    <content><![CDATA[<h2 id="Description"><a href="#Description" class="headerlink" title="Description:"></a>Description:</h2><p>Given a singly linked list, return a random node’s value from the linked list. Each node must have the <strong>same probability</strong> of being chosen.</p>
-<p>Implement the <code>Solution</code> class:</p>
-<ul>
-<li><code>Solution(ListNode head)</code> Initializes the object with the integer array nums.</li>
-<li><code>int getRandom()</code> Chooses a node randomly from the list and returns its value. All the nodes of the list should be equally likely to be choosen.</li>
-</ul>
-<h3 id="Example"><a href="#Example" class="headerlink" title="Example:"></a>Example:</h3><p><img src="https://assets.leetcode.com/uploads/2021/03/16/getrand-linked-list.jpg" alt="getrand-linked-list"></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input</span><br><span class="line">[&quot;Solution&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;]</span><br><span class="line">[[[1, 2, 3]], [], [], [], [], []]</span><br><span class="line">Output</span><br><span class="line">[null, 1, 3, 2, 2, 3]</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Constraints"><a href="#Constraints" class="headerlink" title="Constraints:"></a><strong>Constraints:</strong></h3><ul>
-<li>The number of nodes in the linked list will be in the range <code>[1, 104]</code>.</li>
-<li><code>-10^4 &lt;= Node.val &lt;= 10^4</code></li>
-<li>At most <code>10^4</code> calls will be made to <code>getRandom</code>.</li>
-</ul>
-<blockquote>
-<p>Since at most 10k calls will be made, the overall time complexity of each random call is expected to be bounded by O(nlogn).</p>
-</blockquote>
-<h3 id="Intuition"><a href="#Intuition" class="headerlink" title="Intuition:"></a>Intuition:</h3><p>A simple approach would be converting the linked list into an array, and then random generate a number and random access the array. This would cost extra <code>O(n)</code> space for keeping an array, and <code>O(1)</code> to random access the array.</p>
-<blockquote>
-<p>Actually, another implementation is that, we could traverse the list to get the length, and then random generate a number, and then take O(n) step to get the number.</p>
-<p>This implementation would take O(1) extra space, and O(n) for traversing and accessing.</p>
-</blockquote>
-<h3 id="What-if…-just-visit-each-node-only-once-and-use-O-1-space"><a href="#What-if…-just-visit-each-node-only-once-and-use-O-1-space" class="headerlink" title="What if… just visit each node only once and use O(1) space?"></a>What if… just visit each node only once and use O(1) space?</h3><blockquote>
-<p>The key is, Each node must have the <strong>same probability</strong> of being chosen.</p>
-<p>So to ensure the same probability, it is not necessary to use the built-in random function.</p>
-</blockquote>
-<h3 id="Introducing-Reservoir-Sampling"><a href="#Introducing-Reservoir-Sampling" class="headerlink" title="Introducing Reservoir Sampling:"></a>Introducing Reservoir Sampling:</h3><p>I found a video on YouTube, explaining this idea in an interesting and great way.</p>
-<ul>
-<li><h4 id="Scenario-A-man-picking-a-hat"><a href="#Scenario-A-man-picking-a-hat" class="headerlink" title="Scenario: A man picking a hat"></a>Scenario: A man picking a hat</h4><ul>
-<li><h4 id="each-round-replace-the-old-hat-or-wear-new-hat"><a href="#each-round-replace-the-old-hat-or-wear-new-hat" class="headerlink" title="each round replace the old hat or wear new hat"></a>each round replace the old hat or wear new hat</h4></li>
-<li><p>Each round probability of wearing new hat: 1/n</p>
-</li>
-<li><p>The first hat has a chance of 1/1, so he 100% wear the hat</p>
-</li>
-<li><p>The second hat has a chance of 1/2, so he 50% wear the 2nd hat, 50% keep the first hat</p>
-</li>
-<li><p>The third hat has a chance of 1/3, 1/3 wear the 3nd hat, 2/3 keep the original hat</p>
-</li>
-<li><p>So on and so forth…</p>
-</li>
-</ul>
-</li>
-</ul>
-<img src="https://s2.loli.net/2022/01/08/F9ehzSj1Ovrx6Tq.png" alt="image-20220108005314005" style="zoom: 50%;" />
-
-<img src="https://s2.loli.net/2022/01/08/OA8nIcDtopjaB7x.png" alt="image-20220108005616966" style="zoom:50%;" />
-
-<h3 id="The-Good-Side"><a href="#The-Good-Side" class="headerlink" title="The Good Side:"></a>The Good Side:</h3><p>Reservoir sampling doesn’t need to know the length of the list in advance, it’s an online random algorithm.</p>
-<h3 id="Proof-on-Equal-Probability"><a href="#Proof-on-Equal-Probability" class="headerlink" title="Proof on Equal Probability:"></a>Proof on Equal Probability:</h3><p>The $i_{th}$ hat has a probability of $\frac{1}{i}$ of being chosen in its round. The probability of  $i_{th}$ hat being chosen after $n$ times can be given as:</p>
-<img src="https://s2.loli.net/2022/01/08/XFk2Rr3On7gaKpM.png" alt="image-20220108005314005" style="zoom: 100%;" />
-
-<p>Which is the multiplication of $i_{th}$ hat being chosen, and all the hats after $i_{th}$ hat not being chosen.</p>
-<p>And this RHS equals to $\frac{1}n$, which means every hat has the same probability of being chosen.</p>
-<ul>
-<li>Link: <a href="https://www.youtube.com/watch?v=A1iwzSew5QY">https://www.youtube.com/watch?v=A1iwzSew5QY</a></li>
-</ul>
-<h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation:"></a>Implementation:</h3><p>Now let’s implement the Reservoir Sampling into our code, note that we still have to simulate the process of spinning the wheel, using the random function to implement. And it’s generally slower to perform floating point division, use integer instead.</p>
-<ul>
-<li>Instead of <code>1/i</code>, we have <code>1,2,3…i</code>, but only the <code>1</code> means being chosen</li>
-<li><code>i</code> start from <code>1</code>, because it’s not valid to divide by 0.</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;header.hpp&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// reservoir sampling</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">const</span> ListNode *head;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Solution</span>(ListNode *head)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;head = head;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getRandom</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// we are not allowed to modify the head pointer itself</span></span><br><span class="line">        <span class="comment">// each round we create a new node to do the trick</span></span><br><span class="line">        <span class="keyword">auto</span> node = head;</span><br><span class="line">        <span class="keyword">int</span> res = head-&gt;val;</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (node != <span class="literal">nullptr</span>)</span><br><span class="line">        &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// random generate 1~i, only 1 means being selected</span></span><br><span class="line">            <span class="comment">// i should start from 1, or there would be divide by 0 issue</span></span><br><span class="line">            <span class="keyword">bool</span> replace = (<span class="built_in">rand</span>() % (i - <span class="number">1</span> + <span class="number">1</span>)) + <span class="number">1</span> == <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (replace)</span><br><span class="line">                res = node-&gt;val;</span><br><span class="line">            node = node-&gt;next;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your Solution object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * Solution* obj = new Solution(head);</span></span><br><span class="line"><span class="comment"> * int param_1 = obj-&gt;getRandom();</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Programming</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>LeetCode</tag>
-        <tag>DataStructure</tag>
-        <tag>Medium</tag>
-      </tags>
+    <title></title>
+    <url>/2023/09/08/Yosemite/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>Portfolio Site</title>
@@ -567,40 +603,6 @@
         <tag>Design</tag>
         <tag>About Me</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Why Tuple?</title>
-    <url>/2021/09/21/WhyTuple?/</url>
-    <content><![CDATA[<p>C++ 11 introduces a template Tuple, similar to the one in Python, allows you to store data of different types in a single entity. But you may ask, in C/C++,we already have some mechaism called struct allows us to do the same thing, then why do we need tuple?</p>
-<h3 id="Case-1-One-Time-Structure-to-Transfer-Data"><a href="#Case-1-One-Time-Structure-to-Transfer-Data" class="headerlink" title="Case 1: One-Time Structure to Transfer Data"></a>Case 1: One-Time Structure to Transfer Data</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">tuple&lt;string,<span class="keyword">int</span>&gt; <span class="title">getNameAge</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//do something</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">make_tuple</span>(<span class="string">&quot;Bob&quot;</span>,<span class="number">34</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Person</span>&#123;</span>string name;<span class="keyword">int</span> age;&#125;p;</span><br><span class="line">    tuple&lt;string,<span class="keyword">int</span>&gt; t;</span><br><span class="line">    </span><br><span class="line">    string name;</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    <span class="built_in">tie</span>(name,age) = <span class="built_in">getNameAge</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>If we want to transfer a group of data for only one time, we may not want to define a struct, and using tuple get us away from these definitions.</p>
-<h3 id="Case-2-Fast-Comparison-Using-Tuple-Operators"><a href="#Case-2-Fast-Comparison-Using-Tuple-Operators" class="headerlink" title="Case 2: Fast Comparison Using Tuple Operators"></a>Case 2: Fast Comparison Using Tuple Operators</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">tuple&lt;<span class="keyword">int</span>,<span class="keyword">int</span>,<span class="keyword">int</span>&gt; time1,time2;</span><br><span class="line"><span class="keyword">if</span>(time1&gt;time2)</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;time1 is later&quot;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Case-3-Multi-Index-Map-Unordered-Map"><a href="#Case-3-Multi-Index-Map-Unordered-Map" class="headerlink" title="Case 3: Multi-Index Map/Unordered Map"></a>Case 3: Multi-Index Map/Unordered Map</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//define</span></span><br><span class="line">map&lt;tuple&lt;<span class="keyword">int</span>,<span class="keyword">char</span>,<span class="keyword">float</span>&gt;,string&gt; m;</span><br><span class="line"><span class="comment">//indexing</span></span><br><span class="line">m[<span class="built_in">make_tuple</span>(<span class="number">2</span>,<span class="string">&#x27;a&#x27;</span>,<span class="number">1.0</span>)] = <span class="string">&quot;Test&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Case-4-Fast-Swap"><a href="#Case-4-Fast-Swap" class="headerlink" title="Case 4: Fast Swap"></a>Case 4: Fast Swap</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a,b,c;</span><br><span class="line"><span class="built_in">tie</span>(b,c,a) = <span class="built_in">make_tuple</span>(a,b,c);</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion:"></a>Conclusion:</h3><p>Tuple is not recommended to be overused. If needed, use struct instead.</p>
-]]></content>
-      <categories>
-        <category>Programming</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>Data_Structure</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2023/09/08/Yosemite/</url>
-    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>thread and process</title>
@@ -662,95 +664,6 @@
       <tags>
         <tag>C/C++</tag>
         <tag>Operating System</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>最近半年的生活状态（上）</title>
-    <url>/2022/06/19/%E4%B8%80%E4%BA%9B%E6%9C%80%E8%BF%91%E5%8D%8A%E5%B9%B4%E5%8F%91%E7%94%9F%E7%9A%84%E4%BA%8B(%E4%B8%8A)/</url>
-    <content><![CDATA[<h3 id="最近半年的生活状态（上）"><a href="#最近半年的生活状态（上）" class="headerlink" title="最近半年的生活状态（上）"></a>最近半年的生活状态（上）</h3><p>​    说起来，自从大四之后就很久很久没有为自己写一些东西，也许是太忙？但也有可能是“我没有把这当作是最重要的事情”，所以一直搁置了。不过临近毕业，总算是稍微有点机会写点什么了，就稍微写一点吧。我想先写一些关于大四上学期的内容，不然就太长了。</p>
-<h3 id="大四上"><a href="#大四上" class="headerlink" title="大四上"></a>大四上</h3><p>​    整个大四上发生了很多事情，分手，上课，作品集，申请学校。一直非常焦头烂额，不过好在我在作品集的机构认识了一些朋友，后来11月的时候，还因为疫情的原因在校外酒店住了一个多月。我的整个大四上学期是在忙碌和焦虑中度过的，不过我猜大家都是这样。</p>
-<ul>
-<li>分手</li>
-</ul>
-<p>​    学期的一开始，前任就和我提了分手，不过我太想再回忆这些。分手的时候ta撒了一个谎，后来找我复合，我拒绝了。既然已经过去这么久，就这样吧。</p>
-<ul>
-<li>数据结构基础</li>
-</ul>
-<p>​    大四上才上数据结构确实挺晚了，甚至申请的时候都不一定会出现在成绩单上，但就当是学知识吧—我是这么想的。学校的数据结构课一开始要分班考，基础还行的同学可以选择困难模式，也就是平时的3个实验课作业题目会变难，好处是评分最多可以比其他同学高5分。我选择了困难模式，当然也为此花了一些时间，现在想想，却也不是那么有必要，尽管确实从一些题目中获得了更深的思考。</p>
-<img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h3e0gq6kzmj21yq0tsgrj.jpg" alt="image-20220620001929249" style="zoom:33%;" />
-
-<blockquote>
-<p>当时为了练手，日常还会做一些LeetCode补充一下，传到GitHub记录一下？</p>
-</blockquote>
-<p>​    这门课臭名昭著的地方在于实验课作业的互评制度，也就是大家要互相给代码和实验报告打分。大部分选课的同学应该都是刚上大二，仅校内课程来说，是没有接触过较为现代的Editor或者LaTex/Markdown之类的工具的，于是相当多的同学（至少在我互评的范围内）用Dev C++（大一的时候学校推荐大家使用）写代码，用Word写文档。我觉得他们之中的很多人应该是在这些方面吃了亏，而我可能也只是因为在这些方面（指使用VSCode / Typora）有点接触，在互评上稍微多了点美观分—这其实还挺不公平的…</p>
-<p>​    印象比较深的有几件事，一件是期中考试好像只考了69分，还没有到班级平均线。一件是第二个实验课题目比较困难，当时写了有800行代码，较为头疼。不过比较开心的是，那次我实现了一个类似Trie的结构，还是用了比较基础的multithreading和rvalue reference，尽管最后效率非常低…</p>
-<p>​    至于这门课的结果还不错，期末考试的800个人里面考了130几名，算是给期中考试挽回了一点颜面吧。</p>
-<ul>
-<li>作品集</li>
-</ul>
-<p>​    老实说提起作品集挺汗颜的，只要一想起它我就会非常紧张，但它又是我申请设计/游戏类学校必不可少的一环。暑假因为忙着谈恋爱，浪费（？）了许多时间。我是一个挺恋爱脑的人，所以一旦进入一段关系，效率就会很低下。导致开学的时候，还没有完成多少作品集的内容。从这个意义上来说，幸好分手了，不然以我之前的效率，作品集应该是做不完了吧。</p>
-<img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h3e0ekdizkj21750u00wp.jpg" alt="image-20220620001722163" style="zoom:33%;" />
-
-<blockquote>
-<p>一张产品渲染图，Blender水平提高了许多</p>
-</blockquote>
-<p>​    我在作品集机构完成了自己的第一个游戏的Demo，也因此认识了几个好朋友，后来做产品渲染的时候提高了自己的Blender技巧，这些都是我实实在在的收获。果然还是和游戏相关的事情最容易让人获得快乐啊！</p>
-<ul>
-<li>申请学校</li>
-</ul>
-<p>​    我这个人申请学校的策略完全就是个超级大海王，或许是怕没有书读，我一共申请了23个项目，光是送分加上申请费用就花了差不多2万块。一开始还会反复检查信息是否有误，到后来麻木了，就不太检查了。而选校的事情本身也不甚严谨，当时甚至是昨天刚听说一个项目，今天就决定申请这个项目。实际上我最终决定去的项目，也是我申请结束前10天听说的。不过，反正多申请一个学校也不会缺斤少两，多申请总不会后悔！</p>
-<img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h3e0kqwfmcj214y0ti41g.jpg" alt="image-20220620002158278" style="zoom:33%;" />
-
-<blockquote>
-<p>最后打算去这里了，加州见！</p>
-</blockquote>
-<ul>
-<li>关于日常生活</li>
-</ul>
-<p>​    上个学期最喜欢的事情是因为临时封校，在外面的酒店住了一个多月。一个多月里我能够每天吃麦当劳，每天喝喜茶。每天都只需要步行去机构，坐在人体工学椅上。晚上洗澡，躺在酒店超级软的床上面。真幸福啊…</p>
-<p>​    考GRE那天是万圣节，我当时上午没吃饭就去考试，结果一直到14:30才吃上饭。考完试后去机构继续做作品集，而后回到学校换上我的万圣节costume，扮成迈尔斯来吓人！</p>
-<img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h3e0kp8ijpj20sm12s43z.jpg" alt="image-20220620002245778" style="zoom:33%;" />
-
-<blockquote>
-<p>Happy Halloween~</p>
-</blockquote>
-<p>​    12月的时候我去吃了一个人均500的日料自助。值得一提的是，套餐里有一只大虾，但是是生的。我不喜欢吃刺身，却又不敢说“能不能帮我烤一下”（这太不符合高级日料店的风格了！），于是就只能硬着头皮吃下去。一句题外话，日料的omakase（大概就是自助吧）似乎都挺贵的，好像人均会是4位数，那么看来我吃的这一家店还算比较实惠（？），也不能这么想啦！</p>
-<p>​    最后一件事是关于生日，大学四年我过生日都还算比较有仪式感。唯独21岁这次生日，因为忙着做作品集，从早忙到了晚，就没有考虑过生日怎么过。后来，和舍友（他也要做作品集）一起在机构附近简单吃了个饭，就当是过了生日，希望明年一定要补上。还有一点是，虚幻4在我生日这天崩溃了4次，确实挺让我崩溃的。</p>
-<p>​    我想这就是我对大四上生活的一些简单回顾吧。哦对了，还有一件事，在学期末找了一些同学组队参加了GameJam，还是挺开心的！大四上在一片忙碌中就这样结束了。</p>
-]]></content>
-      <categories>
-        <category>Life, Journal</category>
-      </categories>
-      <tags>
-        <tag>日常生活</tag>
-        <tag>碎碎念</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>ノエルのテーマ 〜最後の旅〜</title>
-    <url>/2021/09/27/%E3%83%8E%E3%82%A8%E3%83%AB%E3%81%AE%E3%83%86%E3%83%BC%E3%83%9E%E3%80%80%E3%80%9C%E6%9C%80%E5%BE%8C%E3%81%AE%E6%97%85%E3%80%9C/</url>
-    <content><![CDATA[<h4 id="Original-Lyrics"><a href="#Original-Lyrics" class="headerlink" title="Original Lyrics:"></a>Original Lyrics:</h4><p>Long ago, when I was just a boy<br>So alone that last of my kind in the world<br>I believe futures could be reborn<br>I would go back in time<br>Change what’s to come</p>
-<p>Hunting, searching for futures I’ve dreamed<br>Ever chasing, believing visions unseen<br>Hearing that hope is futile<br>Only inspires me not to give up</p>
-<p>Valhalla is calling me to the end<br>I can hear now the beating hearts of lost friends<br>Urging me to not forget them<br>As the last hunter<br>I’ll find the key</p>
-<h4 id="Translated-zh-cn"><a href="#Translated-zh-cn" class="headerlink" title="Translated(zh-cn):"></a>Translated(zh-cn):</h4><p>很久之前，当我还是孩童之时</p>
-<p>作为族类的最后一人，孑然一身</p>
-<p>如果未来可以改变</p>
-<p>我将追溯过去，改变将来</p>
-<p>苦苦寻求着梦中的未来</p>
-<p>漫漫追逐着未见的愿景</p>
-<p>正因希望茫茫</p>
-<p>而深知此路断不可弃</p>
-<p>追随英灵殿的召唤，我来到世界的终末</p>
-<p>我离去的朋友啊，心跳声久久回响于耳畔</p>
-<p>告诉着我，不能遗忘，断不能遗忘。</p>
-<p>背负着大家的使命，我必将找到命运之钥。</p>
-]]></content>
-      <categories>
-        <category>Translation</category>
-      </categories>
-      <tags>
-        <tag>Music</tag>
-        <tag>Lyrics</tag>
       </tags>
   </entry>
   <entry>
@@ -1324,34 +1237,121 @@
       </tags>
   </entry>
   <entry>
-    <title>One day in Monterey</title>
-    <url>/2023/06/20/One%20Day%20in%20Monterey/</url>
-    <content><![CDATA[<h3 id="One-day-in-Monterey"><a href="#One-day-in-Monterey" class="headerlink" title="One day in Monterey"></a>One day in Monterey</h3><p>​            因为赶着要去实习(在San Jose)，Path Tracer的作业又拖到最后一天才交，上学和实习便几乎是无缝衔接了。具体衔接得有多紧密呢？我18号中午提交完作业，20号就要开始实习。实习的公司距离学校很远，开车要4.5小时。即使我想一天冲到实习期间的住处，房东也只有19号才有空，这就意味着我只能19号到San Jose，第二天便直接迎接实习生活了。</p>
-<p>​            既然不能一天狂奔到公司，我就估摸着中间找个地方休息一天。南加州和北加州中间选哪呢？San-Luis-Obispo，感觉没什么好玩的，pass。Santa Maria，感觉和Santa Barbara（我学校在的地方）差不多，pass。其他地方感觉也没有什么特别的，也许是加州的小城市都大同小异吧？最后我选择Monterey的原因是1. 听说水族馆很漂亮，是美国第二大的水族馆（第一大在Atlanta）2. macOS 12.0的版本好就是Monterey 3. 有一次在学校旁的iHop吃饭，有一位阿姨说自己住在Monterey，她今天把孩子接回去。稍微聊了几句之后，她便结账离开了。后来我才知道，她也帮我买了单。</p>
-<p>​            选定好地点之后，选择酒店也是纠结了许久。难得出来玩一趟，总得住点好的吧，这可不得Hilton, Hyatt定起来？可是看到Hyatt Regency 358刀一晚的价格的时候，还是一下就退缩了。最终我选择了一个110刀的汽车旅馆，差不多是这个区域里最平价的住处之一了，虽然不如高端酒店豪华，但是评分竟也有8.8，Hyatt Regency评分也不过9.0。就当我怀疑是不是旅馆老板疯狂刷单做评分的时候，我的手已经按下了付款键。</p>
-<p>​            万事俱备，18号交完作业，再次检查行李，加完油，洗车，出发！</p>
-<p>​            沿着101公路一路向北开了1个多小时之后，我的肚子就饿得不行了，毕竟那时已经下午4点半，而我一天都没有吃东西。最后就近下高速，路边找了个麦当劳，点了个巨无霸，麦乐鸡一顿狂吃。啊～活过来了。</p>
-<p>​            再往北开2小时，路上许多飞虫会撞向挡风玻璃，这也就意味着，我的车白洗了。除开这个点，路上的风景倒是很多样，有峡谷，有农田，有沙丘。整体路况而言还可以，大多数时候能开到70-80 mph (国内112-128码)。下午7:30，开到了！在一家中餐馆简单解决晚饭后，我便开回酒店，准备第二天前往水族馆。</p>
-<p>​    <img src="https://s2.loli.net/2023/06/20/oITjcvFuNDAkHyG.png" style="zoom:50%;" /></p>
-<blockquote>
-<p>中餐馆 (Full Moon Chinese Restaurant) 的蟹黄豆腐，他们家分量太足了，饭是用平底的碗装的，差不多是平时2人的量。</p>
-</blockquote>
-<p>​            回去的路上，车辆一直在提示玻璃水不足，我便去加油站的超市里买了一瓶玻璃水。回到酒店的时候，便尝试打开引擎盖，自己添加玻璃水。结果我竟然连怎么打开引擎盖都不会！为了避免行驶过程中汽车引擎盖弹起，汽车引擎盖通常是双层解锁设计，不仅需要车内拉动开关，还需要拉动引擎盖内的锁扣，才能完全解锁。我按照教程摸了半天上方的锁扣，却完全是抓瞎。无奈之下，只能求助于一旁的酒店工作人员，没想到他三下五除二就帮我打开了汽车锁扣——原来我的车的锁扣设置在引擎盖下方。接下来，他熟练地帮我加完玻璃水，此时，我内心的崇拜之情已经无以言表。就在我以为一切完美结束的时候，我才发现引擎盖关不上了，准确来说，是引擎盖的锁扣坏了。酒店人员看到这种情况后，他也尝试着帮我复位锁扣，可惜不管如何拨动都于事无补。他向我指了一个附近的修车店，并告知我“这种情况下千万不能上高速，因为有可能引擎盖会弹起来，挡住视线”。我很无奈，却也只能回到房间，准备第二天一早去维修店碰碰运气。睡觉之前，我不甘心，再去试试把引擎盖压回原位，依然是没有成功。</p>
-<p>​            第二天一早，我便开车去了一个最近的修车店。店内清一色的BBA，保时捷，有些一看就是老古董了。正当我准备下车和店主说明情况的时候，店主和我说，我们不修这种车，你得去隔壁看看。这还是我第一次感觉到阶级的差异，毕竟这汽修店也只是在小破巷里，谁又能想到他有这么大的口气呢？倒车离开的时候，店主因为担心我倒车撞倒后放的古董保时捷，还让我下车，他亲自倒车。我在一片尴尬的氛围中来到了隔壁汽修店，只可惜他也是无能为力，他推荐我去品牌4S店进行维修。</p>
-<p>​            我打开地图，最近的马自达4S店在13英里外，而现在的车况是不能上高速的。无奈之下，我只能去Subaru的4S店寻求帮助，没想到前台的亚裔小哥帮我联系了马自达的4S店，并且询问他们能不能把零件寄过来维修，那一刻我内心涌起一股“Asian help asian”的感动。因为次日我就要去实习，而维修也无法当日完成。在这种情况下，他们不知道用了什么法子，帮我把引擎盖关上了（具体怎么关我也不清楚），并建议我周末到附近的4S店更换这个零件。在得知这一切都不需要收费的情况下，我恨不得当即跪下来给他磕三个头。因为要是关不上，我就去不成水族馆，并且接下来几天就都需要租车，我的车也只能放在他这里维修，甚至之后还要从San Jose开到这边来取（来回就要接近3小时）。</p>
-<p>​            车子能上路了，我就前往了Monterey的水族馆（淘宝买的票竟然只要官网价格的1/7），虽然Santa Barbra也有水族馆，并且同样也以海鲜闻名，但就水族馆而言，终究还是比不上Monterey的规模。文字叙述水族馆的美还是太苍白了，这里便用图片说明吧（其实也是因为流水账太长了）。</p>
-<p><img src="https://s2.loli.net/2023/06/20/C3skF8hro5JVbAN.png" alt="image-20230620003020062"></p>
-<blockquote>
-<p>水族馆的沙丁鱼群，在Open Sea 区域</p>
-</blockquote>
-<p>​            离开水族馆后，我预约了公司附近的车辆维修，然后便直接往住处开去。虽然在蒙特雷只是短短呆了一天，甚至不到24小时，但是实惠的饭菜份量，全能的酒店服务员，热情的4S店员都让我对这个城市有着很好的印象（那个只为富人修车的店家除外）。下次有机会一定会再来！</p>
+    <title>Why Tuple?</title>
+    <url>/2021/09/21/WhyTuple?/</url>
+    <content><![CDATA[<p>C++ 11 introduces a template Tuple, similar to the one in Python, allows you to store data of different types in a single entity. But you may ask, in C/C++,we already have some mechaism called struct allows us to do the same thing, then why do we need tuple?</p>
+<h3 id="Case-1-One-Time-Structure-to-Transfer-Data"><a href="#Case-1-One-Time-Structure-to-Transfer-Data" class="headerlink" title="Case 1: One-Time Structure to Transfer Data"></a>Case 1: One-Time Structure to Transfer Data</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">tuple&lt;string,<span class="keyword">int</span>&gt; <span class="title">getNameAge</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//do something</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">make_tuple</span>(<span class="string">&quot;Bob&quot;</span>,<span class="number">34</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Person</span>&#123;</span>string name;<span class="keyword">int</span> age;&#125;p;</span><br><span class="line">    tuple&lt;string,<span class="keyword">int</span>&gt; t;</span><br><span class="line">    </span><br><span class="line">    string name;</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    <span class="built_in">tie</span>(name,age) = <span class="built_in">getNameAge</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>If we want to transfer a group of data for only one time, we may not want to define a struct, and using tuple get us away from these definitions.</p>
+<h3 id="Case-2-Fast-Comparison-Using-Tuple-Operators"><a href="#Case-2-Fast-Comparison-Using-Tuple-Operators" class="headerlink" title="Case 2: Fast Comparison Using Tuple Operators"></a>Case 2: Fast Comparison Using Tuple Operators</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">tuple&lt;<span class="keyword">int</span>,<span class="keyword">int</span>,<span class="keyword">int</span>&gt; time1,time2;</span><br><span class="line"><span class="keyword">if</span>(time1&gt;time2)</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;time1 is later&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Case-3-Multi-Index-Map-Unordered-Map"><a href="#Case-3-Multi-Index-Map-Unordered-Map" class="headerlink" title="Case 3: Multi-Index Map/Unordered Map"></a>Case 3: Multi-Index Map/Unordered Map</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//define</span></span><br><span class="line">map&lt;tuple&lt;<span class="keyword">int</span>,<span class="keyword">char</span>,<span class="keyword">float</span>&gt;,string&gt; m;</span><br><span class="line"><span class="comment">//indexing</span></span><br><span class="line">m[<span class="built_in">make_tuple</span>(<span class="number">2</span>,<span class="string">&#x27;a&#x27;</span>,<span class="number">1.0</span>)] = <span class="string">&quot;Test&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Case-4-Fast-Swap"><a href="#Case-4-Fast-Swap" class="headerlink" title="Case 4: Fast Swap"></a>Case 4: Fast Swap</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a,b,c;</span><br><span class="line"><span class="built_in">tie</span>(b,c,a) = <span class="built_in">make_tuple</span>(a,b,c);</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion:"></a>Conclusion:</h3><p>Tuple is not recommended to be overused. If needed, use struct instead.</p>
 ]]></content>
       <categories>
-        <category>Life, Journal, Travel</category>
+        <category>Programming</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>Data_Structure</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ノエルのテーマ 〜最後の旅〜</title>
+    <url>/2021/09/27/%E3%83%8E%E3%82%A8%E3%83%AB%E3%81%AE%E3%83%86%E3%83%BC%E3%83%9E%E3%80%80%E3%80%9C%E6%9C%80%E5%BE%8C%E3%81%AE%E6%97%85%E3%80%9C/</url>
+    <content><![CDATA[<h4 id="Original-Lyrics"><a href="#Original-Lyrics" class="headerlink" title="Original Lyrics:"></a>Original Lyrics:</h4><p>Long ago, when I was just a boy<br>So alone that last of my kind in the world<br>I believe futures could be reborn<br>I would go back in time<br>Change what’s to come</p>
+<p>Hunting, searching for futures I’ve dreamed<br>Ever chasing, believing visions unseen<br>Hearing that hope is futile<br>Only inspires me not to give up</p>
+<p>Valhalla is calling me to the end<br>I can hear now the beating hearts of lost friends<br>Urging me to not forget them<br>As the last hunter<br>I’ll find the key</p>
+<h4 id="Translated-zh-cn"><a href="#Translated-zh-cn" class="headerlink" title="Translated(zh-cn):"></a>Translated(zh-cn):</h4><p>很久之前，当我还是孩童之时</p>
+<p>作为族类的最后一人，孑然一身</p>
+<p>如果未来可以改变</p>
+<p>我将追溯过去，改变将来</p>
+<p>苦苦寻求着梦中的未来</p>
+<p>漫漫追逐着未见的愿景</p>
+<p>正因希望茫茫</p>
+<p>而深知此路断不可弃</p>
+<p>追随英灵殿的召唤，我来到世界的终末</p>
+<p>我离去的朋友啊，心跳声久久回响于耳畔</p>
+<p>告诉着我，不能遗忘，断不能遗忘。</p>
+<p>背负着大家的使命，我必将找到命运之钥。</p>
+]]></content>
+      <categories>
+        <category>Translation</category>
+      </categories>
+      <tags>
+        <tag>Music</tag>
+        <tag>Lyrics</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>最近半年的生活状态（上）</title>
+    <url>/2022/06/19/%E4%B8%80%E4%BA%9B%E6%9C%80%E8%BF%91%E5%8D%8A%E5%B9%B4%E5%8F%91%E7%94%9F%E7%9A%84%E4%BA%8B(%E4%B8%8A)/</url>
+    <content><![CDATA[<h3 id="最近半年的生活状态（上）"><a href="#最近半年的生活状态（上）" class="headerlink" title="最近半年的生活状态（上）"></a>最近半年的生活状态（上）</h3><p>​    说起来，自从大四之后就很久很久没有为自己写一些东西，也许是太忙？但也有可能是“我没有把这当作是最重要的事情”，所以一直搁置了。不过临近毕业，总算是稍微有点机会写点什么了，就稍微写一点吧。我想先写一些关于大四上学期的内容，不然就太长了。</p>
+<h3 id="大四上"><a href="#大四上" class="headerlink" title="大四上"></a>大四上</h3><p>​    整个大四上发生了很多事情，分手，上课，作品集，申请学校。一直非常焦头烂额，不过好在我在作品集的机构认识了一些朋友，后来11月的时候，还因为疫情的原因在校外酒店住了一个多月。我的整个大四上学期是在忙碌和焦虑中度过的，不过我猜大家都是这样。</p>
+<ul>
+<li>分手</li>
+</ul>
+<p>​    学期的一开始，前任就和我提了分手，不过我太想再回忆这些。分手的时候ta撒了一个谎，后来找我复合，我拒绝了。既然已经过去这么久，就这样吧。</p>
+<ul>
+<li>数据结构基础</li>
+</ul>
+<p>​    大四上才上数据结构确实挺晚了，甚至申请的时候都不一定会出现在成绩单上，但就当是学知识吧—我是这么想的。学校的数据结构课一开始要分班考，基础还行的同学可以选择困难模式，也就是平时的3个实验课作业题目会变难，好处是评分最多可以比其他同学高5分。我选择了困难模式，当然也为此花了一些时间，现在想想，却也不是那么有必要，尽管确实从一些题目中获得了更深的思考。</p>
+<img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h3e0gq6kzmj21yq0tsgrj.jpg" alt="image-20220620001929249" style="zoom:33%;" />
+
+<blockquote>
+<p>当时为了练手，日常还会做一些LeetCode补充一下，传到GitHub记录一下？</p>
+</blockquote>
+<p>​    这门课臭名昭著的地方在于实验课作业的互评制度，也就是大家要互相给代码和实验报告打分。大部分选课的同学应该都是刚上大二，仅校内课程来说，是没有接触过较为现代的Editor或者LaTex/Markdown之类的工具的，于是相当多的同学（至少在我互评的范围内）用Dev C++（大一的时候学校推荐大家使用）写代码，用Word写文档。我觉得他们之中的很多人应该是在这些方面吃了亏，而我可能也只是因为在这些方面（指使用VSCode / Typora）有点接触，在互评上稍微多了点美观分—这其实还挺不公平的…</p>
+<p>​    印象比较深的有几件事，一件是期中考试好像只考了69分，还没有到班级平均线。一件是第二个实验课题目比较困难，当时写了有800行代码，较为头疼。不过比较开心的是，那次我实现了一个类似Trie的结构，还是用了比较基础的multithreading和rvalue reference，尽管最后效率非常低…</p>
+<p>​    至于这门课的结果还不错，期末考试的800个人里面考了130几名，算是给期中考试挽回了一点颜面吧。</p>
+<ul>
+<li>作品集</li>
+</ul>
+<p>​    老实说提起作品集挺汗颜的，只要一想起它我就会非常紧张，但它又是我申请设计/游戏类学校必不可少的一环。暑假因为忙着谈恋爱，浪费（？）了许多时间。我是一个挺恋爱脑的人，所以一旦进入一段关系，效率就会很低下。导致开学的时候，还没有完成多少作品集的内容。从这个意义上来说，幸好分手了，不然以我之前的效率，作品集应该是做不完了吧。</p>
+<img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h3e0ekdizkj21750u00wp.jpg" alt="image-20220620001722163" style="zoom:33%;" />
+
+<blockquote>
+<p>一张产品渲染图，Blender水平提高了许多</p>
+</blockquote>
+<p>​    我在作品集机构完成了自己的第一个游戏的Demo，也因此认识了几个好朋友，后来做产品渲染的时候提高了自己的Blender技巧，这些都是我实实在在的收获。果然还是和游戏相关的事情最容易让人获得快乐啊！</p>
+<ul>
+<li>申请学校</li>
+</ul>
+<p>​    我这个人申请学校的策略完全就是个超级大海王，或许是怕没有书读，我一共申请了23个项目，光是送分加上申请费用就花了差不多2万块。一开始还会反复检查信息是否有误，到后来麻木了，就不太检查了。而选校的事情本身也不甚严谨，当时甚至是昨天刚听说一个项目，今天就决定申请这个项目。实际上我最终决定去的项目，也是我申请结束前10天听说的。不过，反正多申请一个学校也不会缺斤少两，多申请总不会后悔！</p>
+<img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h3e0kqwfmcj214y0ti41g.jpg" alt="image-20220620002158278" style="zoom:33%;" />
+
+<blockquote>
+<p>最后打算去这里了，加州见！</p>
+</blockquote>
+<ul>
+<li>关于日常生活</li>
+</ul>
+<p>​    上个学期最喜欢的事情是因为临时封校，在外面的酒店住了一个多月。一个多月里我能够每天吃麦当劳，每天喝喜茶。每天都只需要步行去机构，坐在人体工学椅上。晚上洗澡，躺在酒店超级软的床上面。真幸福啊…</p>
+<p>​    考GRE那天是万圣节，我当时上午没吃饭就去考试，结果一直到14:30才吃上饭。考完试后去机构继续做作品集，而后回到学校换上我的万圣节costume，扮成迈尔斯来吓人！</p>
+<img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h3e0kp8ijpj20sm12s43z.jpg" alt="image-20220620002245778" style="zoom:33%;" />
+
+<blockquote>
+<p>Happy Halloween~</p>
+</blockquote>
+<p>​    12月的时候我去吃了一个人均500的日料自助。值得一提的是，套餐里有一只大虾，但是是生的。我不喜欢吃刺身，却又不敢说“能不能帮我烤一下”（这太不符合高级日料店的风格了！），于是就只能硬着头皮吃下去。一句题外话，日料的omakase（大概就是自助吧）似乎都挺贵的，好像人均会是4位数，那么看来我吃的这一家店还算比较实惠（？），也不能这么想啦！</p>
+<p>​    最后一件事是关于生日，大学四年我过生日都还算比较有仪式感。唯独21岁这次生日，因为忙着做作品集，从早忙到了晚，就没有考虑过生日怎么过。后来，和舍友（他也要做作品集）一起在机构附近简单吃了个饭，就当是过了生日，希望明年一定要补上。还有一点是，虚幻4在我生日这天崩溃了4次，确实挺让我崩溃的。</p>
+<p>​    我想这就是我对大四上生活的一些简单回顾吧。哦对了，还有一件事，在学期末找了一些同学组队参加了GameJam，还是挺开心的！大四上在一片忙碌中就这样结束了。</p>
+]]></content>
+      <categories>
+        <category>Life, Journal</category>
       </categories>
       <tags>
         <tag>日常生活</tag>
-        <tag>旅行</tag>
+        <tag>碎碎念</tag>
       </tags>
   </entry>
   <entry>
@@ -1434,106 +1434,6 @@
       </categories>
       <tags>
         <tag>C/C++</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>从歌词学语法01：譲り葉塚-霜月遥</title>
-    <url>/2025/04/20/%E8%AD%B2%E3%82%8A%E8%91%89%E5%A1%9A/</url>
-    <content><![CDATA[<h3 id="从歌词学语法01：譲り葉塚-霜月遥"><a href="#从歌词学语法01：譲り葉塚-霜月遥" class="headerlink" title="从歌词学语法01：譲り葉塚-霜月遥"></a>从歌词学语法01：譲り葉塚-霜月遥</h3><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>从歌词下手学习日语语法个人认为是个不错的选择。平时一直会唱，但并没有仔细整理其内容，因此多数时候也只是一知半解。另一方面，对歌词做分析也有助于更好地了解其背后的意涵。</p>
-<p>这次先选了《譲り葉塚》这首歌，整体而言文法/造词都偏古日语，因此更值得学习和研究。由于网络上翻译很多，所以这里就不作翻译，更多注重于语法和意象，来了解语法/文化本身。</p>
-<p>需要注意的是，这首歌<strong>不是一首男女情歌</strong>。虽然歌词当中出现了「恋慕えるあの人」、「双りの砂利道」容易被误读为“爱人”的表达，但是歌词的核心意象<strong>譲葉</strong>，常被用于比喻世代交替，亲子关系（尤其是母亲）。</p>
-<p><strong>譲葉</strong>这种植物主要的特点是： 新芽长出来以后，老叶才会掉落。给人一种「把位置让出来」的感觉。所以在文学作品中根据“老叶不急着掉落，而是等新芽长好后才慢慢让位”特点，用譲葉来比喻 <strong>父母对子女的关爱与传承</strong>。</p>
-<p>同样地，在这首歌中，譲葉也用于比喻母亲与母爱。这一点可以在词作者本人的博客中得以验证，<a href="https://note.com/hiyamason/n/n04ab9a7d75ad%E3%80%82%E4%B8%BA%E4%BA%86%E6%9B%B4%E5%A5%BD%E5%9C%B0%E5%AF%B9%E7%85%A7%E6%AD%8C%E8%AF%8D%EF%BC%8C%E5%85%88%E5%9C%A8%E4%B8%8B%E9%9D%A2%E7%BB%99%E5%87%BA%E6%95%85%E4%BA%8B%E8%83%8C%E6%99%AF%EF%BC%88%E6%9D%A5%E8%87%AA%E5%8D%9A%E6%96%87%EF%BC%89%E3%80%82">https://note.com/hiyamason/n/n04ab9a7d75ad。为了更好地对照歌词，先在下面给出故事背景（来自博文）。</a></p>
-<h4 id="故事背景"><a href="#故事背景" class="headerlink" title="故事背景"></a>故事背景</h4><p>一位少女在生前因某种原因早早离世，灵魂被困在自己的闺房中，日日等待母亲的到来。起初母亲还常常来探望她，带着团子与鲜花，但随着时间流逝，母亲渐渐不再出现。少女始终坚信母亲没有忘记她，直到有一天，天上的使者降临，邀请她升天。</p>
-<p>然而，升天意味着与母亲永别，少女因放不下执念而拒绝升天，并剪断了天上的丝线。意外地，她因此得到了蝴蝶的羽翼，开始寻找回家的路。</p>
-<p>她回到了故乡，见到母亲正慈爱地陪伴着另一个小女孩——一个她不认识的“新女儿”。这使她意识到，母亲已经彻底走出了悲伤，过上了新的生活，而自己早已被遗忘。</p>
-<p>在极度的悲伤与自责中，她回到空无一人的闺房，陷入彻底的孤独。但天之使者再次降临，给予她“救赎”的使命：成为连接天与地的蝴蝶，收集一千只像她一样无法升天、怀有执念的灵魂（蝶），便能实现愿望、找到归处。</p>
-<p>故事最后，她踏上旅程，边唱着童年与母亲共唱的歌，边在人世间寻找那一千只同样孤独的灵魂。</p>
-<h4 id="歌词（少女视角，第一人称）"><a href="#歌词（少女视角，第一人称）" class="headerlink" title="歌词（少女视角，第一人称）"></a>歌词（少女视角，第一人称）</h4><p>ひとり佇む　誰そ彼<br>小指絡ませぬ　ゆびきり<br>明日も来るから<br>ここに居りなさい</p>
-<ul>
-<li>誰そ彼（黄昏）算是一个很出名的双关，在《你的名字》当中被着重介绍。语源是“彼は誰ぞ”，意思是“那人是谁”，因为黄昏时灯光昏暗，连人也无法辨识，因此得名。</li>
-<li>小指絡ませぬ，<strong>絡ませる</strong>：使役动词「絡む」的使役态。 「ぬ」算是一个很常见的文言体的否定词，即ない。</li>
-<li>后两句实为母亲对亡女所说的话，“我明天还会再来的，请好好待在这里”</li>
-</ul>
-<p>心ぼそき閨の中でも</p>
-<p>灯りとなる　その言葉<br>髪撫づる　痩せた手と手を<br>繋ぎ歩む　双りの砂利道<br>今も　あの日は褪せずに</p>
-<ul>
-<li>心ぼそき，形容词 心細い 的文言连体形。</li>
-<li>閨，闺房、卧室，常用于女性、亲密关系的空间。</li>
-<li>砂利道：碎石铺成的小路，常见于乡村或墓地通路。</li>
-<li>歩む，文体的「歩く」，多用于抽象/比喻义，例如经历了坎坷的人生，“苦難の人生を歩んできた”。</li>
-<li>髪撫づる　痩せた手と手を，这一句中，同样是母亲的手，以及“亡女与母亲”一同走过的石子路。</li>
-</ul>
-<p>格子隔てて散る花<br>骨に纏わりし蝶々も<br>はやくお帰りと<br>舞ひて　ささめきて</p>
-<ul>
-<li>格子（窗格/栅栏）、散る花（正在凋零的花），分别象征阴阳之隔与生命的枯萎。</li>
-<li>骨に，结合亡女的身份，此处可能指遗体。</li>
-<li>纏わりし，し是古日语的过去时态助动词。</li>
-<li>蝶々も，蝴蝶在日式文化中常象征<strong>灵魂、轮回或死者转世</strong>。</li>
-<li>“快点回去吧”，这里可能是指“天之使者（蝴蝶）”，劝主人公放下母亲，一同回到死者的世界。</li>
-<li>舞ひて，动词「舞ふ（まふ）」的连体形+て，此处指蝴蝶在风中飞舞。</li>
-</ul>
-<p>刻の過ぎる故里に住む<br>恋慕える　あの人は<br>嗚呼　偏に別人のよう<br>知らぬ人に<br>知りえぬ笑みなど見せて<br>世界を違える</p>
-<ul>
-<li>刻（とき），更文雅的 “時”</li>
-<li>第一句话在说，“我住在这时间流逝的故乡中”， 体现了“我被留下”的感觉，即灵魂依然留在原地。</li>
-<li><strong>恋慕える　あの人は</strong>， 结合前文，此处指对母亲的深爱。</li>
-<li>知らぬ人に， 这里指母亲的“新女儿”</li>
-<li>知りえぬ笑みなど見せて，<ul>
-<li>「知る」= 知道 +「えぬ」= 「得る」的否定文语体 → “无法得知”</li>
-<li><strong>など</strong>：表示列举或语气强调（在这里有<strong>贬义</strong>成分：居然）</li>
-<li>两句连在一起意为“还向我从未见过的陌生人，展露那种我不曾见过的微笑”，体现了极强的剥夺感。</li>
-</ul>
-</li>
-<li>違える，「違う」的文体表达。</li>
-</ul>
-<p>便り絶える閨の中でも<br>また良い子に眠ります<br>だから　呼んで　名前だけでも<br>忘れぬこと　それだけの願い<br>今は　儚く醜く</p>
-<ul>
-<li>閨，结合前文，此处为亡女生前的卧室，她的灵魂仍被困于此。</li>
-<li>良い子に眠ります，这里的に表示“姿态/方法”，即像好孩子一样入睡。<ul>
-<li>象征“顺从，安静接受命运”</li>
-</ul>
-</li>
-<li>后两句表达不被母亲遗忘的愿望。</li>
-</ul>
-<p>土に汚れ　塚は荒れ果て<br>枯れた草に寄る命<br>天へ昇る糸を切りしは<br>居場所もなき泡沫のならい<br>枝を落ちゆく譲り葉<br>いざや　何処へ逝こうか……</p>
-<ul>
-<li>「荒れ果てる」为复合动词：荒れる + 果てる → “彻底荒废”<ul>
-<li>“我的坟冢早已被泥土污染、彻底荒废”</li>
-</ul>
-</li>
-<li>天へ昇る糸，通往天国的丝线，类似“奈何桥”的存在。</li>
-<li>“切りし”同样为古体过去式表达。</li>
-<li>居場所もなき<ul>
-<li>「居場所」（容身之处）+「なき」= 文语否定形 → 没有归处的</li>
-</ul>
-</li>
-<li>泡沫のならい<ul>
-<li>泡沫是常见古典意象，表达人生如梦，命运无常</li>
-<li>習い，原意是“<strong>习惯、惯例、惯习</strong>”，这里理解为“世间的常态”“命运的安排”。<ul>
-<li>在古语中有时也带有“事物自然的道理”之意。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>「いざや」：感叹词 ，代表“那么…“</li>
-<li>「逝こうか」：<ul>
-<li>「逝く」为「行く」的婉约说法，多用于死亡</li>
-</ul>
-</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>一位已被世界遗忘的逝者，用尽全歌表达了她唯一的愿望：<br> <strong>希望被你记得。</strong><br> 哪怕只是一次轻声呼唤她的名字。<br> 但如今连墓都荒废、归处尽失，她温柔而孤独地问：“那我，究竟该往何方去了呢？”</p>
-<p>最后感谢：</p>
-<ul>
-<li>ChatGPT，MOJI 辞书</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Lyric Analysis</category>
-      </categories>
-      <tags>
-        <tag>Japanese</tag>
-        <tag>Lyric</tag>
       </tags>
   </entry>
   <entry>
@@ -1637,6 +1537,106 @@
         <tag>C/C++</tag>
         <tag>Audio Programming</tag>
         <tag>JUCE</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>从歌词学语法01：譲り葉塚-霜月遥</title>
+    <url>/2025/04/20/%E8%AD%B2%E3%82%8A%E8%91%89%E5%A1%9A/</url>
+    <content><![CDATA[<h3 id="从歌词学语法01：譲り葉塚-霜月遥"><a href="#从歌词学语法01：譲り葉塚-霜月遥" class="headerlink" title="从歌词学语法01：譲り葉塚-霜月遥"></a>从歌词学语法01：譲り葉塚-霜月遥</h3><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>从歌词下手学习日语语法个人认为是个不错的选择。平时一直会唱，但并没有仔细整理其内容，因此多数时候也只是一知半解。另一方面，对歌词做分析也有助于更好地了解其背后的意涵。</p>
+<p>这次先选了《譲り葉塚》这首歌，整体而言文法/造词都偏古日语，因此更值得学习和研究。由于网络上翻译很多，所以这里就不作翻译，更多注重于语法和意象，来了解语法/文化本身。</p>
+<p>需要注意的是，这首歌<strong>不是一首男女情歌</strong>。虽然歌词当中出现了「恋慕えるあの人」、「双りの砂利道」容易被误读为“爱人”的表达，但是歌词的核心意象<strong>譲葉</strong>，常被用于比喻世代交替，亲子关系（尤其是母亲）。</p>
+<p><strong>譲葉</strong>这种植物主要的特点是： 新芽长出来以后，老叶才会掉落。给人一种「把位置让出来」的感觉。所以在文学作品中根据“老叶不急着掉落，而是等新芽长好后才慢慢让位”特点，用譲葉来比喻 <strong>父母对子女的关爱与传承</strong>。</p>
+<p>同样地，在这首歌中，譲葉也用于比喻母亲与母爱。这一点可以在词作者本人的博客中得以验证，<a href="https://note.com/hiyamason/n/n04ab9a7d75ad%E3%80%82%E4%B8%BA%E4%BA%86%E6%9B%B4%E5%A5%BD%E5%9C%B0%E5%AF%B9%E7%85%A7%E6%AD%8C%E8%AF%8D%EF%BC%8C%E5%85%88%E5%9C%A8%E4%B8%8B%E9%9D%A2%E7%BB%99%E5%87%BA%E6%95%85%E4%BA%8B%E8%83%8C%E6%99%AF%EF%BC%88%E6%9D%A5%E8%87%AA%E5%8D%9A%E6%96%87%EF%BC%89%E3%80%82">https://note.com/hiyamason/n/n04ab9a7d75ad。为了更好地对照歌词，先在下面给出故事背景（来自博文）。</a></p>
+<h4 id="故事背景"><a href="#故事背景" class="headerlink" title="故事背景"></a>故事背景</h4><p>一位少女在生前因某种原因早早离世，灵魂被困在自己的闺房中，日日等待母亲的到来。起初母亲还常常来探望她，带着团子与鲜花，但随着时间流逝，母亲渐渐不再出现。少女始终坚信母亲没有忘记她，直到有一天，天上的使者降临，邀请她升天。</p>
+<p>然而，升天意味着与母亲永别，少女因放不下执念而拒绝升天，并剪断了天上的丝线。意外地，她因此得到了蝴蝶的羽翼，开始寻找回家的路。</p>
+<p>她回到了故乡，见到母亲正慈爱地陪伴着另一个小女孩——一个她不认识的“新女儿”。这使她意识到，母亲已经彻底走出了悲伤，过上了新的生活，而自己早已被遗忘。</p>
+<p>在极度的悲伤与自责中，她回到空无一人的闺房，陷入彻底的孤独。但天之使者再次降临，给予她“救赎”的使命：成为连接天与地的蝴蝶，收集一千只像她一样无法升天、怀有执念的灵魂（蝶），便能实现愿望、找到归处。</p>
+<p>故事最后，她踏上旅程，边唱着童年与母亲共唱的歌，边在人世间寻找那一千只同样孤独的灵魂。</p>
+<h4 id="歌词（少女视角，第一人称）"><a href="#歌词（少女视角，第一人称）" class="headerlink" title="歌词（少女视角，第一人称）"></a>歌词（少女视角，第一人称）</h4><p>ひとり佇む　誰そ彼<br>小指絡ませぬ　ゆびきり<br>明日も来るから<br>ここに居りなさい</p>
+<ul>
+<li>誰そ彼（黄昏）算是一个很出名的双关，在《你的名字》当中被着重介绍。语源是“彼は誰ぞ”，意思是“那人是谁”，因为黄昏时灯光昏暗，连人也无法辨识，因此得名。</li>
+<li>小指絡ませぬ，<strong>絡ませる</strong>：使役动词「絡む」的使役态。 「ぬ」算是一个很常见的文言体的否定词，即ない。</li>
+<li>后两句实为母亲对亡女所说的话，“我明天还会再来的，请好好待在这里”</li>
+</ul>
+<p>心ぼそき閨の中でも</p>
+<p>灯りとなる　その言葉<br>髪撫づる　痩せた手と手を<br>繋ぎ歩む　双りの砂利道<br>今も　あの日は褪せずに</p>
+<ul>
+<li>心ぼそき，形容词 心細い 的文言连体形。</li>
+<li>閨，闺房、卧室，常用于女性、亲密关系的空间。</li>
+<li>砂利道：碎石铺成的小路，常见于乡村或墓地通路。</li>
+<li>歩む，文体的「歩く」，多用于抽象/比喻义，例如经历了坎坷的人生，“苦難の人生を歩んできた”。</li>
+<li>髪撫づる　痩せた手と手を，这一句中，同样是母亲的手，以及“亡女与母亲”一同走过的石子路。</li>
+</ul>
+<p>格子隔てて散る花<br>骨に纏わりし蝶々も<br>はやくお帰りと<br>舞ひて　ささめきて</p>
+<ul>
+<li>格子（窗格/栅栏）、散る花（正在凋零的花），分别象征阴阳之隔与生命的枯萎。</li>
+<li>骨に，结合亡女的身份，此处可能指遗体。</li>
+<li>纏わりし，し是古日语的过去时态助动词。</li>
+<li>蝶々も，蝴蝶在日式文化中常象征<strong>灵魂、轮回或死者转世</strong>。</li>
+<li>“快点回去吧”，这里可能是指“天之使者（蝴蝶）”，劝主人公放下母亲，一同回到死者的世界。</li>
+<li>舞ひて，动词「舞ふ（まふ）」的连体形+て，此处指蝴蝶在风中飞舞。</li>
+</ul>
+<p>刻の過ぎる故里に住む<br>恋慕える　あの人は<br>嗚呼　偏に別人のよう<br>知らぬ人に<br>知りえぬ笑みなど見せて<br>世界を違える</p>
+<ul>
+<li>刻（とき），更文雅的 “時”</li>
+<li>第一句话在说，“我住在这时间流逝的故乡中”， 体现了“我被留下”的感觉，即灵魂依然留在原地。</li>
+<li><strong>恋慕える　あの人は</strong>， 结合前文，此处指对母亲的深爱。</li>
+<li>知らぬ人に， 这里指母亲的“新女儿”</li>
+<li>知りえぬ笑みなど見せて，<ul>
+<li>「知る」= 知道 +「えぬ」= 「得る」的否定文语体 → “无法得知”</li>
+<li><strong>など</strong>：表示列举或语气强调（在这里有<strong>贬义</strong>成分：居然）</li>
+<li>两句连在一起意为“还向我从未见过的陌生人，展露那种我不曾见过的微笑”，体现了极强的剥夺感。</li>
+</ul>
+</li>
+<li>違える，「違う」的文体表达。</li>
+</ul>
+<p>便り絶える閨の中でも<br>また良い子に眠ります<br>だから　呼んで　名前だけでも<br>忘れぬこと　それだけの願い<br>今は　儚く醜く</p>
+<ul>
+<li>閨，结合前文，此处为亡女生前的卧室，她的灵魂仍被困于此。</li>
+<li>良い子に眠ります，这里的に表示“姿态/方法”，即像好孩子一样入睡。<ul>
+<li>象征“顺从，安静接受命运”</li>
+</ul>
+</li>
+<li>后两句表达不被母亲遗忘的愿望。</li>
+</ul>
+<p>土に汚れ　塚は荒れ果て<br>枯れた草に寄る命<br>天へ昇る糸を切りしは<br>居場所もなき泡沫のならい<br>枝を落ちゆく譲り葉<br>いざや　何処へ逝こうか……</p>
+<ul>
+<li>「荒れ果てる」为复合动词：荒れる + 果てる → “彻底荒废”<ul>
+<li>“我的坟冢早已被泥土污染、彻底荒废”</li>
+</ul>
+</li>
+<li>天へ昇る糸，通往天国的丝线，类似“奈何桥”的存在。</li>
+<li>“切りし”同样为古体过去式表达。</li>
+<li>居場所もなき<ul>
+<li>「居場所」（容身之处）+「なき」= 文语否定形 → 没有归处的</li>
+</ul>
+</li>
+<li>泡沫のならい<ul>
+<li>泡沫是常见古典意象，表达人生如梦，命运无常</li>
+<li>習い，原意是“<strong>习惯、惯例、惯习</strong>”，这里理解为“世间的常态”“命运的安排”。<ul>
+<li>在古语中有时也带有“事物自然的道理”之意。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>「いざや」：感叹词 ，代表“那么…“</li>
+<li>「逝こうか」：<ul>
+<li>「逝く」为「行く」的婉约说法，多用于死亡</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>一位已被世界遗忘的逝者，用尽全歌表达了她唯一的愿望：<br> <strong>希望被你记得。</strong><br> 哪怕只是一次轻声呼唤她的名字。<br> 但如今连墓都荒废、归处尽失，她温柔而孤独地问：“那我，究竟该往何方去了呢？”</p>
+<p>最后感谢：</p>
+<ul>
+<li>ChatGPT，MOJI 辞书</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Lyric Analysis</category>
+      </categories>
+      <tags>
+        <tag>Japanese</tag>
+        <tag>Lyric</tag>
       </tags>
   </entry>
 </search>
