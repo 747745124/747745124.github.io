@@ -103,85 +103,6 @@
       </tags>
   </entry>
   <entry>
-    <title>382. Linked List Random Node</title>
-    <url>/2021/11/15/382.%20Linked%20List%20Random%20Node/</url>
-    <content><![CDATA[<h2 id="Description"><a href="#Description" class="headerlink" title="Description:"></a>Description:</h2><p>Given a singly linked list, return a random node’s value from the linked list. Each node must have the <strong>same probability</strong> of being chosen.</p>
-<p>Implement the <code>Solution</code> class:</p>
-<ul>
-<li><code>Solution(ListNode head)</code> Initializes the object with the integer array nums.</li>
-<li><code>int getRandom()</code> Chooses a node randomly from the list and returns its value. All the nodes of the list should be equally likely to be choosen.</li>
-</ul>
-<h3 id="Example"><a href="#Example" class="headerlink" title="Example:"></a>Example:</h3><p><img src="https://assets.leetcode.com/uploads/2021/03/16/getrand-linked-list.jpg" alt="getrand-linked-list"></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input</span><br><span class="line">[&quot;Solution&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;]</span><br><span class="line">[[[1, 2, 3]], [], [], [], [], []]</span><br><span class="line">Output</span><br><span class="line">[null, 1, 3, 2, 2, 3]</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Constraints"><a href="#Constraints" class="headerlink" title="Constraints:"></a><strong>Constraints:</strong></h3><ul>
-<li>The number of nodes in the linked list will be in the range <code>[1, 104]</code>.</li>
-<li><code>-10^4 &lt;= Node.val &lt;= 10^4</code></li>
-<li>At most <code>10^4</code> calls will be made to <code>getRandom</code>.</li>
-</ul>
-<blockquote>
-<p>Since at most 10k calls will be made, the overall time complexity of each random call is expected to be bounded by O(nlogn).</p>
-</blockquote>
-<h3 id="Intuition"><a href="#Intuition" class="headerlink" title="Intuition:"></a>Intuition:</h3><p>A simple approach would be converting the linked list into an array, and then random generate a number and random access the array. This would cost extra <code>O(n)</code> space for keeping an array, and <code>O(1)</code> to random access the array.</p>
-<blockquote>
-<p>Actually, another implementation is that, we could traverse the list to get the length, and then random generate a number, and then take O(n) step to get the number.</p>
-<p>This implementation would take O(1) extra space, and O(n) for traversing and accessing.</p>
-</blockquote>
-<h3 id="What-if…-just-visit-each-node-only-once-and-use-O-1-space"><a href="#What-if…-just-visit-each-node-only-once-and-use-O-1-space" class="headerlink" title="What if… just visit each node only once and use O(1) space?"></a>What if… just visit each node only once and use O(1) space?</h3><blockquote>
-<p>The key is, Each node must have the <strong>same probability</strong> of being chosen.</p>
-<p>So to ensure the same probability, it is not necessary to use the built-in random function.</p>
-</blockquote>
-<h3 id="Introducing-Reservoir-Sampling"><a href="#Introducing-Reservoir-Sampling" class="headerlink" title="Introducing Reservoir Sampling:"></a>Introducing Reservoir Sampling:</h3><p>I found a video on YouTube, explaining this idea in an interesting and great way.</p>
-<ul>
-<li><h4 id="Scenario-A-man-picking-a-hat"><a href="#Scenario-A-man-picking-a-hat" class="headerlink" title="Scenario: A man picking a hat"></a>Scenario: A man picking a hat</h4><ul>
-<li><h4 id="each-round-replace-the-old-hat-or-wear-new-hat"><a href="#each-round-replace-the-old-hat-or-wear-new-hat" class="headerlink" title="each round replace the old hat or wear new hat"></a>each round replace the old hat or wear new hat</h4></li>
-<li><p>Each round probability of wearing new hat: 1/n</p>
-</li>
-<li><p>The first hat has a chance of 1/1, so he 100% wear the hat</p>
-</li>
-<li><p>The second hat has a chance of 1/2, so he 50% wear the 2nd hat, 50% keep the first hat</p>
-</li>
-<li><p>The third hat has a chance of 1/3, 1/3 wear the 3nd hat, 2/3 keep the original hat</p>
-</li>
-<li><p>So on and so forth…</p>
-</li>
-</ul>
-</li>
-</ul>
-<img src="https://s2.loli.net/2022/01/08/F9ehzSj1Ovrx6Tq.png" alt="image-20220108005314005" style="zoom: 50%;" />
-
-<img src="https://s2.loli.net/2022/01/08/OA8nIcDtopjaB7x.png" alt="image-20220108005616966" style="zoom:50%;" />
-
-<h3 id="The-Good-Side"><a href="#The-Good-Side" class="headerlink" title="The Good Side:"></a>The Good Side:</h3><p>Reservoir sampling doesn’t need to know the length of the list in advance, it’s an online random algorithm.</p>
-<h3 id="Proof-on-Equal-Probability"><a href="#Proof-on-Equal-Probability" class="headerlink" title="Proof on Equal Probability:"></a>Proof on Equal Probability:</h3><p>The $i_{th}$ hat has a probability of $\frac{1}{i}$ of being chosen in its round. The probability of  $i_{th}$ hat being chosen after $n$ times can be given as:</p>
-<img src="https://s2.loli.net/2022/01/08/XFk2Rr3On7gaKpM.png" alt="image-20220108005314005" style="zoom: 100%;" />
-
-<p>Which is the multiplication of $i_{th}$ hat being chosen, and all the hats after $i_{th}$ hat not being chosen.</p>
-<p>And this RHS equals to $\frac{1}n$, which means every hat has the same probability of being chosen.</p>
-<ul>
-<li>Link: <a href="https://www.youtube.com/watch?v=A1iwzSew5QY">https://www.youtube.com/watch?v=A1iwzSew5QY</a></li>
-</ul>
-<h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation:"></a>Implementation:</h3><p>Now let’s implement the Reservoir Sampling into our code, note that we still have to simulate the process of spinning the wheel, using the random function to implement. And it’s generally slower to perform floating point division, use integer instead.</p>
-<ul>
-<li>Instead of <code>1/i</code>, we have <code>1,2,3…i</code>, but only the <code>1</code> means being chosen</li>
-<li><code>i</code> start from <code>1</code>, because it’s not valid to divide by 0.</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;header.hpp&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// reservoir sampling</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">const</span> ListNode *head;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Solution</span>(ListNode *head)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;head = head;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getRandom</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// we are not allowed to modify the head pointer itself</span></span><br><span class="line">        <span class="comment">// each round we create a new node to do the trick</span></span><br><span class="line">        <span class="keyword">auto</span> node = head;</span><br><span class="line">        <span class="keyword">int</span> res = head-&gt;val;</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (node != <span class="literal">nullptr</span>)</span><br><span class="line">        &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// random generate 1~i, only 1 means being selected</span></span><br><span class="line">            <span class="comment">// i should start from 1, or there would be divide by 0 issue</span></span><br><span class="line">            <span class="keyword">bool</span> replace = (<span class="built_in">rand</span>() % (i - <span class="number">1</span> + <span class="number">1</span>)) + <span class="number">1</span> == <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (replace)</span><br><span class="line">                res = node-&gt;val;</span><br><span class="line">            node = node-&gt;next;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your Solution object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * Solution* obj = new Solution(head);</span></span><br><span class="line"><span class="comment"> * int param_1 = obj-&gt;getRandom();</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Programming</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>LeetCode</tag>
-        <tag>DataStructure</tag>
-        <tag>Medium</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>1345. Jump Game IV</title>
     <url>/2022/01/14/1345.%20Jump%20Game%20IV/</url>
     <content><![CDATA[<h3 id="Description"><a href="#Description" class="headerlink" title="Description:"></a>Description:</h3><p>Given an array of integers <code>arr</code>, you are initially positioned at the first index of the array.</p>
@@ -335,6 +256,85 @@
       </tags>
   </entry>
   <entry>
+    <title>382. Linked List Random Node</title>
+    <url>/2021/11/15/382.%20Linked%20List%20Random%20Node/</url>
+    <content><![CDATA[<h2 id="Description"><a href="#Description" class="headerlink" title="Description:"></a>Description:</h2><p>Given a singly linked list, return a random node’s value from the linked list. Each node must have the <strong>same probability</strong> of being chosen.</p>
+<p>Implement the <code>Solution</code> class:</p>
+<ul>
+<li><code>Solution(ListNode head)</code> Initializes the object with the integer array nums.</li>
+<li><code>int getRandom()</code> Chooses a node randomly from the list and returns its value. All the nodes of the list should be equally likely to be choosen.</li>
+</ul>
+<h3 id="Example"><a href="#Example" class="headerlink" title="Example:"></a>Example:</h3><p><img src="https://assets.leetcode.com/uploads/2021/03/16/getrand-linked-list.jpg" alt="getrand-linked-list"></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Input</span><br><span class="line">[&quot;Solution&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;, &quot;getRandom&quot;]</span><br><span class="line">[[[1, 2, 3]], [], [], [], [], []]</span><br><span class="line">Output</span><br><span class="line">[null, 1, 3, 2, 2, 3]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Constraints"><a href="#Constraints" class="headerlink" title="Constraints:"></a><strong>Constraints:</strong></h3><ul>
+<li>The number of nodes in the linked list will be in the range <code>[1, 104]</code>.</li>
+<li><code>-10^4 &lt;= Node.val &lt;= 10^4</code></li>
+<li>At most <code>10^4</code> calls will be made to <code>getRandom</code>.</li>
+</ul>
+<blockquote>
+<p>Since at most 10k calls will be made, the overall time complexity of each random call is expected to be bounded by O(nlogn).</p>
+</blockquote>
+<h3 id="Intuition"><a href="#Intuition" class="headerlink" title="Intuition:"></a>Intuition:</h3><p>A simple approach would be converting the linked list into an array, and then random generate a number and random access the array. This would cost extra <code>O(n)</code> space for keeping an array, and <code>O(1)</code> to random access the array.</p>
+<blockquote>
+<p>Actually, another implementation is that, we could traverse the list to get the length, and then random generate a number, and then take O(n) step to get the number.</p>
+<p>This implementation would take O(1) extra space, and O(n) for traversing and accessing.</p>
+</blockquote>
+<h3 id="What-if…-just-visit-each-node-only-once-and-use-O-1-space"><a href="#What-if…-just-visit-each-node-only-once-and-use-O-1-space" class="headerlink" title="What if… just visit each node only once and use O(1) space?"></a>What if… just visit each node only once and use O(1) space?</h3><blockquote>
+<p>The key is, Each node must have the <strong>same probability</strong> of being chosen.</p>
+<p>So to ensure the same probability, it is not necessary to use the built-in random function.</p>
+</blockquote>
+<h3 id="Introducing-Reservoir-Sampling"><a href="#Introducing-Reservoir-Sampling" class="headerlink" title="Introducing Reservoir Sampling:"></a>Introducing Reservoir Sampling:</h3><p>I found a video on YouTube, explaining this idea in an interesting and great way.</p>
+<ul>
+<li><h4 id="Scenario-A-man-picking-a-hat"><a href="#Scenario-A-man-picking-a-hat" class="headerlink" title="Scenario: A man picking a hat"></a>Scenario: A man picking a hat</h4><ul>
+<li><h4 id="each-round-replace-the-old-hat-or-wear-new-hat"><a href="#each-round-replace-the-old-hat-or-wear-new-hat" class="headerlink" title="each round replace the old hat or wear new hat"></a>each round replace the old hat or wear new hat</h4></li>
+<li><p>Each round probability of wearing new hat: 1/n</p>
+</li>
+<li><p>The first hat has a chance of 1/1, so he 100% wear the hat</p>
+</li>
+<li><p>The second hat has a chance of 1/2, so he 50% wear the 2nd hat, 50% keep the first hat</p>
+</li>
+<li><p>The third hat has a chance of 1/3, 1/3 wear the 3nd hat, 2/3 keep the original hat</p>
+</li>
+<li><p>So on and so forth…</p>
+</li>
+</ul>
+</li>
+</ul>
+<img src="https://s2.loli.net/2022/01/08/F9ehzSj1Ovrx6Tq.png" alt="image-20220108005314005" style="zoom: 50%;" />
+
+<img src="https://s2.loli.net/2022/01/08/OA8nIcDtopjaB7x.png" alt="image-20220108005616966" style="zoom:50%;" />
+
+<h3 id="The-Good-Side"><a href="#The-Good-Side" class="headerlink" title="The Good Side:"></a>The Good Side:</h3><p>Reservoir sampling doesn’t need to know the length of the list in advance, it’s an online random algorithm.</p>
+<h3 id="Proof-on-Equal-Probability"><a href="#Proof-on-Equal-Probability" class="headerlink" title="Proof on Equal Probability:"></a>Proof on Equal Probability:</h3><p>The $i_{th}$ hat has a probability of $\frac{1}{i}$ of being chosen in its round. The probability of  $i_{th}$ hat being chosen after $n$ times can be given as:</p>
+<img src="https://s2.loli.net/2022/01/08/XFk2Rr3On7gaKpM.png" alt="image-20220108005314005" style="zoom: 100%;" />
+
+<p>Which is the multiplication of $i_{th}$ hat being chosen, and all the hats after $i_{th}$ hat not being chosen.</p>
+<p>And this RHS equals to $\frac{1}n$, which means every hat has the same probability of being chosen.</p>
+<ul>
+<li>Link: <a href="https://www.youtube.com/watch?v=A1iwzSew5QY">https://www.youtube.com/watch?v=A1iwzSew5QY</a></li>
+</ul>
+<h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation:"></a>Implementation:</h3><p>Now let’s implement the Reservoir Sampling into our code, note that we still have to simulate the process of spinning the wheel, using the random function to implement. And it’s generally slower to perform floating point division, use integer instead.</p>
+<ul>
+<li>Instead of <code>1/i</code>, we have <code>1,2,3…i</code>, but only the <code>1</code> means being chosen</li>
+<li><code>i</code> start from <code>1</code>, because it’s not valid to divide by 0.</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;header.hpp&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// reservoir sampling</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">const</span> ListNode *head;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Solution</span>(ListNode *head)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;head = head;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getRandom</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// we are not allowed to modify the head pointer itself</span></span><br><span class="line">        <span class="comment">// each round we create a new node to do the trick</span></span><br><span class="line">        <span class="keyword">auto</span> node = head;</span><br><span class="line">        <span class="keyword">int</span> res = head-&gt;val;</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (node != <span class="literal">nullptr</span>)</span><br><span class="line">        &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// random generate 1~i, only 1 means being selected</span></span><br><span class="line">            <span class="comment">// i should start from 1, or there would be divide by 0 issue</span></span><br><span class="line">            <span class="keyword">bool</span> replace = (<span class="built_in">rand</span>() % (i - <span class="number">1</span> + <span class="number">1</span>)) + <span class="number">1</span> == <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (replace)</span><br><span class="line">                res = node-&gt;val;</span><br><span class="line">            node = node-&gt;next;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your Solution object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * Solution* obj = new Solution(head);</span></span><br><span class="line"><span class="comment"> * int param_1 = obj-&gt;getRandom();</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Programming</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>LeetCode</tag>
+        <tag>DataStructure</tag>
+        <tag>Medium</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>98.Validate Binary Search Tree</title>
     <url>/2021/09/30/98.ValidateBST/</url>
     <content><![CDATA[<h3 id="Description"><a href="#Description" class="headerlink" title="Description:"></a>Description:</h3><p>Given the <code>root</code> of a binary tree, <em>determine if it is a valid binary search tree (BST)</em>.</p>
@@ -384,6 +384,45 @@
       </tags>
   </entry>
   <entry>
+    <title>Blender 3.1 Alpha Render Test on M1 Max</title>
+    <url>/2021/12/10/Blender%203.1%20Render%20Test/</url>
+    <content><![CDATA[<h2 id="All-Scenes-are-rendered-using-cycles-using-GPU-Compute-1080P"><a href="#All-Scenes-are-rendered-using-cycles-using-GPU-Compute-1080P" class="headerlink" title="All Scenes are rendered using cycles using GPU Compute 1080P"></a>All Scenes are rendered using cycles using GPU Compute 1080P</h2><h3 id="1-Classroom-300-Samplings"><a href="#1-Classroom-300-Samplings" class="headerlink" title="1.Classroom 300 Samplings"></a>1.Classroom 300 Samplings</h3><ul>
+<li><p>Result: 1min 47.32s = 107.32s </p>
+</li>
+<li><p>Boost compared to CPU: 8*60/107.32 = 4.47x</p>
+</li>
+<li><p>Roughly equivalent to CUDA 3060Ti @Blender 2.9x </p>
+</li>
+<li><p>Roughtly equivalent to Optix 2080 @Blender 2.8x and Optix 3060 @Blender 2.9x</p>
+</li>
+<li><p>According to Rob Williams@<a href="https://techgage.com/article/blender-3-0-gpu-performance/">https://techgage.com/article/blender-3-0-gpu-performance/</a>, the performance of M1 Max is half of the 3060 with Optix 3060 @Blender 3.00. If we assume there is a performance boost of 2 times in Cycles from 2.9x to 3.00, a rough equivalent will be 2060 Max-Q (206s Optix 2.93).</p>
+<p><img src="https://s2.loli.net/2022/01/01/WiZIz8rKlXEcOYM.png" alt="image-20220101235753865"></p>
+</li>
+</ul>
+<h3 id="2-BMW27-GPU-Compute-1225-Samplings"><a href="#2-BMW27-GPU-Compute-1225-Samplings" class="headerlink" title="2.BMW27 (GPU Compute) 1225 Samplings"></a>2.BMW27 (GPU Compute) 1225 Samplings</h3><ul>
+<li>Result: 43.59s</li>
+<li>Boost Compared to CPU: 210/43.59 = 4.82x</li>
+<li>Roughly equivalent to CUDA 3060~3060Ti @Blender 2.9x </li>
+<li>Roughtly equivalent to Optix 2060 @Blender 2.8x and Optix 3050Ti @Blender 2.9x</li>
+<li><img src="https://s2.loli.net/2022/01/01/wZ35lDaBkiJ7mWQ.png" alt="image-20211219164344829" style="zoom:50%;" /></li>
+</ul>
+<h3 id="3-Barcelona-Pavilion-1000-Samplings"><a href="#3-Barcelona-Pavilion-1000-Samplings" class="headerlink" title="3.Barcelona Pavilion 1000 Samplings"></a>3.Barcelona Pavilion 1000 Samplings</h3><ul>
+<li>Result: 176.51s</li>
+<li>Boost Compared to CPU: 640/176.51 = 3.62x</li>
+<li>Roughly equivalent to CUDA 3070~3070Ti @Blender 2.9x </li>
+<li>Roughtly equivalent to Optix 2070 @Blender 2.8x and Optix 3050Ti @Blender 2.9x</li>
+<li><img src="https://s2.loli.net/2022/01/01/oBTbOQra1Dp8nZd.png" alt="image-20211219171113341" style="zoom:33%;" /></li>
+</ul>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3>]]></content>
+      <categories>
+        <category>Rendering</category>
+      </categories>
+      <tags>
+        <tag>Redering</tag>
+        <tag>Blender</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>One day in Monterey</title>
     <url>/2023/06/20/One%20Day%20in%20Monterey/</url>
     <content><![CDATA[<h3 id="One-day-in-Monterey"><a href="#One-day-in-Monterey" class="headerlink" title="One day in Monterey"></a>One day in Monterey</h3><p>​            因为赶着要去实习(在San Jose)，Path Tracer的作业又拖到最后一天才交，上学和实习便几乎是无缝衔接了。具体衔接得有多紧密呢？我18号中午提交完作业，20号就要开始实习。实习的公司距离学校很远，开车要4.5小时。即使我想一天冲到实习期间的住处，房东也只有19号才有空，这就意味着我只能19号到San Jose，第二天便直接迎接实习生活了。</p>
@@ -412,41 +451,6 @@
       <tags>
         <tag>日常生活</tag>
         <tag>旅行</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Missing triangle in BVH</title>
-    <url>/2023/05/22/Little%20Caveat%20in%20BVH%20of%20Triangles/</url>
-    <content><![CDATA[<p>Recently I was applying Bounding Volume Hierachy to a Whitted-style Raytracing system. The idea of BVH and implementation are well described in <strong>Ray Tracing in the Next Week</strong> by Peter Shirly. It’s a really great book. And here’s the link <a href="https://raytracing.github.io/books/RayTracingTheNextWeek.html">https://raytracing.github.io/books/RayTracingTheNextWeek.html</a></p>
-<p>One key component in BVH is AABB (Axis-Aligned-Bounding-Box) intersects with ray. People usually adopt Slab method to address this problem. To be more specific, computing the ray-AABB intersection along 3 different axis, if these intervals produces an overlapping region, then the ray intersects with AABB and vice versa.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">compute (tx0, tx1)</span><br><span class="line">compute (ty0, ty1)</span><br><span class="line">compute (tz0, tz1)</span><br><span class="line">return overlap?( (tx0, tx1), (ty0, ty1), (tz0, tz1))</span><br></pre></td></tr></table></figure>
-
-
-
-<img src="https://s2.loli.net/2023/05/23/vhnUw7z6Z1xqeHg.png" alt="image-20230522223149832" style="zoom:33%;" />
-
-<p>After applying this method to the scene rendering, I lost some of the triangles in the scene. However, all spheres are kept intact. For example, here’s what I got after applying BVH and the latter is before BVH.</p>
-<img src="https://s2.loli.net/2023/05/23/dN6TeBRK4MjtzSm.png" alt="image-20230522224231933" style="zoom:33%;" />
-
-<img src="https://s2.loli.net/2023/05/23/xQ8LMCgjAqoVWPw.png" alt="image-20230522224256173" style="zoom:33%;" />
-
-<p> After couple hours of <code>step_into</code> debugging, I found the reason to be as follows:</p>
-<blockquote>
-<p>For spheres, the Bouding box will always have some length along 3 axis. However, this isn’t necessarily the case for AABB of triangles. ==Bounding Box of triangles can fall back to plane if the triangle is parallel to either xy, yz or xz plane== . </p>
-<p>Let’s say a triangle is parallel to the <code>xz</code> plane, so the 3 vertices has the same <code>y</code> value. And this makes <code>ty0</code> and <code>ty1</code> to be the same in above computation, and thus resulting no overlapping region for other 2 axis. i.e. The bounding box doesn’t intersect with the triangle (which is a false statement)</p>
-</blockquote>
-<p>To address this, simply add some thickness to each axis while building bounding box for triangles. In my case, I use <code>1e-3</code>, and boom, problem solved!</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//in triangle class  </span></span><br><span class="line"><span class="function">AABB <span class="title">getAABB</span><span class="params">(<span class="keyword">float</span> t0, <span class="keyword">float</span> t1)</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> min_x = std::<span class="built_in">min</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">x</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> min_y = std::<span class="built_in">min</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">y</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> min_z = std::<span class="built_in">min</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">z</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> max_x = std::<span class="built_in">max</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">x</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> max_y = std::<span class="built_in">max</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">y</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> max_z = std::<span class="built_in">max</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">z</span>()&#125;);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">AABB</span>(gl::<span class="built_in">vec3</span>(min_x<span class="number">-1e3</span>, min_y<span class="number">-1e3</span>, min_z<span class="number">-1e3</span>), gl::<span class="built_in">vec3</span>(max_x, max_y, max_z));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-]]></content>
-      <categories>
-        <category>Rendering</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>Rendering</tag>
       </tags>
   </entry>
   <entry>
@@ -1020,140 +1024,6 @@
       </tags>
   </entry>
   <entry>
-    <title>计算机网络-概览笔记</title>
-    <url>/2021/09/05/Notes-Computer%20Networks/</url>
-    <content><![CDATA[<h3 id="Client-Server"><a href="#Client-Server" class="headerlink" title="Client/Server:"></a>Client/Server:</h3><p>应用层，最为抽象</p>
-<h3 id="TCP-传输层"><a href="#TCP-传输层" class="headerlink" title="TCP:传输层"></a>TCP:传输层</h3><p>对可靠性要求高、检验错误</p>
-<h3 id="UDP："><a href="#UDP：" class="headerlink" title="UDP："></a>UDP：</h3><p>对可靠性要求低、但是能够保证实时</p>
-<ul>
-<li>直播</li>
-<li>事务性应用</li>
-</ul>
-<h3 id="IP-网络层-End-to-End"><a href="#IP-网络层-End-to-End" class="headerlink" title="IP:网络层 End to End"></a>IP:网络层 End to End</h3><p>从主机到主机</p>
-<p>在Link Layer的点到点通讯基础上实现</p>
-<h3 id="Link-Layer-点到点通讯"><a href="#Link-Layer-点到点通讯" class="headerlink" title="Link Layer:点到点通讯"></a>Link Layer:点到点通讯</h3><h3 id="Physical-Layer-物理信号-数字信号"><a href="#Physical-Layer-物理信号-数字信号" class="headerlink" title="Physical Layer:物理信号-数字信号"></a>Physical Layer:物理信号-数字信号</h3><p>通过media（介质）：</p>
-<ul>
-<li>Copper</li>
-<li>Fibre</li>
-</ul>
-<h3 id="网络层："><a href="#网络层：" class="headerlink" title="网络层："></a>网络层：</h3><h4 id="传统工作方式：查表-转发"><a href="#传统工作方式：查表-转发" class="headerlink" title="传统工作方式：查表+转发"></a>传统工作方式：查表+转发</h4><ul>
-<li>路由器交换信息</li>
-<li>计算出路由表</li>
-<li>IP协议收到分组后，根据IP查路由表，再根据表转发</li>
-</ul>
-<h4 id="SDN方式：数据平面-控制系统"><a href="#SDN方式：数据平面-控制系统" class="headerlink" title="SDN方式：数据平面+控制系统"></a>SDN方式：数据平面+控制系统</h4><p>交换机：多字段匹配-&gt;block/转发/flood</p>
-<p>操作系统：计算flow table-下发给交换机</p>
-<p>（programmable+new features could be added）</p>
-<p>比如说要新增加负载均衡，只需要编程即可</p>
-<h4 id="链路层和局域网"><a href="#链路层和局域网" class="headerlink" title="链路层和局域网"></a>链路层和局域网</h4><h3 id="框架："><a href="#框架：" class="headerlink" title="框架："></a>框架：</h3><p>在下层提供的服务上实现更高级的功能</p>
-<h3 id="网络："><a href="#网络：" class="headerlink" title="网络："></a>网络：</h3><h4 id="Node"><a href="#Node" class="headerlink" title="Node:"></a>Node:</h4><ul>
-<li><p>主机以及主机上的应用程序</p>
-</li>
-<li><p>路由器、交换机等网络交换设备</p>
-</li>
-<li><p>方的节点：主要节点（Client/Server）</p>
-<p>圆形节点：中转节点</p>
-</li>
-</ul>
-<h4 id="Edge-通信链路"><a href="#Edge-通信链路" class="headerlink" title="Edge:通信链路"></a>Edge:通信链路</h4><ul>
-<li>access：主机接入到（最近的交换机）互联网的链路（一方一圆）</li>
-<li>backbone：路由器之间的链路（两个圆的）</li>
-</ul>
-<h4 id="Protocol-对等层实体交换数据所需要遵循的规范"><a href="#Protocol-对等层实体交换数据所需要遵循的规范" class="headerlink" title="Protocol:对等层实体交换数据所需要遵循的规范"></a>Protocol:对等层实体交换数据所需要遵循的规范</h4><p>Protocol Data Unit(PDU)</p>
-<h3 id="互联网包括：网络边缘-网络核心-接入网"><a href="#互联网包括：网络边缘-网络核心-接入网" class="headerlink" title="互联网包括：网络边缘/网络核心/接入网"></a>互联网包括：网络边缘/网络核心/接入网</h3><h3 id="1-2-网络边缘"><a href="#1-2-网络边缘" class="headerlink" title="1.2 网络边缘"></a>1.2 网络边缘</h3><p>网络边缘:</p>
-<ul>
-<li>主机</li>
-<li>应用程序</li>
-</ul>
-<h3 id="1-3-Core（用于数据交换）"><a href="#1-3-Core（用于数据交换）" class="headerlink" title="1.3 Core（用于数据交换）"></a>1.3 Core（用于数据交换）</h3><ul>
-<li>相互连接的路由器</li>
-<li>网络的网络</li>
-</ul>
-<h3 id="1-4-Access"><a href="#1-4-Access" class="headerlink" title="1.4 Access"></a>1.4 Access</h3><ul>
-<li>有线或者无线通信链路</li>
-</ul>
-<p>边缘接入核心-&gt;核心连接所有边缘节点-&gt;边缘可以和任意边缘节点交换</p>
-<p>网络核心：相当于全球范围内的切换开关（如果需要交换，就打开）</p>
-<h4 id="应用进程交互模式："><a href="#应用进程交互模式：" class="headerlink" title="应用进程交互模式："></a>应用进程交互模式：</h4><ul>
-<li><p>Client/Server模式：</p>
-<ul>
-<li>Client后运行起来，向Server发出请求，资源来自于Server</li>
-<li>问题：如果Client特别多，需要准备很多Server，到达一定程度时性能断崖式下跌</li>
-</ul>
-</li>
-<li><p>Peer-Peer 模式：</p>
-<ul>
-<li>没有专门的服务器</li>
-<li>每个节点既是Client也是Server</li>
-<li>分布式通信，下载文件的时候，相当于多路下载片段</li>
-</ul>
-</li>
-</ul>
-<h4 id="基础设施为网络应用提供的服务："><a href="#基础设施为网络应用提供的服务：" class="headerlink" title="基础设施为网络应用提供的服务："></a>基础设施为网络应用提供的服务：</h4><ul>
-<li>TCP（面向连接（端系统知道/路径节点不知道）的通信方式）：Shake Hand方式（数据传输前做好准备）<ul>
-<li>可靠：不重复、不丢、不乱序</li>
-<li>Flow Control:发送方不会淹没接收方</li>
-<li>阻塞控制(Congestion Control)</li>
-<li>要考虑网络+设备</li>
-</ul>
-</li>
-<li>UDP(connectless，直接发送，不需要提前连接)<ul>
-<li>不可靠</li>
-<li>没有流量控制</li>
-<li>没有阻塞控制</li>
-<li>适合实时多媒体应用</li>
-<li>事务性很强的应用（）</li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Programming</category>
-      </categories>
-      <tags>
-        <tag>Computer Networks</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Blender 3.1 Alpha Render Test on M1 Max</title>
-    <url>/2021/12/10/Blender%203.1%20Render%20Test/</url>
-    <content><![CDATA[<h2 id="All-Scenes-are-rendered-using-cycles-using-GPU-Compute-1080P"><a href="#All-Scenes-are-rendered-using-cycles-using-GPU-Compute-1080P" class="headerlink" title="All Scenes are rendered using cycles using GPU Compute 1080P"></a>All Scenes are rendered using cycles using GPU Compute 1080P</h2><h3 id="1-Classroom-300-Samplings"><a href="#1-Classroom-300-Samplings" class="headerlink" title="1.Classroom 300 Samplings"></a>1.Classroom 300 Samplings</h3><ul>
-<li><p>Result: 1min 47.32s = 107.32s </p>
-</li>
-<li><p>Boost compared to CPU: 8*60/107.32 = 4.47x</p>
-</li>
-<li><p>Roughly equivalent to CUDA 3060Ti @Blender 2.9x </p>
-</li>
-<li><p>Roughtly equivalent to Optix 2080 @Blender 2.8x and Optix 3060 @Blender 2.9x</p>
-</li>
-<li><p>According to Rob Williams@<a href="https://techgage.com/article/blender-3-0-gpu-performance/">https://techgage.com/article/blender-3-0-gpu-performance/</a>, the performance of M1 Max is half of the 3060 with Optix 3060 @Blender 3.00. If we assume there is a performance boost of 2 times in Cycles from 2.9x to 3.00, a rough equivalent will be 2060 Max-Q (206s Optix 2.93).</p>
-<p><img src="https://s2.loli.net/2022/01/01/WiZIz8rKlXEcOYM.png" alt="image-20220101235753865"></p>
-</li>
-</ul>
-<h3 id="2-BMW27-GPU-Compute-1225-Samplings"><a href="#2-BMW27-GPU-Compute-1225-Samplings" class="headerlink" title="2.BMW27 (GPU Compute) 1225 Samplings"></a>2.BMW27 (GPU Compute) 1225 Samplings</h3><ul>
-<li>Result: 43.59s</li>
-<li>Boost Compared to CPU: 210/43.59 = 4.82x</li>
-<li>Roughly equivalent to CUDA 3060~3060Ti @Blender 2.9x </li>
-<li>Roughtly equivalent to Optix 2060 @Blender 2.8x and Optix 3050Ti @Blender 2.9x</li>
-<li><img src="https://s2.loli.net/2022/01/01/wZ35lDaBkiJ7mWQ.png" alt="image-20211219164344829" style="zoom:50%;" /></li>
-</ul>
-<h3 id="3-Barcelona-Pavilion-1000-Samplings"><a href="#3-Barcelona-Pavilion-1000-Samplings" class="headerlink" title="3.Barcelona Pavilion 1000 Samplings"></a>3.Barcelona Pavilion 1000 Samplings</h3><ul>
-<li>Result: 176.51s</li>
-<li>Boost Compared to CPU: 640/176.51 = 3.62x</li>
-<li>Roughly equivalent to CUDA 3070~3070Ti @Blender 2.9x </li>
-<li>Roughtly equivalent to Optix 2070 @Blender 2.8x and Optix 3050Ti @Blender 2.9x</li>
-<li><img src="https://s2.loli.net/2022/01/01/oBTbOQra1Dp8nZd.png" alt="image-20211219171113341" style="zoom:33%;" /></li>
-</ul>
-<h3 id=""><a href="#" class="headerlink" title=""></a></h3>]]></content>
-      <categories>
-        <category>Rendering</category>
-      </categories>
-      <tags>
-        <tag>Redering</tag>
-        <tag>Blender</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Portfolio Site</title>
     <url>/2022/01/19/Portfolio%20Site%20Online/</url>
     <content><![CDATA[<p>Recently I began my Master application for 2022 Fall, and some of the universities, require the applicants to submit their portfolio in the form of personal website. I was intended to submit this site, however, this site only contains daily logs and technical topic posts. So I would rather create another website for my portfolio works.</p>
@@ -1167,6 +1037,41 @@
       <tags>
         <tag>Design</tag>
         <tag>About Me</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Missing triangle in BVH</title>
+    <url>/2023/05/22/Little%20Caveat%20in%20BVH%20of%20Triangles/</url>
+    <content><![CDATA[<p>Recently I was applying Bounding Volume Hierachy to a Whitted-style Raytracing system. The idea of BVH and implementation are well described in <strong>Ray Tracing in the Next Week</strong> by Peter Shirly. It’s a really great book. And here’s the link <a href="https://raytracing.github.io/books/RayTracingTheNextWeek.html">https://raytracing.github.io/books/RayTracingTheNextWeek.html</a></p>
+<p>One key component in BVH is AABB (Axis-Aligned-Bounding-Box) intersects with ray. People usually adopt Slab method to address this problem. To be more specific, computing the ray-AABB intersection along 3 different axis, if these intervals produces an overlapping region, then the ray intersects with AABB and vice versa.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">compute (tx0, tx1)</span><br><span class="line">compute (ty0, ty1)</span><br><span class="line">compute (tz0, tz1)</span><br><span class="line">return overlap?( (tx0, tx1), (ty0, ty1), (tz0, tz1))</span><br></pre></td></tr></table></figure>
+
+
+
+<img src="https://s2.loli.net/2023/05/23/vhnUw7z6Z1xqeHg.png" alt="image-20230522223149832" style="zoom:33%;" />
+
+<p>After applying this method to the scene rendering, I lost some of the triangles in the scene. However, all spheres are kept intact. For example, here’s what I got after applying BVH and the latter is before BVH.</p>
+<img src="https://s2.loli.net/2023/05/23/dN6TeBRK4MjtzSm.png" alt="image-20230522224231933" style="zoom:33%;" />
+
+<img src="https://s2.loli.net/2023/05/23/xQ8LMCgjAqoVWPw.png" alt="image-20230522224256173" style="zoom:33%;" />
+
+<p> After couple hours of <code>step_into</code> debugging, I found the reason to be as follows:</p>
+<blockquote>
+<p>For spheres, the Bouding box will always have some length along 3 axis. However, this isn’t necessarily the case for AABB of triangles. ==Bounding Box of triangles can fall back to plane if the triangle is parallel to either xy, yz or xz plane== . </p>
+<p>Let’s say a triangle is parallel to the <code>xz</code> plane, so the 3 vertices has the same <code>y</code> value. And this makes <code>ty0</code> and <code>ty1</code> to be the same in above computation, and thus resulting no overlapping region for other 2 axis. i.e. The bounding box doesn’t intersect with the triangle (which is a false statement)</p>
+</blockquote>
+<p>To address this, simply add some thickness to each axis while building bounding box for triangles. In my case, I use <code>1e-3</code>, and boom, problem solved!</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//in triangle class  </span></span><br><span class="line"><span class="function">AABB <span class="title">getAABB</span><span class="params">(<span class="keyword">float</span> t0, <span class="keyword">float</span> t1)</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> min_x = std::<span class="built_in">min</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">x</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> min_y = std::<span class="built_in">min</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">y</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> min_z = std::<span class="built_in">min</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">z</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> max_x = std::<span class="built_in">max</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">x</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">x</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> max_y = std::<span class="built_in">max</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">y</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">y</span>()&#125;);</span><br><span class="line">    <span class="keyword">auto</span> max_z = std::<span class="built_in">max</span>(</span><br><span class="line">        &#123;<span class="keyword">this</span>-&gt;v0.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v1.position.<span class="built_in">z</span>(), <span class="keyword">this</span>-&gt;v2.position.<span class="built_in">z</span>()&#125;);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">AABB</span>(gl::<span class="built_in">vec3</span>(min_x<span class="number">-1e3</span>, min_y<span class="number">-1e3</span>, min_z<span class="number">-1e3</span>), gl::<span class="built_in">vec3</span>(max_x, max_y, max_z));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>Rendering</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>Rendering</tag>
       </tags>
   </entry>
   <entry>
@@ -1229,35 +1134,6 @@
       <tags>
         <tag>C/C++</tag>
         <tag>Operating System</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Why Tuple?</title>
-    <url>/2021/09/21/WhyTuple?/</url>
-    <content><![CDATA[<p>C++ 11 introduces a template Tuple, similar to the one in Python, allows you to store data of different types in a single entity. But you may ask, in C/C++,we already have some mechaism called struct allows us to do the same thing, then why do we need tuple?</p>
-<h3 id="Case-1-One-Time-Structure-to-Transfer-Data"><a href="#Case-1-One-Time-Structure-to-Transfer-Data" class="headerlink" title="Case 1: One-Time Structure to Transfer Data"></a>Case 1: One-Time Structure to Transfer Data</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">tuple&lt;string,<span class="keyword">int</span>&gt; <span class="title">getNameAge</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//do something</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">make_tuple</span>(<span class="string">&quot;Bob&quot;</span>,<span class="number">34</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Person</span>&#123;</span>string name;<span class="keyword">int</span> age;&#125;p;</span><br><span class="line">    tuple&lt;string,<span class="keyword">int</span>&gt; t;</span><br><span class="line">    </span><br><span class="line">    string name;</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    <span class="built_in">tie</span>(name,age) = <span class="built_in">getNameAge</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>If we want to transfer a group of data for only one time, we may not want to define a struct, and using tuple get us away from these definitions.</p>
-<h3 id="Case-2-Fast-Comparison-Using-Tuple-Operators"><a href="#Case-2-Fast-Comparison-Using-Tuple-Operators" class="headerlink" title="Case 2: Fast Comparison Using Tuple Operators"></a>Case 2: Fast Comparison Using Tuple Operators</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">tuple&lt;<span class="keyword">int</span>,<span class="keyword">int</span>,<span class="keyword">int</span>&gt; time1,time2;</span><br><span class="line"><span class="keyword">if</span>(time1&gt;time2)</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;time1 is later&quot;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Case-3-Multi-Index-Map-Unordered-Map"><a href="#Case-3-Multi-Index-Map-Unordered-Map" class="headerlink" title="Case 3: Multi-Index Map/Unordered Map"></a>Case 3: Multi-Index Map/Unordered Map</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//define</span></span><br><span class="line">map&lt;tuple&lt;<span class="keyword">int</span>,<span class="keyword">char</span>,<span class="keyword">float</span>&gt;,string&gt; m;</span><br><span class="line"><span class="comment">//indexing</span></span><br><span class="line">m[<span class="built_in">make_tuple</span>(<span class="number">2</span>,<span class="string">&#x27;a&#x27;</span>,<span class="number">1.0</span>)] = <span class="string">&quot;Test&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Case-4-Fast-Swap"><a href="#Case-4-Fast-Swap" class="headerlink" title="Case 4: Fast Swap"></a>Case 4: Fast Swap</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a,b,c;</span><br><span class="line"><span class="built_in">tie</span>(b,c,a) = <span class="built_in">make_tuple</span>(a,b,c);</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion:"></a>Conclusion:</h3><p>Tuple is not recommended to be overused. If needed, use struct instead.</p>
-]]></content>
-      <categories>
-        <category>Programming</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>Data_Structure</tag>
       </tags>
   </entry>
   <entry>
@@ -1370,168 +1246,6 @@
       </tags>
   </entry>
   <entry>
-    <title>从歌词学语法01：譲り葉塚-霜月遥</title>
-    <url>/2025/04/20/%E8%AD%B2%E3%82%8A%E8%91%89%E5%A1%9A/</url>
-    <content><![CDATA[<h3 id="从歌词学语法01：譲り葉塚-霜月遥"><a href="#从歌词学语法01：譲り葉塚-霜月遥" class="headerlink" title="从歌词学语法01：譲り葉塚-霜月遥"></a>从歌词学语法01：譲り葉塚-霜月遥</h3><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>从歌词下手学习日语语法个人认为是个不错的选择。平时一直会唱，但并没有仔细整理其内容，因此多数时候也只是一知半解。另一方面，对歌词做分析也有助于更好地了解其背后的意涵。</p>
-<p>这次先选了《譲り葉塚》这首歌，整体而言文法/造词都偏古日语，因此更值得学习和研究。由于网络上翻译很多，所以这里就不作翻译，更多注重于语法和意象，来了解语法/文化本身。</p>
-<p>需要注意的是，这首歌<strong>不是一首男女情歌</strong>。虽然歌词当中出现了「恋慕えるあの人」、「双りの砂利道」容易被误读为“爱人”的表达，但是歌词的核心意象<strong>譲葉</strong>，常被用于比喻世代交替，亲子关系（尤其是母亲）。</p>
-<p><strong>譲葉</strong>这种植物主要的特点是： 新芽长出来以后，老叶才会掉落。给人一种「把位置让出来」的感觉。所以在文学作品中根据“老叶不急着掉落，而是等新芽长好后才慢慢让位”特点，用譲葉来比喻 <strong>父母对子女的关爱与传承</strong>。</p>
-<p>同样地，在这首歌中，譲葉也用于比喻母亲与母爱。这一点可以在词作者本人的博客中得以验证，<a href="https://note.com/hiyamason/n/n04ab9a7d75ad">https://note.com/hiyamason/n/n04ab9a7d75ad</a></p>
-<h4 id="故事背景"><a href="#故事背景" class="headerlink" title="故事背景"></a>故事背景</h4><p>一位少女在生前因某种原因早早离世，灵魂被困在自己的闺房中，日日等待母亲的到来。起初母亲还常常来探望她，带着团子与鲜花，但随着时间流逝，母亲渐渐不再出现。少女始终坚信母亲没有忘记她，直到有一天，天上的使者降临，邀请她升天。</p>
-<p>然而，升天意味着与母亲永别，少女因放不下执念而拒绝升天，并剪断了天上的丝线。意外地，她因此得到了蝴蝶的羽翼，开始寻找回家的路。</p>
-<p>她回到了故乡，见到母亲正慈爱地陪伴着另一个小女孩——一个她不认识的“新女儿”。这使她意识到，母亲已经彻底走出了悲伤，过上了新的生活，而自己早已被遗忘。</p>
-<p>在极度的悲伤与自责中，她回到空无一人的闺房，陷入彻底的孤独。但天之使者再次降临，给予她“救赎”的使命：成为连接天与地的蝴蝶，收集一千只像她一样无法升天、怀有执念的灵魂（蝶），便能实现愿望、找到归处。</p>
-<p>故事最后，她踏上旅程，边唱着童年与母亲共唱的歌，边在人世间寻找那一千只同样孤独的灵魂。</p>
-<h4 id="歌词（少女视角，第一人称）"><a href="#歌词（少女视角，第一人称）" class="headerlink" title="歌词（少女视角，第一人称）"></a>歌词（少女视角，第一人称）</h4><p>ひとり佇む　誰そ彼<br>小指絡ませぬ　ゆびきり<br>明日も来るから<br>ここに居りなさい</p>
-<ul>
-<li>誰そ彼（黄昏）算是一个很出名的双关，在《你的名字》当中被着重介绍。语源是“彼は誰ぞ”，意思是“那人是谁”，因为黄昏时灯光昏暗，连人也无法辨识，因此得名。</li>
-<li>小指絡ませぬ，<strong>絡ませる</strong>：使役动词「絡む」的使役态。 「ぬ」算是一个很常见的文言体的否定词，即ない。</li>
-<li>后两句实为母亲对亡女所说的话，“我明天还会再来的，请好好待在这里”</li>
-</ul>
-<p>心ぼそき閨の中でも</p>
-<p>灯りとなる　その言葉<br>髪撫づる　痩せた手と手を<br>繋ぎ歩む　双りの砂利道<br>今も　あの日は褪せずに</p>
-<ul>
-<li>心ぼそき，形容词 心細い 的文言连体形。</li>
-<li>閨，闺房、卧室，常用于女性、亲密关系的空间。</li>
-<li>砂利道：碎石铺成的小路，常见于乡村或墓地通路。</li>
-<li>歩む，文体的「歩く」，多用于抽象/比喻义，例如经历了坎坷的人生，“苦難の人生を歩んできた”。</li>
-<li>髪撫づる　痩せた手と手を，这一句中，同样是母亲的手，以及“亡女与母亲”一同走过的石子路。</li>
-</ul>
-<p>格子隔てて散る花<br>骨に纏わりし蝶々も<br>はやくお帰りと<br>舞ひて　ささめきて</p>
-<ul>
-<li>格子（窗格/栅栏）、散る花（正在凋零的花），分别象征阴阳之隔与生命的枯萎。</li>
-<li>骨に，结合亡女的身份，此处可能指遗体。</li>
-<li>纏わりし，し是古日语的过去时态助动词。</li>
-<li>蝶々も，蝴蝶在日式文化中常象征<strong>灵魂、轮回或死者转世</strong>。</li>
-<li>“快点回去吧”，这里可能是指“天之使者（蝴蝶）”，劝主人公放下母亲，一同回到死者的世界。</li>
-<li>舞ひて，动词「舞ふ（まふ）」的连体形+て，此处指蝴蝶在风中飞舞。</li>
-</ul>
-<p>刻の過ぎる故里に住む<br>恋慕える　あの人は<br>嗚呼　偏に別人のよう<br>知らぬ人に<br>知りえぬ笑みなど見せて<br>世界を違える</p>
-<ul>
-<li>刻（とき），更文雅的 “時”</li>
-<li>第一句话在说，“我住在这时间流逝的故乡中”， 体现了“我被留下”的感觉，即灵魂依然留在原地。</li>
-<li><strong>恋慕える　あの人は</strong>， 结合前文，此处指对母亲的深爱。</li>
-<li>知らぬ人に， 这里指母亲的“新女儿”</li>
-<li>知りえぬ笑みなど見せて，<ul>
-<li>「知る」= 知道 +「えぬ」= 「得る」的否定文语体 → “无法得知”</li>
-<li><strong>など</strong>：表示列举或语气强调（在这里有<strong>贬义</strong>成分：居然）</li>
-<li>两句连在一起意为“还向我从未见过的陌生人，展露那种我不曾见过的微笑”，体现了极强的剥夺感。</li>
-</ul>
-</li>
-<li>違える，「違う」的文体表达。</li>
-</ul>
-<p>便り絶える閨の中でも<br>また良い子に眠ります<br>だから　呼んで　名前だけでも<br>忘れぬこと　それだけの願い<br>今は　儚く醜く</p>
-<ul>
-<li>閨，结合前文，此处为亡女生前的卧室，她的灵魂仍被困于此。</li>
-<li>良い子に眠ります，这里的に表示“姿态/方法”，即像好孩子一样入睡。<ul>
-<li>象征“顺从，安静接受命运”</li>
-</ul>
-</li>
-<li>后两句表达不被母亲遗忘的愿望。</li>
-</ul>
-<p>土に汚れ　塚は荒れ果て<br>枯れた草に寄る命<br>天へ昇る糸を切りしは<br>居場所もなき泡沫のならい<br>枝を落ちゆく譲り葉<br>いざや　何処へ逝こうか……</p>
-<ul>
-<li>「荒れ果てる」为复合动词：荒れる + 果てる → “彻底荒废”<ul>
-<li>“我的坟冢早已被泥土污染、彻底荒废”</li>
-</ul>
-</li>
-<li>天へ昇る糸，通往天国的丝线，类似“奈何桥”的存在。</li>
-<li>“切りし”同样为古体过去式表达。</li>
-<li>居場所もなき<ul>
-<li>「居場所」（容身之处）+「なき」= 文语否定形 → 没有归处的</li>
-</ul>
-</li>
-<li>泡沫のならい<ul>
-<li>泡沫是常见古典意象，表达人生如梦，命运无常</li>
-<li>習い，原意是“<strong>习惯、惯例、惯习</strong>”，这里理解为“世间的常态”“命运的安排”。<ul>
-<li>在古语中有时也带有“事物自然的道理”之意。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>「いざや」：感叹词 ，代表“那么…“</li>
-<li>「逝こうか」：<ul>
-<li>「逝く」为「行く」的婉约说法，多用于死亡</li>
-</ul>
-</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>一位已被世界遗忘的逝者，用尽全歌表达了她唯一的愿望：<br> <strong>希望被你记得。</strong><br> 哪怕只是一次轻声呼唤她的名字。<br> 但如今连墓都荒废、归处尽失，她温柔而孤独地问：“那我，究竟该往何方去了呢？”</p>
-<p>最后感谢：</p>
-<ul>
-<li>ChatGPT，MOJI 辞书</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Lyric Analysis</category>
-      </categories>
-      <tags>
-        <tag>Japanese</tag>
-        <tag>Lyric</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>最近半年的生活状态（上）</title>
-    <url>/2022/06/19/%E4%B8%80%E4%BA%9B%E6%9C%80%E8%BF%91%E5%8D%8A%E5%B9%B4%E5%8F%91%E7%94%9F%E7%9A%84%E4%BA%8B(%E4%B8%8A)/</url>
-    <content><![CDATA[<h3 id="最近半年的生活状态（上）"><a href="#最近半年的生活状态（上）" class="headerlink" title="最近半年的生活状态（上）"></a>最近半年的生活状态（上）</h3><p>​    说起来，自从大四之后就很久很久没有为自己写一些东西，也许是太忙？但也有可能是“我没有把这当作是最重要的事情”，所以一直搁置了。不过临近毕业，总算是稍微有点机会写点什么了，就稍微写一点吧。我想先写一些关于大四上学期的内容，不然就太长了。</p>
-<h3 id="大四上"><a href="#大四上" class="headerlink" title="大四上"></a>大四上</h3><p>​    整个大四上发生了很多事情，分手，上课，作品集，申请学校。一直非常焦头烂额，不过好在我在作品集的机构认识了一些朋友，后来11月的时候，还因为疫情的原因在校外酒店住了一个多月。我的整个大四上学期是在忙碌和焦虑中度过的，不过我猜大家都是这样。</p>
-<ul>
-<li>分手</li>
-</ul>
-<p>​    学期的一开始，前任就和我提了分手，不过我太想再回忆这些。分手的时候ta撒了一个谎，后来找我复合，我拒绝了。既然已经过去这么久，就这样吧。</p>
-<ul>
-<li>数据结构基础</li>
-</ul>
-<p>​    大四上才上数据结构确实挺晚了，甚至申请的时候都不一定会出现在成绩单上，但就当是学知识吧—我是这么想的。学校的数据结构课一开始要分班考，基础还行的同学可以选择困难模式，也就是平时的3个实验课作业题目会变难，好处是评分最多可以比其他同学高5分。我选择了困难模式，当然也为此花了一些时间，现在想想，却也不是那么有必要，尽管确实从一些题目中获得了更深的思考。</p>
-<img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h3e0gq6kzmj21yq0tsgrj.jpg" alt="image-20220620001929249" style="zoom:33%;" />
-
-<blockquote>
-<p>当时为了练手，日常还会做一些LeetCode补充一下，传到GitHub记录一下？</p>
-</blockquote>
-<p>​    这门课臭名昭著的地方在于实验课作业的互评制度，也就是大家要互相给代码和实验报告打分。大部分选课的同学应该都是刚上大二，仅校内课程来说，是没有接触过较为现代的Editor或者LaTex/Markdown之类的工具的，于是相当多的同学（至少在我互评的范围内）用Dev C++（大一的时候学校推荐大家使用）写代码，用Word写文档。我觉得他们之中的很多人应该是在这些方面吃了亏，而我可能也只是因为在这些方面（指使用VSCode / Typora）有点接触，在互评上稍微多了点美观分—这其实还挺不公平的…</p>
-<p>​    印象比较深的有几件事，一件是期中考试好像只考了69分，还没有到班级平均线。一件是第二个实验课题目比较困难，当时写了有800行代码，较为头疼。不过比较开心的是，那次我实现了一个类似Trie的结构，还是用了比较基础的multithreading和rvalue reference，尽管最后效率非常低…</p>
-<p>​    至于这门课的结果还不错，期末考试的800个人里面考了130几名，算是给期中考试挽回了一点颜面吧。</p>
-<ul>
-<li>作品集</li>
-</ul>
-<p>​    老实说提起作品集挺汗颜的，只要一想起它我就会非常紧张，但它又是我申请设计/游戏类学校必不可少的一环。暑假因为忙着谈恋爱，浪费（？）了许多时间。我是一个挺恋爱脑的人，所以一旦进入一段关系，效率就会很低下。导致开学的时候，还没有完成多少作品集的内容。从这个意义上来说，幸好分手了，不然以我之前的效率，作品集应该是做不完了吧。</p>
-<img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h3e0ekdizkj21750u00wp.jpg" alt="image-20220620001722163" style="zoom:33%;" />
-
-<blockquote>
-<p>一张产品渲染图，Blender水平提高了许多</p>
-</blockquote>
-<p>​    我在作品集机构完成了自己的第一个游戏的Demo，也因此认识了几个好朋友，后来做产品渲染的时候提高了自己的Blender技巧，这些都是我实实在在的收获。果然还是和游戏相关的事情最容易让人获得快乐啊！</p>
-<ul>
-<li>申请学校</li>
-</ul>
-<p>​    我这个人申请学校的策略完全就是个超级大海王，或许是怕没有书读，我一共申请了23个项目，光是送分加上申请费用就花了差不多2万块。一开始还会反复检查信息是否有误，到后来麻木了，就不太检查了。而选校的事情本身也不甚严谨，当时甚至是昨天刚听说一个项目，今天就决定申请这个项目。实际上我最终决定去的项目，也是我申请结束前10天听说的。不过，反正多申请一个学校也不会缺斤少两，多申请总不会后悔！</p>
-<img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h3e0kqwfmcj214y0ti41g.jpg" alt="image-20220620002158278" style="zoom:33%;" />
-
-<blockquote>
-<p>最后打算去这里了，加州见！</p>
-</blockquote>
-<ul>
-<li>关于日常生活</li>
-</ul>
-<p>​    上个学期最喜欢的事情是因为临时封校，在外面的酒店住了一个多月。一个多月里我能够每天吃麦当劳，每天喝喜茶。每天都只需要步行去机构，坐在人体工学椅上。晚上洗澡，躺在酒店超级软的床上面。真幸福啊…</p>
-<p>​    考GRE那天是万圣节，我当时上午没吃饭就去考试，结果一直到14:30才吃上饭。考完试后去机构继续做作品集，而后回到学校换上我的万圣节costume，扮成迈尔斯来吓人！</p>
-<img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h3e0kp8ijpj20sm12s43z.jpg" alt="image-20220620002245778" style="zoom:33%;" />
-
-<blockquote>
-<p>Happy Halloween~</p>
-</blockquote>
-<p>​    12月的时候我去吃了一个人均500的日料自助。值得一提的是，套餐里有一只大虾，但是是生的。我不喜欢吃刺身，却又不敢说“能不能帮我烤一下”（这太不符合高级日料店的风格了！），于是就只能硬着头皮吃下去。一句题外话，日料的omakase（大概就是自助吧）似乎都挺贵的，好像人均会是4位数，那么看来我吃的这一家店还算比较实惠（？），也不能这么想啦！</p>
-<p>​    最后一件事是关于生日，大学四年我过生日都还算比较有仪式感。唯独21岁这次生日，因为忙着做作品集，从早忙到了晚，就没有考虑过生日怎么过。后来，和舍友（他也要做作品集）一起在机构附近简单吃了个饭，就当是过了生日，希望明年一定要补上。还有一点是，虚幻4在我生日这天崩溃了4次，确实挺让我崩溃的。</p>
-<p>​    我想这就是我对大四上生活的一些简单回顾吧。哦对了，还有一件事，在学期末找了一些同学组队参加了GameJam，还是挺开心的！大四上在一片忙碌中就这样结束了。</p>
-]]></content>
-      <categories>
-        <category>Life, Journal</category>
-      </categories>
-      <tags>
-        <tag>日常生活</tag>
-        <tag>碎碎念</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>雨滴合成器/A Raindrop Synthesizer</title>
     <url>/2023/03/23/%E9%9B%A8%E6%BB%B4%E5%90%88%E6%88%90%E5%99%A8/</url>
     <content><![CDATA[<p>​        这学期的Audio Programming课写了一个雨滴合成器作为最终作业，期间因为种种原因代码改了好几个版本，现在的版本效果算是差强人意。虽然结果不是尽善尽美，整个迭代的过程还是值得记录的，如此也就有了这篇博客。</p>
@@ -1632,6 +1346,292 @@
         <tag>C/C++</tag>
         <tag>Audio Programming</tag>
         <tag>JUCE</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>从歌词学语法01：譲り葉塚-霜月遥</title>
+    <url>/2025/04/20/%E8%AD%B2%E3%82%8A%E8%91%89%E5%A1%9A/</url>
+    <content><![CDATA[<h3 id="从歌词学语法01：譲り葉塚-霜月遥"><a href="#从歌词学语法01：譲り葉塚-霜月遥" class="headerlink" title="从歌词学语法01：譲り葉塚-霜月遥"></a>从歌词学语法01：譲り葉塚-霜月遥</h3><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>从歌词下手学习日语语法个人认为是个不错的选择。平时一直会唱，但并没有仔细整理其内容，因此多数时候也只是一知半解。另一方面，对歌词做分析也有助于更好地了解其背后的意涵。</p>
+<p>这次先选了《譲り葉塚》这首歌，整体而言文法/造词都偏古日语，因此更值得学习和研究。由于网络上翻译很多，所以这里就不作翻译，更多注重于语法和意象，来了解语法/文化本身。</p>
+<p>需要注意的是，这首歌<strong>不是一首男女情歌</strong>。虽然歌词当中出现了「恋慕えるあの人」、「双りの砂利道」容易被误读为“爱人”的表达，但是歌词的核心意象<strong>譲葉</strong>，常被用于比喻世代交替，亲子关系（尤其是母亲）。</p>
+<p><strong>譲葉</strong>这种植物主要的特点是： 新芽长出来以后，老叶才会掉落。给人一种「把位置让出来」的感觉。所以在文学作品中根据“老叶不急着掉落，而是等新芽长好后才慢慢让位”特点，用譲葉来比喻 <strong>父母对子女的关爱与传承</strong>。</p>
+<p>同样地，在这首歌中，譲葉也用于比喻母亲与母爱。这一点可以在词作者本人的博客中得以验证，<a href="https://note.com/hiyamason/n/n04ab9a7d75ad">https://note.com/hiyamason/n/n04ab9a7d75ad</a></p>
+<h4 id="故事背景"><a href="#故事背景" class="headerlink" title="故事背景"></a>故事背景</h4><p>一位少女在生前因某种原因早早离世，灵魂被困在自己的闺房中，日日等待母亲的到来。起初母亲还常常来探望她，带着团子与鲜花，但随着时间流逝，母亲渐渐不再出现。少女始终坚信母亲没有忘记她，直到有一天，天上的使者降临，邀请她升天。</p>
+<p>然而，升天意味着与母亲永别，少女因放不下执念而拒绝升天，并剪断了天上的丝线。意外地，她因此得到了蝴蝶的羽翼，开始寻找回家的路。</p>
+<p>她回到了故乡，见到母亲正慈爱地陪伴着另一个小女孩——一个她不认识的“新女儿”。这使她意识到，母亲已经彻底走出了悲伤，过上了新的生活，而自己早已被遗忘。</p>
+<p>在极度的悲伤与自责中，她回到空无一人的闺房，陷入彻底的孤独。但天之使者再次降临，给予她“救赎”的使命：成为连接天与地的蝴蝶，收集一千只像她一样无法升天、怀有执念的灵魂（蝶），便能实现愿望、找到归处。</p>
+<p>故事最后，她踏上旅程，边唱着童年与母亲共唱的歌，边在人世间寻找那一千只同样孤独的灵魂。</p>
+<h4 id="歌词（少女视角，第一人称）"><a href="#歌词（少女视角，第一人称）" class="headerlink" title="歌词（少女视角，第一人称）"></a>歌词（少女视角，第一人称）</h4><p>ひとり佇む　誰そ彼<br>小指絡ませぬ　ゆびきり<br>明日も来るから<br>ここに居りなさい</p>
+<ul>
+<li>誰そ彼（黄昏）算是一个很出名的双关，在《你的名字》当中被着重介绍。语源是“彼は誰ぞ”，意思是“那人是谁”，因为黄昏时灯光昏暗，连人也无法辨识，因此得名。</li>
+<li>小指絡ませぬ，<strong>絡ませる</strong>：使役动词「絡む」的使役态。 「ぬ」算是一个很常见的文言体的否定词，即ない。</li>
+<li>后两句实为母亲对亡女所说的话，“我明天还会再来的，请好好待在这里”</li>
+</ul>
+<p>心ぼそき閨の中でも</p>
+<p>灯りとなる　その言葉<br>髪撫づる　痩せた手と手を<br>繋ぎ歩む　双りの砂利道<br>今も　あの日は褪せずに</p>
+<ul>
+<li>心ぼそき，形容词 心細い 的文言连体形。</li>
+<li>閨，闺房、卧室，常用于女性、亲密关系的空间。</li>
+<li>砂利道：碎石铺成的小路，常见于乡村或墓地通路。</li>
+<li>歩む，文体的「歩く」，多用于抽象/比喻义，例如经历了坎坷的人生，“苦難の人生を歩んできた”。</li>
+<li>髪撫づる　痩せた手と手を，这一句中，同样是母亲的手，以及“亡女与母亲”一同走过的石子路。</li>
+</ul>
+<p>格子隔てて散る花<br>骨に纏わりし蝶々も<br>はやくお帰りと<br>舞ひて　ささめきて</p>
+<ul>
+<li>格子（窗格/栅栏）、散る花（正在凋零的花），分别象征阴阳之隔与生命的枯萎。</li>
+<li>骨に，结合亡女的身份，此处可能指遗体。</li>
+<li>纏わりし，し是古日语的过去时态助动词。</li>
+<li>蝶々も，蝴蝶在日式文化中常象征<strong>灵魂、轮回或死者转世</strong>。</li>
+<li>“快点回去吧”，这里可能是指“天之使者（蝴蝶）”，劝主人公放下母亲，一同回到死者的世界。</li>
+<li>舞ひて，动词「舞ふ（まふ）」的连体形+て，此处指蝴蝶在风中飞舞。</li>
+</ul>
+<p>刻の過ぎる故里に住む<br>恋慕える　あの人は<br>嗚呼　偏に別人のよう<br>知らぬ人に<br>知りえぬ笑みなど見せて<br>世界を違える</p>
+<ul>
+<li>刻（とき），更文雅的 “時”</li>
+<li>第一句话在说，“我住在这时间流逝的故乡中”， 体现了“我被留下”的感觉，即灵魂依然留在原地。</li>
+<li><strong>恋慕える　あの人は</strong>， 结合前文，此处指对母亲的深爱。</li>
+<li>知らぬ人に， 这里指母亲的“新女儿”</li>
+<li>知りえぬ笑みなど見せて，<ul>
+<li>「知る」= 知道 +「えぬ」= 「得る」的否定文语体 → “无法得知”</li>
+<li><strong>など</strong>：表示列举或语气强调（在这里有<strong>贬义</strong>成分：居然）</li>
+<li>两句连在一起意为“还向我从未见过的陌生人，展露那种我不曾见过的微笑”，体现了极强的剥夺感。</li>
+</ul>
+</li>
+<li>違える，「違う」的文体表达。</li>
+</ul>
+<p>便り絶える閨の中でも<br>また良い子に眠ります<br>だから　呼んで　名前だけでも<br>忘れぬこと　それだけの願い<br>今は　儚く醜く</p>
+<ul>
+<li>閨，结合前文，此处为亡女生前的卧室，她的灵魂仍被困于此。</li>
+<li>良い子に眠ります，这里的に表示“姿态/方法”，即像好孩子一样入睡。<ul>
+<li>象征“顺从，安静接受命运”</li>
+</ul>
+</li>
+<li>后两句表达不被母亲遗忘的愿望。</li>
+</ul>
+<p>土に汚れ　塚は荒れ果て<br>枯れた草に寄る命<br>天へ昇る糸を切りしは<br>居場所もなき泡沫のならい<br>枝を落ちゆく譲り葉<br>いざや　何処へ逝こうか……</p>
+<ul>
+<li>「荒れ果てる」为复合动词：荒れる + 果てる → “彻底荒废”<ul>
+<li>“我的坟冢早已被泥土污染、彻底荒废”</li>
+</ul>
+</li>
+<li>天へ昇る糸，通往天国的丝线，类似“奈何桥”的存在。</li>
+<li>“切りし”同样为古体过去式表达。</li>
+<li>居場所もなき<ul>
+<li>「居場所」（容身之处）+「なき」= 文语否定形 → 没有归处的</li>
+</ul>
+</li>
+<li>泡沫のならい<ul>
+<li>泡沫是常见古典意象，表达人生如梦，命运无常</li>
+<li>習い，原意是“<strong>习惯、惯例、惯习</strong>”，这里理解为“世间的常态”“命运的安排”。<ul>
+<li>在古语中有时也带有“事物自然的道理”之意。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>「いざや」：感叹词 ，代表“那么…“</li>
+<li>「逝こうか」：<ul>
+<li>「逝く」为「行く」的婉约说法，多用于死亡</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>一位已被世界遗忘的逝者，用尽全歌表达了她唯一的愿望：<br> <strong>希望被你记得。</strong><br> 哪怕只是一次轻声呼唤她的名字。<br> 但如今连墓都荒废、归处尽失，她温柔而孤独地问：“那我，究竟该往何方去了呢？”</p>
+<p>最后感谢：</p>
+<ul>
+<li>ChatGPT，MOJI 辞书</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Lyric Analysis</category>
+      </categories>
+      <tags>
+        <tag>Japanese</tag>
+        <tag>Lyric</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Why Tuple?</title>
+    <url>/2021/09/21/WhyTuple?/</url>
+    <content><![CDATA[<p>C++ 11 introduces a template Tuple, similar to the one in Python, allows you to store data of different types in a single entity. But you may ask, in C/C++,we already have some mechaism called struct allows us to do the same thing, then why do we need tuple?</p>
+<h3 id="Case-1-One-Time-Structure-to-Transfer-Data"><a href="#Case-1-One-Time-Structure-to-Transfer-Data" class="headerlink" title="Case 1: One-Time Structure to Transfer Data"></a>Case 1: One-Time Structure to Transfer Data</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function">tuple&lt;string,<span class="keyword">int</span>&gt; <span class="title">getNameAge</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//do something</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">make_tuple</span>(<span class="string">&quot;Bob&quot;</span>,<span class="number">34</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Person</span>&#123;</span>string name;<span class="keyword">int</span> age;&#125;p;</span><br><span class="line">    tuple&lt;string,<span class="keyword">int</span>&gt; t;</span><br><span class="line">    </span><br><span class="line">    string name;</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    <span class="built_in">tie</span>(name,age) = <span class="built_in">getNameAge</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>If we want to transfer a group of data for only one time, we may not want to define a struct, and using tuple get us away from these definitions.</p>
+<h3 id="Case-2-Fast-Comparison-Using-Tuple-Operators"><a href="#Case-2-Fast-Comparison-Using-Tuple-Operators" class="headerlink" title="Case 2: Fast Comparison Using Tuple Operators"></a>Case 2: Fast Comparison Using Tuple Operators</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">tuple&lt;<span class="keyword">int</span>,<span class="keyword">int</span>,<span class="keyword">int</span>&gt; time1,time2;</span><br><span class="line"><span class="keyword">if</span>(time1&gt;time2)</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;time1 is later&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Case-3-Multi-Index-Map-Unordered-Map"><a href="#Case-3-Multi-Index-Map-Unordered-Map" class="headerlink" title="Case 3: Multi-Index Map/Unordered Map"></a>Case 3: Multi-Index Map/Unordered Map</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//define</span></span><br><span class="line">map&lt;tuple&lt;<span class="keyword">int</span>,<span class="keyword">char</span>,<span class="keyword">float</span>&gt;,string&gt; m;</span><br><span class="line"><span class="comment">//indexing</span></span><br><span class="line">m[<span class="built_in">make_tuple</span>(<span class="number">2</span>,<span class="string">&#x27;a&#x27;</span>,<span class="number">1.0</span>)] = <span class="string">&quot;Test&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Case-4-Fast-Swap"><a href="#Case-4-Fast-Swap" class="headerlink" title="Case 4: Fast Swap"></a>Case 4: Fast Swap</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a,b,c;</span><br><span class="line"><span class="built_in">tie</span>(b,c,a) = <span class="built_in">make_tuple</span>(a,b,c);</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion:"></a>Conclusion:</h3><p>Tuple is not recommended to be overused. If needed, use struct instead.</p>
+]]></content>
+      <categories>
+        <category>Programming</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>Data_Structure</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>计算机网络-概览笔记</title>
+    <url>/2021/09/05/Notes-Computer%20Networks/</url>
+    <content><![CDATA[<h3 id="Client-Server"><a href="#Client-Server" class="headerlink" title="Client/Server:"></a>Client/Server:</h3><p>应用层，最为抽象</p>
+<h3 id="TCP-传输层"><a href="#TCP-传输层" class="headerlink" title="TCP:传输层"></a>TCP:传输层</h3><p>对可靠性要求高、检验错误</p>
+<h3 id="UDP："><a href="#UDP：" class="headerlink" title="UDP："></a>UDP：</h3><p>对可靠性要求低、但是能够保证实时</p>
+<ul>
+<li>直播</li>
+<li>事务性应用</li>
+</ul>
+<h3 id="IP-网络层-End-to-End"><a href="#IP-网络层-End-to-End" class="headerlink" title="IP:网络层 End to End"></a>IP:网络层 End to End</h3><p>从主机到主机</p>
+<p>在Link Layer的点到点通讯基础上实现</p>
+<h3 id="Link-Layer-点到点通讯"><a href="#Link-Layer-点到点通讯" class="headerlink" title="Link Layer:点到点通讯"></a>Link Layer:点到点通讯</h3><h3 id="Physical-Layer-物理信号-数字信号"><a href="#Physical-Layer-物理信号-数字信号" class="headerlink" title="Physical Layer:物理信号-数字信号"></a>Physical Layer:物理信号-数字信号</h3><p>通过media（介质）：</p>
+<ul>
+<li>Copper</li>
+<li>Fibre</li>
+</ul>
+<h3 id="网络层："><a href="#网络层：" class="headerlink" title="网络层："></a>网络层：</h3><h4 id="传统工作方式：查表-转发"><a href="#传统工作方式：查表-转发" class="headerlink" title="传统工作方式：查表+转发"></a>传统工作方式：查表+转发</h4><ul>
+<li>路由器交换信息</li>
+<li>计算出路由表</li>
+<li>IP协议收到分组后，根据IP查路由表，再根据表转发</li>
+</ul>
+<h4 id="SDN方式：数据平面-控制系统"><a href="#SDN方式：数据平面-控制系统" class="headerlink" title="SDN方式：数据平面+控制系统"></a>SDN方式：数据平面+控制系统</h4><p>交换机：多字段匹配-&gt;block/转发/flood</p>
+<p>操作系统：计算flow table-下发给交换机</p>
+<p>（programmable+new features could be added）</p>
+<p>比如说要新增加负载均衡，只需要编程即可</p>
+<h4 id="链路层和局域网"><a href="#链路层和局域网" class="headerlink" title="链路层和局域网"></a>链路层和局域网</h4><h3 id="框架："><a href="#框架：" class="headerlink" title="框架："></a>框架：</h3><p>在下层提供的服务上实现更高级的功能</p>
+<h3 id="网络："><a href="#网络：" class="headerlink" title="网络："></a>网络：</h3><h4 id="Node"><a href="#Node" class="headerlink" title="Node:"></a>Node:</h4><ul>
+<li><p>主机以及主机上的应用程序</p>
+</li>
+<li><p>路由器、交换机等网络交换设备</p>
+</li>
+<li><p>方的节点：主要节点（Client/Server）</p>
+<p>圆形节点：中转节点</p>
+</li>
+</ul>
+<h4 id="Edge-通信链路"><a href="#Edge-通信链路" class="headerlink" title="Edge:通信链路"></a>Edge:通信链路</h4><ul>
+<li>access：主机接入到（最近的交换机）互联网的链路（一方一圆）</li>
+<li>backbone：路由器之间的链路（两个圆的）</li>
+</ul>
+<h4 id="Protocol-对等层实体交换数据所需要遵循的规范"><a href="#Protocol-对等层实体交换数据所需要遵循的规范" class="headerlink" title="Protocol:对等层实体交换数据所需要遵循的规范"></a>Protocol:对等层实体交换数据所需要遵循的规范</h4><p>Protocol Data Unit(PDU)</p>
+<h3 id="互联网包括：网络边缘-网络核心-接入网"><a href="#互联网包括：网络边缘-网络核心-接入网" class="headerlink" title="互联网包括：网络边缘/网络核心/接入网"></a>互联网包括：网络边缘/网络核心/接入网</h3><h3 id="1-2-网络边缘"><a href="#1-2-网络边缘" class="headerlink" title="1.2 网络边缘"></a>1.2 网络边缘</h3><p>网络边缘:</p>
+<ul>
+<li>主机</li>
+<li>应用程序</li>
+</ul>
+<h3 id="1-3-Core（用于数据交换）"><a href="#1-3-Core（用于数据交换）" class="headerlink" title="1.3 Core（用于数据交换）"></a>1.3 Core（用于数据交换）</h3><ul>
+<li>相互连接的路由器</li>
+<li>网络的网络</li>
+</ul>
+<h3 id="1-4-Access"><a href="#1-4-Access" class="headerlink" title="1.4 Access"></a>1.4 Access</h3><ul>
+<li>有线或者无线通信链路</li>
+</ul>
+<p>边缘接入核心-&gt;核心连接所有边缘节点-&gt;边缘可以和任意边缘节点交换</p>
+<p>网络核心：相当于全球范围内的切换开关（如果需要交换，就打开）</p>
+<h4 id="应用进程交互模式："><a href="#应用进程交互模式：" class="headerlink" title="应用进程交互模式："></a>应用进程交互模式：</h4><ul>
+<li><p>Client/Server模式：</p>
+<ul>
+<li>Client后运行起来，向Server发出请求，资源来自于Server</li>
+<li>问题：如果Client特别多，需要准备很多Server，到达一定程度时性能断崖式下跌</li>
+</ul>
+</li>
+<li><p>Peer-Peer 模式：</p>
+<ul>
+<li>没有专门的服务器</li>
+<li>每个节点既是Client也是Server</li>
+<li>分布式通信，下载文件的时候，相当于多路下载片段</li>
+</ul>
+</li>
+</ul>
+<h4 id="基础设施为网络应用提供的服务："><a href="#基础设施为网络应用提供的服务：" class="headerlink" title="基础设施为网络应用提供的服务："></a>基础设施为网络应用提供的服务：</h4><ul>
+<li>TCP（面向连接（端系统知道/路径节点不知道）的通信方式）：Shake Hand方式（数据传输前做好准备）<ul>
+<li>可靠：不重复、不丢、不乱序</li>
+<li>Flow Control:发送方不会淹没接收方</li>
+<li>阻塞控制(Congestion Control)</li>
+<li>要考虑网络+设备</li>
+</ul>
+</li>
+<li>UDP(connectless，直接发送，不需要提前连接)<ul>
+<li>不可靠</li>
+<li>没有流量控制</li>
+<li>没有阻塞控制</li>
+<li>适合实时多媒体应用</li>
+<li>事务性很强的应用（）</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+      </categories>
+      <tags>
+        <tag>Computer Networks</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>最近半年的生活状态（上）</title>
+    <url>/2022/06/19/%E4%B8%80%E4%BA%9B%E6%9C%80%E8%BF%91%E5%8D%8A%E5%B9%B4%E5%8F%91%E7%94%9F%E7%9A%84%E4%BA%8B(%E4%B8%8A)/</url>
+    <content><![CDATA[<h3 id="最近半年的生活状态（上）"><a href="#最近半年的生活状态（上）" class="headerlink" title="最近半年的生活状态（上）"></a>最近半年的生活状态（上）</h3><p>​    说起来，自从大四之后就很久很久没有为自己写一些东西，也许是太忙？但也有可能是“我没有把这当作是最重要的事情”，所以一直搁置了。不过临近毕业，总算是稍微有点机会写点什么了，就稍微写一点吧。我想先写一些关于大四上学期的内容，不然就太长了。</p>
+<h3 id="大四上"><a href="#大四上" class="headerlink" title="大四上"></a>大四上</h3><p>​    整个大四上发生了很多事情，分手，上课，作品集，申请学校。一直非常焦头烂额，不过好在我在作品集的机构认识了一些朋友，后来11月的时候，还因为疫情的原因在校外酒店住了一个多月。我的整个大四上学期是在忙碌和焦虑中度过的，不过我猜大家都是这样。</p>
+<ul>
+<li>分手</li>
+</ul>
+<p>​    学期的一开始，前任就和我提了分手，不过我太想再回忆这些。分手的时候ta撒了一个谎，后来找我复合，我拒绝了。既然已经过去这么久，就这样吧。</p>
+<ul>
+<li>数据结构基础</li>
+</ul>
+<p>​    大四上才上数据结构确实挺晚了，甚至申请的时候都不一定会出现在成绩单上，但就当是学知识吧—我是这么想的。学校的数据结构课一开始要分班考，基础还行的同学可以选择困难模式，也就是平时的3个实验课作业题目会变难，好处是评分最多可以比其他同学高5分。我选择了困难模式，当然也为此花了一些时间，现在想想，却也不是那么有必要，尽管确实从一些题目中获得了更深的思考。</p>
+<img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h3e0gq6kzmj21yq0tsgrj.jpg" alt="image-20220620001929249" style="zoom:33%;" />
+
+<blockquote>
+<p>当时为了练手，日常还会做一些LeetCode补充一下，传到GitHub记录一下？</p>
+</blockquote>
+<p>​    这门课臭名昭著的地方在于实验课作业的互评制度，也就是大家要互相给代码和实验报告打分。大部分选课的同学应该都是刚上大二，仅校内课程来说，是没有接触过较为现代的Editor或者LaTex/Markdown之类的工具的，于是相当多的同学（至少在我互评的范围内）用Dev C++（大一的时候学校推荐大家使用）写代码，用Word写文档。我觉得他们之中的很多人应该是在这些方面吃了亏，而我可能也只是因为在这些方面（指使用VSCode / Typora）有点接触，在互评上稍微多了点美观分—这其实还挺不公平的…</p>
+<p>​    印象比较深的有几件事，一件是期中考试好像只考了69分，还没有到班级平均线。一件是第二个实验课题目比较困难，当时写了有800行代码，较为头疼。不过比较开心的是，那次我实现了一个类似Trie的结构，还是用了比较基础的multithreading和rvalue reference，尽管最后效率非常低…</p>
+<p>​    至于这门课的结果还不错，期末考试的800个人里面考了130几名，算是给期中考试挽回了一点颜面吧。</p>
+<ul>
+<li>作品集</li>
+</ul>
+<p>​    老实说提起作品集挺汗颜的，只要一想起它我就会非常紧张，但它又是我申请设计/游戏类学校必不可少的一环。暑假因为忙着谈恋爱，浪费（？）了许多时间。我是一个挺恋爱脑的人，所以一旦进入一段关系，效率就会很低下。导致开学的时候，还没有完成多少作品集的内容。从这个意义上来说，幸好分手了，不然以我之前的效率，作品集应该是做不完了吧。</p>
+<img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h3e0ekdizkj21750u00wp.jpg" alt="image-20220620001722163" style="zoom:33%;" />
+
+<blockquote>
+<p>一张产品渲染图，Blender水平提高了许多</p>
+</blockquote>
+<p>​    我在作品集机构完成了自己的第一个游戏的Demo，也因此认识了几个好朋友，后来做产品渲染的时候提高了自己的Blender技巧，这些都是我实实在在的收获。果然还是和游戏相关的事情最容易让人获得快乐啊！</p>
+<ul>
+<li>申请学校</li>
+</ul>
+<p>​    我这个人申请学校的策略完全就是个超级大海王，或许是怕没有书读，我一共申请了23个项目，光是送分加上申请费用就花了差不多2万块。一开始还会反复检查信息是否有误，到后来麻木了，就不太检查了。而选校的事情本身也不甚严谨，当时甚至是昨天刚听说一个项目，今天就决定申请这个项目。实际上我最终决定去的项目，也是我申请结束前10天听说的。不过，反正多申请一个学校也不会缺斤少两，多申请总不会后悔！</p>
+<img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h3e0kqwfmcj214y0ti41g.jpg" alt="image-20220620002158278" style="zoom:33%;" />
+
+<blockquote>
+<p>最后打算去这里了，加州见！</p>
+</blockquote>
+<ul>
+<li>关于日常生活</li>
+</ul>
+<p>​    上个学期最喜欢的事情是因为临时封校，在外面的酒店住了一个多月。一个多月里我能够每天吃麦当劳，每天喝喜茶。每天都只需要步行去机构，坐在人体工学椅上。晚上洗澡，躺在酒店超级软的床上面。真幸福啊…</p>
+<p>​    考GRE那天是万圣节，我当时上午没吃饭就去考试，结果一直到14:30才吃上饭。考完试后去机构继续做作品集，而后回到学校换上我的万圣节costume，扮成迈尔斯来吓人！</p>
+<img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h3e0kp8ijpj20sm12s43z.jpg" alt="image-20220620002245778" style="zoom:33%;" />
+
+<blockquote>
+<p>Happy Halloween~</p>
+</blockquote>
+<p>​    12月的时候我去吃了一个人均500的日料自助。值得一提的是，套餐里有一只大虾，但是是生的。我不喜欢吃刺身，却又不敢说“能不能帮我烤一下”（这太不符合高级日料店的风格了！），于是就只能硬着头皮吃下去。一句题外话，日料的omakase（大概就是自助吧）似乎都挺贵的，好像人均会是4位数，那么看来我吃的这一家店还算比较实惠（？），也不能这么想啦！</p>
+<p>​    最后一件事是关于生日，大学四年我过生日都还算比较有仪式感。唯独21岁这次生日，因为忙着做作品集，从早忙到了晚，就没有考虑过生日怎么过。后来，和舍友（他也要做作品集）一起在机构附近简单吃了个饭，就当是过了生日，希望明年一定要补上。还有一点是，虚幻4在我生日这天崩溃了4次，确实挺让我崩溃的。</p>
+<p>​    我想这就是我对大四上生活的一些简单回顾吧。哦对了，还有一件事，在学期末找了一些同学组队参加了GameJam，还是挺开心的！大四上在一片忙碌中就这样结束了。</p>
+]]></content>
+      <categories>
+        <category>Life, Journal</category>
+      </categories>
+      <tags>
+        <tag>日常生活</tag>
+        <tag>碎碎念</tag>
       </tags>
   </entry>
 </search>
