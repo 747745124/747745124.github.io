@@ -1712,9 +1712,9 @@
       </tags>
   </entry>
   <entry>
-    <title>Diving into Halton Sampling in Your Renderer</title>
+    <title></title>
     <url>/2025/05/06/Halton%20Sequence/</url>
-    <content><![CDATA[<p>When you swap out <code>rand()</code> for a low-discrepancy sequence like Halton, you expect smoother, faster-converging Monte Carlo renders. But Halton isn’t just “fancier randomness”—it has its own quirks that can trip you up when you mix 1D and 2D draws. </p>
+    <content><![CDATA[<h2 id="Diving-into-Halton-Sampling-in-Your-Renderer"><a href="#Diving-into-Halton-Sampling-in-Your-Renderer" class="headerlink" title="Diving into Halton Sampling in Your Renderer"></a>Diving into Halton Sampling in Your Renderer</h2><p>When you swap out <code>rand()</code> for a low-discrepancy sequence like Halton, you expect smoother, faster-converging Monte Carlo renders. But Halton isn’t just “fancier randomness”—it has its own quirks that can trip you up when you mix 1D and 2D draws. </p>
 <hr>
 <h3 id="1-The-Halton-“Spreadsheet”-Analogy"><a href="#1-The-Halton-“Spreadsheet”-Analogy" class="headerlink" title="1. The Halton “Spreadsheet” Analogy"></a>1. The Halton “Spreadsheet” Analogy</h3><p>Imagine your pixel sampler has an <strong>infinite spreadsheet</strong> of precomputed values:</p>
 <table>
@@ -1788,8 +1788,8 @@
 <blockquote>
 <p>Correct rendering using the updated Halton sampler</p>
 </blockquote>
-<h3 id="3-The-“Correct”-Halton-Sampler-API"><a href="#3-The-“Correct”-Halton-Sampler-API" class="headerlink" title="3. The “Correct” Halton Sampler API"></a>3. The “Correct” Halton Sampler API</h3><p>To fix it, we split “which row” from “which column”:</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">HaltonSampler</span> &#123;</span><br><span class="line">  <span class="type">uint32_t</span> row       = <span class="number">0</span>;  <span class="comment">// which pixel‐sample</span></span><br><span class="line">  <span class="type">int</span>      column    = <span class="number">0</span>;  <span class="comment">// which dimension of that sample</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="comment">// Call once at the start of each primary ray (each pixel‐sample)</span></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">startSample</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    row++;</span><br><span class="line">    column = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Pull one 1D sample (Fresnel, etc.)</span></span><br><span class="line">  <span class="function"><span class="type">float</span> <span class="title">get1D</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">float</span> v = <span class="built_in">radicalInverse</span>(prime[column], row);</span><br><span class="line">    column++;</span><br><span class="line">    <span class="keyword">return</span> v;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Pull a 2D sample (microfacet, lens, etc.)</span></span><br><span class="line">  <span class="function">vec2 <span class="title">get2D</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">float</span> x = <span class="built_in">radicalInverse</span>(prime[column],   row);</span><br><span class="line">    <span class="type">float</span> y = <span class="built_in">radicalInverse</span>(prime[column<span class="number">+1</span>], row);</span><br><span class="line">    column += <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">return</span> &#123; x, y &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="3-The-“Correct”-Halton-Sampler-API-from-PBRT-simplified"><a href="#3-The-“Correct”-Halton-Sampler-API-from-PBRT-simplified" class="headerlink" title="3. The “Correct” Halton Sampler API (from PBRT, simplified)"></a>3. The “Correct” Halton Sampler API (from PBRT, simplified)</h3><p>To fix it, we split “which row” from “which column”:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">HaltonSampler</span> &#123;</span><br><span class="line">  <span class="type">uint32_t</span> row       = <span class="number">1</span>;  <span class="comment">// which pixel‐sample</span></span><br><span class="line">  <span class="type">int</span>      column    = <span class="number">0</span>;  <span class="comment">// which dimension of that sample</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="comment">// Call once at the start of each primary ray (each pixel‐sample)</span></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">startSample</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    row++;</span><br><span class="line">    column = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Pull one 1D sample (Fresnel, etc.)</span></span><br><span class="line">  <span class="function"><span class="type">float</span> <span class="title">get1D</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">float</span> v = <span class="built_in">radicalInverse</span>(prime[column], row);</span><br><span class="line">    column++;</span><br><span class="line">    <span class="keyword">return</span> v;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Pull a 2D sample (microfacet, lens, etc.)</span></span><br><span class="line">  <span class="function">vec2 <span class="title">get2D</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">float</span> x = <span class="built_in">radicalInverse</span>(prime[column],   row);</span><br><span class="line">    <span class="type">float</span> y = <span class="built_in">radicalInverse</span>(prime[column<span class="number">+1</span>], row);</span><br><span class="line">    column += <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">return</span> &#123; x, y &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 <p>Now:</p>
 <ol>
@@ -1810,8 +1810,86 @@
 </li>
 </ul>
 <p>Within a single path you just grab different dims of one quasi-random point; across the whole image each dimension covers [0,1] evenly.</p>
+<h3 id="5-Caveats"><a href="#5-Caveats" class="headerlink" title="5. Caveats"></a>5. Caveats</h3><h4 id="If-You-Never-Call-startSample"><a href="#If-You-Never-Call-startSample" class="headerlink" title="If You Never Call startSample()"></a>If You <strong>Never</strong> Call <code>startSample()</code></h4><ul>
+<li><p><strong>What happens</strong></p>
+<ul>
+<li><code>row</code> stays at its initial value (e.g. 1).</li>
+<li><code>column</code> increments on each <code>get1D()</code>&#x2F;<code>get2D()</code>.</li>
+<li>You always read <strong>row 1</strong>, columns 0,1,2,3,…</li>
+</ul>
+</li>
+<li><p><strong>Returned values</strong></p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//pixel sample 1</span></span><br><span class="line">u = <span class="built_in">get1D</span>(): <span class="built_in">radicalInverse</span>(prime[<span class="number">0</span>], <span class="number">1</span>) </span><br><span class="line">v = <span class="built_in">get1D</span>(): <span class="built_in">radicalInverse</span>(prime[<span class="number">1</span>],<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//pixel sample 2</span></span><br><span class="line">u = <span class="built_in">get1D</span>(): <span class="built_in">radicalInverse</span>(prime[<span class="number">2</span>], <span class="number">1</span>) </span><br><span class="line">v = <span class="built_in">get1D</span>(): <span class="built_in">radicalInverse</span>(prime[<span class="number">3</span>],<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Impact</strong></p>
+<p>Each parameter samples <code>u</code> across pixel, is a sequence on the initial row with a fixed stride. </p>
+<p>Let’s say for each pixel, you request one <code>u = get1D()</code>, then <code>u</code> across pixel samples is just a row from the table, which is <strong>not uniform.</strong></p>
+</li>
+</ul>
+<img src="https://s2.loli.net/2025/05/06/gSw1pj5lQayHEiT.png" alt="image-20250506014947727" style="zoom: 50%;" />
+
+<blockquote>
+<p>In above example, <code>u</code> are circles in red, <code>v</code> are circled in yellow. Both of them are not uniform.</p>
+</blockquote>
+<h4 id="If-You-Skip-Resetting-column-in-startSample"><a href="#If-You-Skip-Resetting-column-in-startSample" class="headerlink" title="If You Skip Resetting column in startSample()"></a>If You <strong>Skip</strong> Resetting <code>column</code> in <code>startSample()</code></h4><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">startSample</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  row++;      </span><br><span class="line">  <span class="comment">// OOPS: column is NOT reset → carries over from last pixel</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>What happens</strong><ul>
+<li><code>row</code> advances per pixel, but <code>column</code> keeps climbing across pixels.</li>
+<li>Pixel 1 might read columns 0,1,2; Pixel 2 now reads columns 3,4,5; Pixel 3 reads 6,7,8; …</li>
+</ul>
+</li>
+<li><strong>Returned values</strong><ul>
+<li><strong>Pixel 1</strong>: u &#x3D; get1D→col0, v &#x3D; get2D→col1, …</li>
+<li><strong>Pixel 2</strong>: u &#x3D; get1D→col2, v &#x3D; get2D→col3, …</li>
+<li><strong>Pixel 3</strong>: u &#x3D; get1D→col4, …</li>
+</ul>
+</li>
+<li><strong>Impact</strong><ul>
+<li>Each individual call is still reading a single Halton column <strong>down the rows</strong></li>
+<li>But the <em>mapping</em> of “Fresnel”→col0, “microfacet”→cols1&#x2F;2, “lens”→col3, etc. drifts unpredictably between pixels.<ul>
+<li>Larger primes push more weight near zero, so as you march down that diagonal your samples systematically shift. i.e. <strong>Not uniform</strong>.</li>
+</ul>
+</li>
+<li>Visually, each parameter samples, across all pixels, forms a diagonal walk on the table, which is not uniform.</li>
+</ul>
+</li>
+</ul>
+<img src="https://s2.loli.net/2025/05/06/ShwjrA3EtpqbLlP.png" alt="image-20250506015346961" style="zoom:33%;" />
+
+<blockquote>
+<p>In above example, <code>u</code> are circles in red, <code>v</code> are circled in yellow. Both of them are not uniform. Though slightly better than previous one, since we move across rows.</p>
+</blockquote>
+<h4 id="3-If-You-Don’t-Advance-the-Row-in-startSample"><a href="#3-If-You-Don’t-Advance-the-Row-in-startSample" class="headerlink" title="3. If You Don’t Advance the Row in startSample()"></a>3. If You <strong>Don’t Advance</strong> the Row in <code>startSample()</code></h4><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">startSample</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="comment">// OOPS: no row++, so row stays fixed</span></span><br><span class="line">  column = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>What happens</strong></p>
+<ul>
+<li><code>row</code> is always the same (say 0),</li>
+<li><code>column</code> resets each pixel and then increments as you call <code>get1D()</code>&#x2F;<code>get2D()</code>.</li>
+</ul>
+</li>
+<li><p><strong>Returned values per pixel</strong></p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//pixel 1</span></span><br><span class="line"><span class="built_in">get1D</span>() → <span class="built_in">radicalInverse</span>(prime[<span class="number">0</span>], <span class="number">1</span>)  </span><br><span class="line"><span class="built_in">get1D</span>() → <span class="built_in">radicalInverse</span>(prime[<span class="number">1</span>], <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//pixel 2</span></span><br><span class="line"><span class="built_in">get1D</span>() → <span class="built_in">radicalInverse</span>(prime[<span class="number">0</span>], <span class="number">1</span>)  </span><br><span class="line"><span class="built_in">get1D</span>() → <span class="built_in">radicalInverse</span>(prime[<span class="number">1</span>], <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Impact</strong></p>
+<ul>
+<li>Each parameter samples, across all pixels is just reading the same value.</li>
+<li><strong>No variation</strong>, no uniformity over the image.</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://s2.loli.net/2025/05/06/ACgMRjtnsy1lbUD.png" alt="image-20250506015637891"></p>
+<blockquote>
+<p>In above example, <code>u</code> are circles in red, <code>v</code> are circled in yellow. Both of them stays the same value across pixels.</p>
+</blockquote>
+<h4 id="Again-the-correct-version"><a href="#Again-the-correct-version" class="headerlink" title="Again, the correct version"></a>Again, the correct version</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">startSample</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    row++;</span><br><span class="line">    column = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<img src="https://s2.loli.net/2025/05/06/Xfyznmku2V6Wvdt.png" alt="image-20250506015858123" style="zoom:50%;" />
+
+<p>Now you can see both <code>u</code> and <code>v</code> are uniform across pixels.</p>
 <hr>
-<h3 id="5-TL-DR"><a href="#5-TL-DR" class="headerlink" title="5. TL;DR"></a>5. TL;DR</h3><ul>
+<h3 id="6-TL-DR"><a href="#6-TL-DR" class="headerlink" title="6. TL;DR"></a>6. TL;DR</h3><ul>
 <li><strong>Don’t</strong> bump your low-discrepancy index in both <code>get1D()</code> and <code>get2D()</code>.  That “phase-shifts” your samples. Making them not uniform across samples.</li>
 <li><strong>Do</strong> maintain:<ul>
 <li>one counter <strong>per pixel</strong> (<code>row</code>) advanced once by <code>startSample()</code>,</li>
@@ -1821,12 +1899,5 @@
 <li><strong>Result</strong>: perfect coordination between Fresnel flips, BSDF directions, lens jitter, shadow-ray uniforms—all with QMC convergence benefits.</li>
 </ul>
 ]]></content>
-      <categories>
-        <category>Rendering</category>
-      </categories>
-      <tags>
-        <tag>C/C++</tag>
-        <tag>Rendering</tag>
-      </tags>
   </entry>
 </search>
