@@ -1711,4 +1711,122 @@
         <tag>CG</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Diving into Halton Sampling in Your Renderer</title>
+    <url>/2025/05/06/Halton%20Sequence/</url>
+    <content><![CDATA[<p>When you swap out <code>rand()</code> for a low-discrepancy sequence like Halton, you expect smoother, faster-converging Monte Carlo renders. But Halton isn’t just “fancier randomness”—it has its own quirks that can trip you up when you mix 1D and 2D draws. </p>
+<hr>
+<h3 id="1-The-Halton-“Spreadsheet”-Analogy"><a href="#1-The-Halton-“Spreadsheet”-Analogy" class="headerlink" title="1. The Halton “Spreadsheet” Analogy"></a>1. The Halton “Spreadsheet” Analogy</h3><p>Imagine your pixel sampler has an <strong>infinite spreadsheet</strong> of precomputed values:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Row</strong> (pixel sample index)</th>
+<th><strong>Col 0</strong> (base 2)</th>
+<th><strong>Col 1</strong> (base 3)</th>
+<th><strong>Col 2</strong> (base 5)</th>
+<th>…</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1</strong></td>
+<td>0.5000</td>
+<td>0.3333</td>
+<td>0.2000</td>
+<td>…</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td>0.2500</td>
+<td>0.6667</td>
+<td>0.4000</td>
+<td>…</td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td>0.7500</td>
+<td>0.1111</td>
+<td>0.6000</td>
+<td>…</td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td>0.1250</td>
+<td>0.4444</td>
+<td>0.8000</td>
+<td>…</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>Rows</strong> ≙ which <em>pixel-sample</em> you’re on</li>
+<li><strong>Columns</strong> ≙ which <em>dimension</em> (lens jitter, Fresnel coin-flip, microfacet lobe) you’re reading</li>
+</ul>
+<p>Crucially, <strong>each column by itself</strong>—if you walk <em>down</em> the rows—forms a uniform Halton stream.  But reading <em>across</em> one row (all the dims of a single sample) is just one point’s coordinates, not a uniform 1D series.</p>
+<hr>
+<h3 id="2-The-Interference-Bug-in-the-Old-Sampler"><a href="#2-The-Interference-Bug-in-the-Old-Sampler" class="headerlink" title="2. The Interference Bug in the Old Sampler"></a>2. The Interference Bug in the Old Sampler</h3><p>My initial implementation is something like this.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">uint sampleIndex = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">reset</span><span class="params">()</span> </span>&#123; sampleIndex = <span class="number">0</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">float</span> <span class="title">get1D</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="comment">// bump row, then read column 0</span></span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">radicalInverse</span>(base2, ++sampleIndex);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">vec2 <span class="title">get2D</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="comment">// bump row *again*, then read cols 0&amp;1 of that new row</span></span><br><span class="line">  <span class="type">uint32_t</span> s = ++sampleIndex;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="built_in">radicalInverse</span>(base2, s),</span><br><span class="line">           <span class="built_in">radicalInverse</span>(base3, s) &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>And then for each ray sample, I use them as the sampled uniform number to feed the <code>Sample_f</code> function.</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">float</span> uc     = sampler.<span class="built_in">get1D</span>(); <span class="comment">// row → 1, reads col 0  </span></span><br><span class="line">vec2 u    = sampler.<span class="built_in">get2D</span>(); <span class="comment">// row → 2, reads cols 0&amp;1  </span></span><br><span class="line"></span><br><span class="line"><span class="built_in">Sample_f</span>(Vector3f wo, Float uc, Point2f u,</span><br><span class="line">        TransportMode mode, BxDFReflTransFlags sampleFlags)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>Note that I never called reset once. So <code>uc</code> basically gives all the number on the even rows of the Halton table’s first column (i.e. <code>Halton[1][0], Halton[3][0], Halton[5][0]</code> …) across all the samples. And <code>u</code> gives something similar, all the odd rows of the table’s first and second column across all the samples. The distribution of <code>uc</code> across all the samples are actually <code>(0.5, 0.75, 0.625...)</code> and it never goes below <code>0.5</code> so it’s not a uniform distribution across all the samples. Similar applies to the distribution of <code>u</code>.</p>
+<img src="https://s2.loli.net/2025/05/06/q7I2GKDegSn5wj4.png" alt="image-20250506010617653" style="zoom:33%;" />
+
+<blockquote>
+<p>Weird rendering caused by non-uniform numbers.</p>
+</blockquote>
+<p>The reason I didn’t find the bug is because initially, is because for each sample, I only called <code>float uc  = sampler.get1D();</code>, and never called <code>vec2 u = sampler.get2D();</code>  So the sequence of <code>uc</code> I’m getting is exactly the first column of the Halton table, which is uniform across the samples.</p>
+<img src="https://s2.loli.net/2025/05/06/NpRiv6oPCetGVMw.png" alt="image-20250506010902436" style="zoom: 33%;" />
+
+<blockquote>
+<p>Correct rendering using the updated Halton sampler</p>
+</blockquote>
+<h3 id="3-The-“Correct”-Halton-Sampler-API"><a href="#3-The-“Correct”-Halton-Sampler-API" class="headerlink" title="3. The “Correct” Halton Sampler API"></a>3. The “Correct” Halton Sampler API</h3><p>To fix it, we split “which row” from “which column”:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">HaltonSampler</span> &#123;</span><br><span class="line">  <span class="type">uint32_t</span> row       = <span class="number">0</span>;  <span class="comment">// which pixel‐sample</span></span><br><span class="line">  <span class="type">int</span>      column    = <span class="number">0</span>;  <span class="comment">// which dimension of that sample</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="comment">// Call once at the start of each primary ray (each pixel‐sample)</span></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">startSample</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    row++;</span><br><span class="line">    column = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Pull one 1D sample (Fresnel, etc.)</span></span><br><span class="line">  <span class="function"><span class="type">float</span> <span class="title">get1D</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">float</span> v = <span class="built_in">radicalInverse</span>(prime[column], row);</span><br><span class="line">    column++;</span><br><span class="line">    <span class="keyword">return</span> v;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Pull a 2D sample (microfacet, lens, etc.)</span></span><br><span class="line">  <span class="function">vec2 <span class="title">get2D</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">float</span> x = <span class="built_in">radicalInverse</span>(prime[column],   row);</span><br><span class="line">    <span class="type">float</span> y = <span class="built_in">radicalInverse</span>(prime[column<span class="number">+1</span>], row);</span><br><span class="line">    column += <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">return</span> &#123; x, y &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>Now:</p>
+<ol>
+<li><strong><code>startSample()</code></strong> → move <strong>down</strong> one row (new pixel sample), reset to first column</li>
+<li><strong><code>get1D()</code></strong> or <strong><code>get2D()</code></strong> → read successive columns of <em>that</em> row</li>
+</ol>
+<hr>
+<h3 id="4-Why-This-“Just-Works”-in-a-Path-Tracer"><a href="#4-Why-This-“Just-Works”-in-a-Path-Tracer" class="headerlink" title="4. Why This “Just Works” in a Path Tracer"></a>4. Why This “Just Works” in a Path Tracer</h3><ul>
+<li><p><strong>Per-pixel</strong>: you do</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">sampler.<span class="built_in">startSample</span>();              <span class="comment">// row = i</span></span><br><span class="line"><span class="type">float</span> coinFlip = sampler.<span class="built_in">get1D</span>();   <span class="comment">// reads column 0 of row i</span></span><br><span class="line">vec2 microU   = sampler.<span class="built_in">get2D</span>();    <span class="comment">// reads cols 1&amp;2 of row i</span></span><br><span class="line"><span class="type">float</span> lensU   = sampler.<span class="built_in">get1D</span>();    <span class="comment">// reads column 3 of row i</span></span><br><span class="line"><span class="comment">// … further bounces pull more columns …</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Uniformity</strong> arises <strong>across</strong> pixel-samples:</p>
+<ul>
+<li>Looking at <em>all</em> <code>coinFlip</code> values is column 0 down rows → the base-2 Halton sequence → nicely stratified</li>
+<li>Looking at <em>all</em> <code>microU.x</code> is column 1 down rows → base-3 Halton → stratified in that dimension</li>
+<li>And so on</li>
+</ul>
+</li>
+</ul>
+<p>Within a single path you just grab different dims of one quasi-random point; across the whole image each dimension covers [0,1] evenly.</p>
+<hr>
+<h3 id="5-TL-DR"><a href="#5-TL-DR" class="headerlink" title="5. TL;DR"></a>5. TL;DR</h3><ul>
+<li><strong>Don’t</strong> bump your low-discrepancy index in both <code>get1D()</code> and <code>get2D()</code>.  That “phase-shifts” your samples. Making them not uniform across samples.</li>
+<li><strong>Do</strong> maintain:<ul>
+<li>one counter <strong>per pixel</strong> (<code>row</code>) advanced once by <code>startSample()</code>,</li>
+<li>one counter <strong>per random number</strong> (<code>column</code>) advanced by each <code>get1D()</code>&#x2F;<code>get2D()</code>.</li>
+</ul>
+</li>
+<li><strong>Result</strong>: perfect coordination between Fresnel flips, BSDF directions, lens jitter, shadow-ray uniforms—all with QMC convergence benefits.</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Rendering</category>
+      </categories>
+      <tags>
+        <tag>C/C++</tag>
+        <tag>Rendering</tag>
+      </tags>
+  </entry>
 </search>
